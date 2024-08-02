@@ -53,6 +53,12 @@
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Unity Assets\**" />
+      <EmbeddedResource Remove="Unity Assets\**" />
+      <None Remove="Unity Assets\**" />
+    </ItemGroup>
+
     <Import Project="../LC.targets" />
 <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
     <Exec Command="netcode-patch -nv 1.5.2 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')"/>
