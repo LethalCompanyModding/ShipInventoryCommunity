@@ -126,7 +126,8 @@ public class ChuteInteract : NetworkBehaviour
         // Spawn each item
         foreach (var singleData in selectedData)
         {
-            var newItem = Instantiate(item.spawnPrefab);
+            var newItem = Instantiate(item.spawnPrefab) ?? throw new NullReferenceException();
+            newItem.transform.SetParent(GameObject.Find(Constants.SHIP_PATH).transform, false);
             
             // Set values
             var grabObj = newItem.GetComponent<GrabbableObject>();
@@ -134,8 +135,6 @@ public class ChuteInteract : NetworkBehaviour
             // Call spawn methods
             grabObj.Start();
             grabObj.PlayDropSFX();
-            grabObj.isInShipRoom = true;
-            grabObj.OnHitGround();
             
             // Spawn item
             var networkObj = grabObj.NetworkObject;
@@ -169,8 +168,9 @@ public class ChuteInteract : NetworkBehaviour
             
         if (item.saveItemVariable)
             grabObj.LoadItemSaveData(data.SAVE_DATA);
-        
+
         grabObj.isInShipRoom = true;
+        grabObj.isInElevator = true;
         grabObj.OnHitGround();
 
         // Play particles

@@ -51,14 +51,6 @@ internal class StartOfRound_Patches
         
         // GRABBABLE
         var grabObj = vent.GetComponent<GrabbableObject>();
-        var item = ScriptableObject.CreateInstance<Item>();
-        item.isScrap = true;
-        item.lockedInDemo = true;
-        item.itemName = "VENT_CHUTE";
-        item.spawnPrefab = NetworkPrefabUtils.GetPrefab(Constants.VENT_PREFAB);
-        item.saveItemVariable = true;
-        
-        grabObj.itemProperties = item;
         grabObj.isInElevator = true;
         grabObj.isInShipRoom = true;
         grabObj.OnHitGround();

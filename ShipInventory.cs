@@ -38,7 +38,17 @@ public class ShipInventory : BaseUnityPlugin
         NetworkPrefabUtils.LoadPrefab(Constants.VENT_PREFAB, obj =>
         {
             obj.AddComponent<ChuteInteract>();
-            obj.AddComponent<VentProp>();
+            var grab = obj.AddComponent<VentProp>();
+            
+            // Vent Prop Item
+            var item = ScriptableObject.CreateInstance<Item>();
+            item.isScrap = true;
+            item.lockedInDemo = true;
+            item.itemName = "VENT_CHUTE";
+            item.spawnPrefab = NetworkPrefabUtils.GetPrefab(Constants.VENT_PREFAB);
+            item.saveItemVariable = true;
+        
+            grab.itemProperties = item;
         });
         
         // Apply patches
