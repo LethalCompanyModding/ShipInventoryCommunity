@@ -28,7 +28,7 @@ public class InventoryNode : TerminalNode
         // Set text
         string content = "";
 
-        if (items.Count > 0)
+        if (items.Any())
         {
             content += "Total: $" + items.Sum(i => i.SCRAP_VALUE) + "\n";
 

@@ -15,10 +15,10 @@ public static class Constants
 
     // --- ASSETS ---
     public const string VENT_PREFAB = "VentChute"; // Name of the prefab
-    public const string BUNDLE = "ShipInventory.Resources.ls-bundle"; // Name of the bundle
+    public const string BUNDLE = "ShipInventory.Resources.si-bundle"; // Name of the bundle
     
     // --- LAYERS ---
     public const string LAYER_PROPS = "Props"; // Name of the layer Props
-    public const string LAYER_COLLIDERS = "Colliders"; // Name of the layer Props
-    public const string LAYER_INTERACTABLE = "InteractableObject"; // Name of the layer Props
+    public const string LAYER_IGNORE = "Ignore Raycast"; // Name of the layer Ignore Raycast
+    public const string LAYER_INTERACTABLE = "InteractableObject"; // Name of the layer Interactable Object
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -13,8 +14,6 @@ public class ChuteInteract : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        Instance = this;
-        
         _trigger = GetComponent<InteractTrigger>();
         itemRestorePoint = transform.Find("DropNode");
         spawnParticles = GetComponentInChildren<ParticleSystem>();
@@ -24,9 +23,37 @@ public class ChuteInteract : NetworkBehaviour
 
     #region Items
 
-    private static List<ItemData> storedItems = [];
-    public static List<ItemData> GetItems() => storedItems.OrderBy(i => i.GetItem()?.itemName).ToList();
-    internal static void SetItems(List<ItemData> newItems) => storedItems = newItems;
+    private static IEnumerable<ItemData> storedItems = [];
+    public static IEnumerable<ItemData> GetItems() => storedItems.OrderBy(i => i.GetItem()?.itemName).ToList();
+
+    internal static void SetItems(IEnumerable<ItemData> newItems)
+    {
+        storedItems = newItems;
+        UpdateValue();
+    }
+
+    private static void Add(ItemData data) => SetItems(storedItems.Append(data));
+
+    private static void Remove(ItemData data)
+    {
+        var copy = storedItems.ToList();
+        copy.Remove(data);
+        SetItems(copy);
+    }
+
+    public static void UpdateValue()
+    {
+        if (Instance == null)
+            return;
+        
+        var grabObj = Instance.GetComponent<GrabbableObject>();
+        
+        if (grabObj == null)
+            return;
+
+        grabObj.scrapValue = storedItems.Sum(i => i.SCRAP_VALUE);
+        grabObj.OnHitGround(); // Update 
+    }
 
     #endregion
     #region Store Items
@@ -65,7 +92,7 @@ public class ChuteInteract : NetworkBehaviour
     private void StoreItemClientRpc(ItemData data)
     {
         Logger.Debug("Client received new item!");
-        storedItems.Add(data);
+        Add(data);
         Logger.Debug("Client added new item!");
     }
 
@@ -107,6 +134,8 @@ public class ChuteInteract : NetworkBehaviour
             // Call spawn methods
             grabObj.Start();
             grabObj.PlayDropSFX();
+            grabObj.isInShipRoom = true;
+            grabObj.OnHitGround();
             
             // Spawn item
             var networkObj = grabObj.NetworkObject;
@@ -122,7 +151,7 @@ public class ChuteInteract : NetworkBehaviour
     public void SpawnItemClientRpc(NetworkObjectReference networkObject, ItemData data)
     {
         Logger.Debug("Updating the items...");
-        storedItems.Remove(data);
+        Remove(data);
         Logger.Debug("Items updated!");
         
         var item = data.GetItem();
@@ -140,9 +169,10 @@ public class ChuteInteract : NetworkBehaviour
             
         if (item.saveItemVariable)
             grabObj.LoadItemSaveData(data.SAVE_DATA);
-            
-        grabObj.isInShipRoom = true;
         
+        grabObj.isInShipRoom = true;
+        grabObj.OnHitGround();
+
         // Play particles
         spawnParticles.Play();
         
@@ -211,7 +241,7 @@ public class ChuteInteract : NetworkBehaviour
         // Update layer
         var hasItem = Physics.CheckSphere(itemRestorePoint.position, 0.2f, 1 << LayerMask.NameToLayer(Constants.LAYER_PROPS));
         
-        gameObject.layer = LayerMask.NameToLayer(hasItem ? Constants.LAYER_COLLIDERS : Constants.LAYER_INTERACTABLE);
+        gameObject.layer = LayerMask.NameToLayer(hasItem ? Constants.LAYER_IGNORE : Constants.LAYER_INTERACTABLE);
     }
 
     #endregion

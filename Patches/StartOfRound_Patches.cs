@@ -38,12 +38,33 @@ internal class StartOfRound_Patches
             return;
         
         var chute = vent.GetComponent<ChuteInteract>();
+        ChuteInteract.Instance = chute;
+        
+        // TRIGGER
         var interact = chute.GetComponent<InteractTrigger>();
         interact.onInteract.AddListener(chute.StoreHeldItem);
         interact.timeToHold = 0.5f;
 
-        vent.transform.localPosition = new Vector3(1.9f, 1f, -4.45f);
+        // TRANSFORM
+        vent.transform.localPosition = new Vector3(1.9f, 1f, -4.5f);
         vent.transform.localRotation = Quaternion.Euler(35, 0, 0);
+        
+        // GRABBABLE
+        var grabObj = vent.GetComponent<GrabbableObject>();
+        var item = ScriptableObject.CreateInstance<Item>();
+        item.isScrap = true;
+        item.lockedInDemo = true;
+        item.itemName = "VENT_CHUTE";
+        item.spawnPrefab = NetworkPrefabUtils.GetPrefab(Constants.VENT_PREFAB);
+        item.saveItemVariable = true;
+        
+        grabObj.itemProperties = item;
+        grabObj.isInElevator = true;
+        grabObj.isInShipRoom = true;
+        grabObj.OnHitGround();
+        
+        // Update scrap value of the chute
+        ChuteInteract.UpdateValue();
     }
     
     [HarmonyPostfix]
@@ -57,13 +78,5 @@ internal class StartOfRound_Patches
         ChuteInteract.SetItems(
             ES3.Load<ItemData[]>(Constants.STORED_ITEMS, GameNetworkManager.Instance.currentSaveFileName).ToList()
         );
-    }
-
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(StartOfRound.EndOfGame))]
-    private static void ClearShip(StartOfRound __instance)
-    {
-        if (__instance.allPlayersDead)
-            ChuteInteract.SetItems([]);
     }
 }

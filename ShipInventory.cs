@@ -35,7 +35,11 @@ public class ShipInventory : BaseUnityPlugin
         // ---
         
         // Load prefabs
-        NetworkPrefabUtils.LoadPrefab(Constants.VENT_PREFAB, obj => obj.AddComponent<ChuteInteract>());
+        NetworkPrefabUtils.LoadPrefab(Constants.VENT_PREFAB, obj =>
+        {
+            obj.AddComponent<ChuteInteract>();
+            obj.AddComponent<VentProp>();
+        });
         
         // Apply patches
         Patch();
