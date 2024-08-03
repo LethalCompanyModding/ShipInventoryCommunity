@@ -3,6 +3,7 @@ using HarmonyLib;
 using ShipInventory.Helpers;
 using ShipInventory.Objects;
 using UnityEngine;
+using Logger = ShipInventory.Helpers.Logger;
 
 namespace ShipInventory.Patches;
 
@@ -56,5 +57,13 @@ internal class StartOfRound_Patches
         ChuteInteract.SetItems(
             ES3.Load<ItemData[]>(Constants.STORED_ITEMS, GameNetworkManager.Instance.currentSaveFileName).ToList()
         );
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(StartOfRound.EndOfGame))]
+    private static void ClearShip(StartOfRound __instance)
+    {
+        if (__instance.allPlayersDead)
+            ChuteInteract.SetItems([]);
     }
 }

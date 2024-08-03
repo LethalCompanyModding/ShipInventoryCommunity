@@ -57,6 +57,9 @@
       <Compile Remove="Unity Assets\**" />
       <EmbeddedResource Remove="Unity Assets\**" />
       <None Remove="Unity Assets\**" />
+      <Compile Remove="ThunderStore\**" />
+      <EmbeddedResource Remove="ThunderStore\**" />
+      <None Remove="ThunderStore\**" />
     </ItemGroup>
 
     <Import Project="../LC.targets" />

@@ -20,13 +20,13 @@ public class RetrieveNode : TerminalNode
 
     public RetrieveNode()
     {
-        displayText = $"For ${TARGET}, we found this set of items:\n{ITEMS}\n\nThey total to ${TOTAL}.\n\n";
+        displayText = $"For ${TARGET}, we found this set of items:\n{ITEMS}\n\nTheir total to ${TOTAL}.\n\n";
         clearPreviousText = true;
         terminalOptions =
         [
             new CompatibleNoun()
         ];
-        terminalEvent = "chuteSpawn";
+        terminalEvent = Constants.VENT_SPAWN;
     }
 
     public string ParseText(string original)

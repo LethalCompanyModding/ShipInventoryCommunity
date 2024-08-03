@@ -13,7 +13,7 @@ public class SuccessNode : TerminalNode
     {
         clearPreviousText = true;
         displayText = $"You just recovered [variableAmount] {RECOVERED} from the ship's inventory.\n\n";
-        terminalEvent = "chuteSpawn";
+        terminalEvent = Constants.VENT_SPAWN;
     }
 
     public string ParseText(string original) => !original.Contains(RECOVERED) 

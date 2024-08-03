@@ -25,6 +25,5 @@ public class GameNetworkManager_Patches
         }
         
         ES3.Save(Constants.STORED_ITEMS, items.ToArray(), __instance.currentSaveFileName);
-        ChuteInteract.SetItems([]);
     }
 }
