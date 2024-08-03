@@ -1,4 +1,4 @@
-﻿# Ship Inventory
+# Ship Inventory
 Adds a ship object that allows players to safely store items inside the ship's inventory.
 
 ## Vent Chute
