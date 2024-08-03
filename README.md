@@ -1,6 +1,11 @@
 ﻿# Ship Inventory
 Adds a ship object that allows players to safely store items inside the ship's inventory.
 
+## Vent Chute
+By holding an item to the vent chute, you can put items into the ship's inventory. You can also retrieve them using the terminal.
+
+![Image of the vent chute](./ThunderStore/vent_holding_apparatus.png)
+
 ## Commands
 The players have access to two commands:
 - Inventory
