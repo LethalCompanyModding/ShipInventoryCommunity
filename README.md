@@ -9,14 +9,14 @@ The players have access to two commands:
 ### Inventory
 By typing 'inventory' in the terminal, the terminal will show you all the items that are currently stored in the ship's inventory.
 
-![Image of the inventory](https://github.com/WarperSan/ShipInventory/blob/master/ThunderStore/inventory.png)
+![Image of the inventory](./ThunderStore/inventory.png)
 
 Here, you can see all the items and their average value. If you want to retrieve an item, you can type the name of the item (e.g.: 'app' for the Apparatus). Optionally, you can also define how many items you want by adding a number.
 
 ### Retrieve
 By typing 'retrieve' followed by a number, the terminal will retrieve items that add up to the given number.
 
-![Image of the retrieve](https://github.com/WarperSan/ShipInventory/blob/master/ThunderStore/retrieve.png)
+![Image of the retrieve](./ThunderStore/retrieve.png)
 
 *Note that the terminal will try to find the combination of the fewer items with the least overflow.*
 
