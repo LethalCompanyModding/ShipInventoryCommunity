@@ -1,0 +1,9 @@
+﻿{
+  "name": "ShipInventory",
+  "version_number": "1.0.0",
+  "website_url": "https://github.com/WarperSan/ShipInventory",
+  "description": "Adds an inventory to the ship, allowing it to store items and retrieve them.",
+  "dependencies": [
+    "BepInEx-BepInExPack-5.4.2100"
+  ]
+}
