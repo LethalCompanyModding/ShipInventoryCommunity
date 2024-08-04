@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using HarmonyLib;
+﻿using HarmonyLib;
 using ShipInventory.Helpers;
 using ShipInventory.Objects;
 using UnityEngine;
@@ -12,7 +11,6 @@ internal class StartOfRound_Patches
 {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(StartOfRound.Start))]
-    [HarmonyPriority(600)]
     private static void SetupVent(StartOfRound __instance)
     {
         GameObject? vent = null;
@@ -21,9 +19,12 @@ internal class StartOfRound_Patches
         if (__instance.IsServer || __instance.IsHost)
         {
             var prefab = NetworkPrefabUtils.GetPrefab(Constants.VENT_PREFAB);
-            
+
             if (prefab is null)
+            {
+                Logger.Debug("Vent prefab not found!");
                 return;
+            }
         
             vent = Object.Instantiate(prefab);
             
@@ -33,10 +34,14 @@ internal class StartOfRound_Patches
         }
         
         vent ??= Object.FindAnyObjectByType<ChuteInteract>().gameObject;
-        
+
         if (vent == null)
+        {
+            Logger.Debug("Vent prefab not found!");
             return;
+        }
         
+        Logger.Debug("Starting to set up the vent...");
         var chute = vent.GetComponent<ChuteInteract>();
         ChuteInteract.Instance = chute;
         
@@ -53,10 +58,12 @@ internal class StartOfRound_Patches
         var grabObj = vent.GetComponent<GrabbableObject>();
         grabObj.isInElevator = true;
         grabObj.isInShipRoom = true;
+        grabObj.scrapPersistedThroughRounds = true;
         grabObj.OnHitGround();
         
         // Update scrap value of the chute
-        ChuteInteract.UpdateValue();
+        ItemManager.UpdateValue();
+        Logger.Debug("Set up finished!");
     }
     
     [HarmonyPostfix]
@@ -65,10 +72,15 @@ internal class StartOfRound_Patches
     {
         // If key missing, skip
         if (!ES3.KeyExists(Constants.STORED_ITEMS, GameNetworkManager.Instance.currentSaveFileName))
+        {
+            ItemManager.SetItems([]);
             return;
+        }
         
-        ChuteInteract.SetItems(
+        Logger.Debug("Loading stored items...");
+        ItemManager.SetItems(
             ES3.Load<ItemData[]>(Constants.STORED_ITEMS, GameNetworkManager.Instance.currentSaveFileName)
         );
+        Logger.Debug("Loaded stored items!");
     }
 }

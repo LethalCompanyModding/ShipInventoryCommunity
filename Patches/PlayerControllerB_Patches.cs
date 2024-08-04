@@ -9,7 +9,7 @@ public class PlayerControllerB_Patches
 {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(PlayerControllerB.ConnectClientToPlayerObject))]
-    private static void OnPlayerConnect(PlayerControllerB __instance)
+    private static void RequestOnConnect(PlayerControllerB __instance)
     {
         // If not client, skip
         if (!__instance.IsClient)
@@ -19,6 +19,6 @@ public class PlayerControllerB_Patches
         if (StartOfRound.Instance.localPlayerController.IsServer)
             return;
 
-        ChuteInteract.Instance.RequestItems();
+        ChuteInteract.Instance?.RequestItems();
     }
 }

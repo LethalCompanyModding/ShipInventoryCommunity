@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Text.RegularExpressions;
 using HarmonyLib;
 using ShipInventory.Commands;
 using ShipInventory.Objects;
@@ -51,13 +50,13 @@ internal class Terminal_Patches
     {
         // Get text
         string added = __instance.screenText.text[^__instance.textAdded..];
-        added = __instance.RemovePunctuation(added);
-        
-        // Get player defined value
-        int.TryParse(Regex.Match(added, "\\d+").Value, out int playerDefinedAmount);
+        added = __instance.RemovePunctuation(added).ToLower();
+
+        // Get arguments
+        string[] args = added.Split(" ");
         
         // Get keyword
-        var keyword = __instance.CheckForExactSentences(added.Split(" ")[0]);
+        var keyword = __instance.CheckForExactSentences(args[0]);
         
         TerminalNode? attempt = null;
 
@@ -66,9 +65,15 @@ internal class Terminal_Patches
             attempt = InventoryNode.GetOption(__instance, added);
 
         // If special keyword is RetrieveNode
-        if (keyword?.specialKeywordResult is RetrieveNode retrieveNode)
+        if (keyword?.specialKeywordResult is RetrieveNode retrieveNode && args.Length > 1)
         {
-            retrieveNode.TryRetrieve(playerDefinedAmount);
+            //if (int.TryParse(args[1], out int totalValue))
+            //    retrieveNode.RetrieveAmount(totalValue);
+            if (args[1] == "random" || args[1] == "rdm")
+                retrieveNode.RetrieveRandom();
+            else if (args[1] == "all")
+                retrieveNode.RetrieveAll();            
+            
             attempt = retrieveNode;
         }
 
@@ -86,14 +91,14 @@ internal class Terminal_Patches
         if (node.terminalEvent != Constants.VENT_SPAWN)
             return;
         
-        if (node is SuccessNode { selectedItem: not null } successNode)
-            ChuteInteract.Instance.SpawnItemServerRpc(successNode.selectedItem.Value, __instance.playerDefinedAmount);
+        if (node is SuccessNode successNode)
+            ChuteInteract.Instance?.SpawnItemServerRpc(successNode.selectedItem, __instance.playerDefinedAmount);
         
         if (node is RetrieveNode retrieveNode)
         {
-            foreach (var group in retrieveNode.GetItems() ?? [])
+            foreach (var group in retrieveNode.GetItems())
             {
-                ChuteInteract.Instance.SpawnItemServerRpc(
+                ChuteInteract.Instance?.SpawnItemServerRpc(
                     group.First(),
                     group.Count()
                 );

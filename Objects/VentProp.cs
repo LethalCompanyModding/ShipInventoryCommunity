@@ -1,4 +1,6 @@
-﻿namespace ShipInventory.Objects;
+﻿using System.Linq;
+
+namespace ShipInventory.Objects;
 
 public class VentProp : GrabbableObject
 {
@@ -12,5 +14,10 @@ public class VentProp : GrabbableObject
     
     public override void Update()
     {
+    }
+    
+    public static void RemoveChute(ref GrabbableObject[] list)
+    {
+        list = list.Where(o => o is not VentProp).ToArray();
     }
 }

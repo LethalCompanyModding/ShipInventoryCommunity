@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace ShipInventory;
 
-[BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class ShipInventory : BaseUnityPlugin
 {
     private void Awake()
@@ -17,8 +17,35 @@ public class ShipInventory : BaseUnityPlugin
         // Load bundle
         if (!Bundle.LoadBundle(Constants.BUNDLE))
             return;
-    
-        // --- Network stuff ---
+
+        PrepareNetwork();
+        Patch();
+
+        Helpers.Logger.Info($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
+    }
+
+    #region Patches
+
+    private static Harmony? Harmony { get; set; }
+
+    private static void Patch()
+    {
+        Helpers.Logger.Debug("Patching...");
+
+        Harmony ??= new Harmony(MyPluginInfo.PLUGIN_GUID);
+
+        Harmony.PatchAll();
+
+        Helpers.Logger.Debug("Finished patching!");
+    }
+
+    #endregion
+    #region Network
+
+    private static void PrepareNetwork()
+    {
+        Helpers.Logger.Debug("Prepare RPCs...");
+        
         var types = Assembly.GetExecutingAssembly().GetTypes();
         foreach (var type in types)
         {
@@ -32,11 +59,10 @@ public class ShipInventory : BaseUnityPlugin
                 }
             }
         }
-        // ---
+        Helpers.Logger.Debug("RPCs prepared!");
         
-        // Load prefabs
-        NetworkPrefabUtils.LoadPrefab(Constants.VENT_PREFAB, obj =>
-        {
+        Helpers.Logger.Debug("Loading all prefabs...");
+        NetworkPrefabUtils.LoadPrefab(Constants.VENT_PREFAB, obj => {
             obj.AddComponent<ChuteInteract>();
             var grab = obj.AddComponent<VentProp>();
             
@@ -50,26 +76,7 @@ public class ShipInventory : BaseUnityPlugin
         
             grab.itemProperties = item;
         });
-        
-        // Apply patches
-        Patch();
-
-        Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} v{PluginInfo.PLUGIN_VERSION} has loaded!");
-    }
-
-    #region Patches
-
-    private static Harmony? Harmony { get; set; }
-
-    internal static void Patch()
-    {
-        Helpers.Logger.Info("Patching...");
-
-        Harmony ??= new Harmony(PluginInfo.PLUGIN_GUID);
-
-        Harmony.PatchAll();
-
-        Helpers.Logger.Info("Finished patching!");
+        Helpers.Logger.Debug("All prefabs loaded!");
     }
 
     #endregion

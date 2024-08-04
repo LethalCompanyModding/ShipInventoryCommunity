@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using GameNetcodeStuff;
+using ShipInventory.Helpers;
 using Unity.Netcode;
 using UnityEngine;
 using Logger = ShipInventory.Helpers.Logger;
@@ -10,7 +10,7 @@ namespace ShipInventory.Objects;
 
 public class ChuteInteract : NetworkBehaviour
 {
-    public static ChuteInteract Instance = null!;
+    public static ChuteInteract? Instance = null;
 
     public override void OnNetworkSpawn()
     {
@@ -21,41 +21,6 @@ public class ChuteInteract : NetworkBehaviour
         base.OnNetworkSpawn();
     }
 
-    #region Items
-
-    private static IEnumerable<ItemData> storedItems = [];
-    public static IEnumerable<ItemData> GetItems() => storedItems.OrderBy(i => i.GetItem()?.itemName).ToList();
-
-    internal static void SetItems(IEnumerable<ItemData> newItems)
-    {
-        storedItems = newItems;
-        UpdateValue();
-    }
-
-    private static void Add(ItemData data) => SetItems(storedItems.Append(data));
-
-    private static void Remove(ItemData data)
-    {
-        var copy = storedItems.ToList();
-        copy.Remove(data);
-        SetItems(copy);
-    }
-
-    public static void UpdateValue()
-    {
-        if (Instance == null)
-            return;
-        
-        var grabObj = Instance.GetComponent<GrabbableObject>();
-        
-        if (grabObj == null)
-            return;
-
-        grabObj.scrapValue = storedItems.Sum(i => i.SCRAP_VALUE);
-        grabObj.OnHitGround(); // Update 
-    }
-
-    #endregion
     #region Store Items
     
     public void StoreHeldItem(PlayerControllerB player)
@@ -69,7 +34,7 @@ public class ChuteInteract : NetworkBehaviour
             return;
         }
         
-        ItemData data = ItemData.Save(item);
+        ItemData data = ItemManager.Save(item);
         
         // Despawn the held item
         Logger.Debug("Despawn held object...");
@@ -96,7 +61,7 @@ public class ChuteInteract : NetworkBehaviour
     private void StoreItemClientRpc(ItemData data)
     {
         Logger.Debug("Client received new item!");
-        Add(data);
+        ItemManager.Add(data);
         Logger.Debug("Client added new item!");
     }
 
@@ -114,21 +79,10 @@ public class ChuteInteract : NetworkBehaviour
         if (item is null)
             return;
 
-        // If item not stored, skip
-        var allData = storedItems.Where(d => d.ID == data.ID).ToList();
-
-        if (!allData.Any())
-        {
-            Logger.Info($"The chute does not contain any '{item.itemName}'.");
-            return;
-        }
-        
-        // Select data to spawn
-        count = Mathf.Min(allData.Count, count);
-        var selectedData = allData.GetRange(0, count);
+        var items = ItemManager.GetInstances(data, count);
 
         // Spawn each item
-        foreach (var singleData in selectedData)
+        foreach (var singleData in items)
         {
             var newItem = Instantiate(item.spawnPrefab) ?? throw new NullReferenceException();
             newItem.transform.SetParent(GameObject.Find(Constants.SHIP_PATH).transform, false);
@@ -147,14 +101,14 @@ public class ChuteInteract : NetworkBehaviour
             SpawnItemClientRpc(networkObj, singleData);
         }
         
-        Logger.Debug($"Server spawned {count} new items!");
+        Logger.Debug($"Server spawned {items.Count()} new items!");
     }
 
     [ClientRpc]
     public void SpawnItemClientRpc(NetworkObjectReference networkObject, ItemData data)
     {
         Logger.Debug("Updating the items...");
-        Remove(data);
+        ItemManager.Remove(data);
         Logger.Debug("Items updated!");
         
         var item = data.GetItem();
@@ -189,19 +143,32 @@ public class ChuteInteract : NetworkBehaviour
     public void RequestItems()
     {
         Logger.Debug("Requesting the items to the server...");
-        RequestItemsServerRpc(StartOfRound.Instance.localPlayerController.playerClientId);
+        RequestItemsServerRpc(GameNetworkManager.Instance.localPlayerController.playerClientId);
+    }
+
+    public void RequestAll()
+    {
+        // Skip if request from client
+        if (GameNetworkManager.Instance.localPlayerController.IsClient)
+            return;
+
+        var ids = StartOfRound.Instance.allPlayerScripts
+            .Where(p => p.IsClient)
+            .Select(p => p.playerClientId);
+        
+        RequestItemsServerRpc(ids.ToArray());
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void RequestItemsServerRpc(ulong playerId)
+    private void RequestItemsServerRpc(params ulong[] ids)
     {
         Logger.Debug("Item request heard!");
-        Logger.Debug($"Sending the items to client {playerId}...");
-        RequestItemsClientRpc(storedItems.ToArray(), new ClientRpcParams
+        Logger.Debug($"Sending the items to client {string.Join(", ", ids)}...");
+        RequestItemsClientRpc(ItemManager.GetItems().ToArray(), new ClientRpcParams
         {
             Send = new ClientRpcSendParams
             {
-                TargetClientIds = [playerId]
+                TargetClientIds = ids
             }
         });
     }
@@ -212,12 +179,13 @@ public class ChuteInteract : NetworkBehaviour
         Logger.Debug("Client received items!");
         
         // Skip if target is invalid
-        var targets = @params.Send.TargetClientIds;
+        var targets = @params.Send.TargetClientIds ?? [];
         
-        if (targets != null)
+        // If not a target, skip
+        if (!targets.Contains(GameNetworkManager.Instance.localPlayerController.playerClientId))
             return;
 
-        SetItems(data.ToList());
+        ItemManager.SetItems(data.ToList());
         Logger.Debug("Client updated items!");
     }
 
@@ -234,13 +202,17 @@ public class ChuteInteract : NetworkBehaviour
         // If no trigger, skip
         if (!_trigger)
             return;
+
+        var local = GameNetworkManager.Instance?.localPlayerController;
         
         // If player invalid, skip
-        if (GameNetworkManager.Instance?.localPlayerController is null)
+        if (local is null)
             return;
 
         // Update interactable
-        _trigger.interactable = GameNetworkManager.Instance.localPlayerController.isHoldingObject;
+        var isAllowed = ItemManager.IsItemAllowed(local.currentlyHeldObjectServer?.itemProperties);
+        _trigger.interactable = local.isHoldingObject && isAllowed;
+        _trigger.disabledHoverTip = isAllowed ? Constants.NOT_HOLDING_ITEM : Constants.ITEM_NOT_ALLOWED;
 
         // Update layer
         var hasItem = Physics.CheckSphere(itemRestorePoint.position, 0.2f, 1 << LayerMask.NameToLayer(Constants.LAYER_PROPS));

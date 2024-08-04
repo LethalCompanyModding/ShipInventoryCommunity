@@ -1,5 +1,6 @@
 ﻿using System;
 using ShipInventory.Commands;
+using ShipInventory.Helpers;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -16,22 +17,7 @@ public struct ItemData : INetworkSerializable
     {
     }
 
-    public static ItemData Save(GrabbableObject item)
-    {
-        ItemData data = default;
-
-        data.ID = StartOfRound.Instance.allItemsList.itemsList.FindIndex(i => i == item.itemProperties);
-        
-        if (item.itemProperties.isScrap)
-            data.SCRAP_VALUE = item.scrapValue;
-        
-        if (item.itemProperties.saveItemVariable)
-            data.SAVE_DATA = item.GetItemDataToSave();
-        
-        return data;
-    }
-
-    public Item? GetItem() => StartOfRound.Instance.allItemsList.itemsList[ID];
+    public Item? GetItem() => ItemManager.GetItem(this);
 
     public CompatibleNoun? CreateOption()
     {

@@ -1,26 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using HarmonyLib;
+using ShipInventory.Helpers;
 using ShipInventory.Objects;
+using UnityEngine;
 
 // ReSharper disable PossibleMultipleEnumeration
 
 namespace ShipInventory.Commands;
 
+/// <summary>
+/// Node used to retrieve items easily from the inventory
+/// </summary>
 public class RetrieveNode : TerminalNode
 {
-    private const string TARGET = "[target]";
-    private const string ITEMS = "[items]";
-    private const string TOTAL = "[total]";
-        
-    private IEnumerable<ItemData>? items;
-    private int target;
+    private IEnumerable<ItemData> items = [];
 
-    public IEnumerable<IGrouping<int, ItemData>>? GetItems() 
-        => items?.GroupBy(i => i.ID).OrderBy(i => i.First().GetItem()?.itemName);
+    public IEnumerable<IGrouping<int, ItemData>> GetItems() 
+        => items.GroupBy(i => i.ID).OrderBy(i => i.First().GetItem()?.itemName);
 
     public RetrieveNode()
     {
-        displayText = $"For ${TARGET}, we found this set of items:\n{ITEMS}\n\nTheir total to ${TOTAL}.\n\n";
+        Default();
         clearPreviousText = true;
         terminalOptions =
         [
@@ -31,67 +32,40 @@ public class RetrieveNode : TerminalNode
 
     public string ParseText(string original)
     {
-        var _target = target.ToString();
-        var total = (items?.Sum(i => i.SCRAP_VALUE) ?? 0).ToString();
-        var _items = "";
-
-        foreach (var group in GetItems() ?? [])
-        {
-            var item = group.First().GetItem();
-            
-            if (item == null)
-                continue;
-            
-            _items = $"\u2219 {item.itemName} x{group.Count()}";
-
-            // Add average value
-            var avg =  group.Average(d => d.SCRAP_VALUE);
-            _items += $" (AVG: ${avg:N2})";
-        }
+        original = ItemManager.DisplayItems(original, GetItems(), ItemManager.PrintExtra.SUM);
         
-        original = original.Replace(TOTAL, total);
-        original = original.Replace(TARGET, _target);
-        original = original.Replace(ITEMS, string.IsNullOrEmpty(_items) ? "No items found" : _items);
+        // RESET
+        Default();
         
         return original;
     }
 
-    public void TryRetrieve(int _target)
+    public void Default()
     {
-        target = _target;
-        items = GetClosest(
-            ChuteInteract.GetItems(),
-            _target
-        );
+        displayText = "The Company does not support his feature.\nHere are the valid parameters:\n- ALL\n- RANDOM/RDM\n\n";
+        items = [];
     }
-    
-    private static IEnumerable<ItemData> GetClosest(IEnumerable<ItemData> items, int target)
+
+    #region Retrieve Options
+
+    public void RetrieveRandom()
     {
-        // If target invalid, skip
-        if (target <= 0)
-            return [];
-        
-        var validItems = items
-            .Where(i => i.SCRAP_VALUE > 0) // Keep items with scrap value
-            .OrderBy(i => i.SCRAP_VALUE) // Sort items by scrap value
-            .ToArray();
-        
-        var solution = GetSubsets(validItems).Select(n => new
+        displayText = $"The Company selected a random set of items:\n{Constants.ITEMS}\nThey total to ${Constants.TOTAL}.\n\n";
+        var _items = ItemManager.GetItems().ToList();
+
+        for (int i = 0; i < Random.Range(1, _items.Count); i++)
         {
-            ITEMS = n,
-            TOTAL = n.Sum(i => i.SCRAP_VALUE)
-        })
-        .Where(n => n.TOTAL >= target) // Select valid solutions
-        .OrderBy(n => n.TOTAL) // Order solutions by excess
-        .ThenBy(n => n.ITEMS.Count()) // Favor solutions with fewer objects
-        .FirstOrDefault();
-        
-        return solution?.ITEMS ?? [];
+            _items.RemoveAt(Random.Range(0, _items.Count));
+        }
+
+        items = _items;
     }
-    private static IEnumerable<IEnumerable<ItemData>> GetSubsets(ItemData[] items) => items.Length switch
+
+    public void RetrieveAll()
     {
-        0 => [],
-        1 => new[] { [], items.Take(1) },
-        _ => GetSubsets(items[1..]).SelectMany(y => new[] { y, y.Append(items[0]) })
-    };
+        displayText = $"The Company selected all the items:\n{Constants.ITEMS}\nThey total to ${Constants.TOTAL}.\n\n";
+        items = ItemManager.GetItems();
+    }
+
+    #endregion
 }
