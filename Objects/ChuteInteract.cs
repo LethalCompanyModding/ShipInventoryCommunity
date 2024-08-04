@@ -75,6 +75,10 @@ public class ChuteInteract : NetworkBehaviour
         Logger.Debug("Despawn held object...");
         player.DespawnHeldObject();
         
+        // Destroy radar icon
+        if (item.radarIcon != null)
+            Destroy(item.radarIcon.gameObject);
+        
         // Send store request to server
         Logger.Debug("Sending new item to server...");
         StoreItemServerRpc(data);
