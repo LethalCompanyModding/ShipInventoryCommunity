@@ -68,7 +68,7 @@ internal class StartOfRound_Patches
             return;
         
         ChuteInteract.SetItems(
-            ES3.Load<ItemData[]>(Constants.STORED_ITEMS, GameNetworkManager.Instance.currentSaveFileName).ToList()
+            ES3.Load<ItemData[]>(Constants.STORED_ITEMS, GameNetworkManager.Instance.currentSaveFileName)
         );
     }
 }

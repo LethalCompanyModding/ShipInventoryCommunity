@@ -12,22 +12,28 @@ public class GameNetworkManager_Patches
     private static void SaveStoredItems(GameNetworkManager __instance)
     {
         ChuteInteract.Instance?.gameObject.SetActive(false);
-        
-        ES3.DeleteKey(Constants.VANILLA_ITEM_IDS, __instance.currentSaveFileName);
-        ES3.DeleteKey(Constants.VANILLA_ITEM_POS, __instance.currentSaveFileName);
-        ES3.DeleteKey(Constants.VANILLA_ITEM_VALUES, __instance.currentSaveFileName);
-        ES3.DeleteKey(Constants.VANILLA_ITEM_DATA, __instance.currentSaveFileName);
-        
-        var items = ChuteInteract.GetItems();
-        
-        // Delete keys if empty
-        if (items.Any())
+
+        string[] keys =
+        [
+            Constants.STORED_ITEMS,
+            Constants.VANILLA_ITEM_IDS,
+            Constants.VANILLA_ITEM_POS,
+            Constants.VANILLA_ITEM_VALUES,
+            Constants.VANILLA_ITEM_DATA
+        ];
+
+        // Delete if exist
+        foreach (var key in keys)
         {
-            ES3.DeleteKey(Constants.STORED_ITEMS, __instance.currentSaveFileName);
-            return;
+            if (ES3.KeyExists(key, __instance.currentSaveFileName))
+                ES3.DeleteKey(key, __instance.currentSaveFileName);
         }
         
-        ES3.Save(Constants.STORED_ITEMS, items.ToArray(), __instance.currentSaveFileName);
+        var items = ChuteInteract.GetItems();
+
+        // Save items if necessary
+        if (items.Any())
+            ES3.Save(Constants.STORED_ITEMS, items.ToArray(), __instance.currentSaveFileName);
     }
     
     [HarmonyPostfix]

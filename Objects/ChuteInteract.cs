@@ -207,10 +207,10 @@ public class ChuteInteract : NetworkBehaviour
     {
         Logger.Debug("Client received items!");
         
-        // Skip if local is not a target
+        // Skip if target is invalid
         var targets = @params.Send.TargetClientIds;
         
-        if (targets != null && targets.Contains(StartOfRound.Instance.localPlayerController.playerClientId))
+        if (targets != null)
             return;
 
         SetItems(data.ToList());
