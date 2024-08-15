@@ -45,6 +45,12 @@ public class GameNetworkManager_Patches
     [HarmonyPatch(nameof(GameNetworkManager.SaveItemsInShip))]
     private static void SaveChuteItems(GameNetworkManager __instance)
     {
+        // Delete items
+        ES3.DeleteKey("shipGrabbableItemIDs", __instance.currentSaveFileName);
+        ES3.DeleteKey("shipGrabbableItemPos", __instance.currentSaveFileName);
+        ES3.DeleteKey("shipScrapValues", __instance.currentSaveFileName);
+        ES3.DeleteKey("shipItemSaveData", __instance.currentSaveFileName);
+        
         Logger.Debug("Saving chute items...");
 
         var items = ItemManager.GetItems();

@@ -1,6 +1,8 @@
 using System.Reflection;
 using BepInEx;
 using HarmonyLib;
+using InteractiveTerminalAPI.UI;
+using ShipInventory.Applications;
 using ShipInventory.Helpers;
 using ShipInventory.Objects;
 using UnityEngine;
@@ -8,10 +10,15 @@ using UnityEngine;
 namespace ShipInventory;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+[BepInDependency("WhiteSpike.InteractiveTerminalAPI")]
 public class ShipInventory : BaseUnityPlugin
 {
+    internal static ShipInventoryConfigs CONFIG { get; private set; } = null!; 
+    
     private void Awake()
     {
+        CONFIG = new ShipInventoryConfigs(Config); 
+        
         Helpers.Logger.SetLogger(Logger);
 
         // Load bundle
@@ -21,6 +28,8 @@ public class ShipInventory : BaseUnityPlugin
         PrepareNetwork();
         Patch();
 
+        InteractiveTerminalManager.RegisterApplication<ShipApplication>("ship", true);
+        
         Helpers.Logger.Info($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
     }
 

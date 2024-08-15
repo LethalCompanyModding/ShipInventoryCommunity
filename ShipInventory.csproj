@@ -62,6 +62,12 @@
       <None Remove="ThunderStore\**" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="InteractiveTerminalAPI">
+        <HintPath>..\..\SteamLibrary\steamapps\common\Lethal Company\BepInEx\plugins\InteractiveTerminalAPI\InteractiveTerminalAPI.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
     <Import Project="../LC.targets" />
 <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
     <Exec Command="netcode-patch -nv 1.5.2 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')"/>

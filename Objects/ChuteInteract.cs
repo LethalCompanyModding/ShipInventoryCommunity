@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using GameNetcodeStuff;
 using ShipInventory.Helpers;
@@ -18,6 +20,8 @@ public class ChuteInteract : NetworkBehaviour
         itemRestorePoint = transform.Find("DropNode");
         spawnParticles = GetComponentInChildren<ParticleSystem>();
         
+        spawnParent = GameObject.Find(Constants.SHIP_PATH).transform;
+        
         base.OnNetworkSpawn();
     }
 
@@ -28,21 +32,24 @@ public class ChuteInteract : NetworkBehaviour
         GrabbableObject item = player.currentlyHeldObjectServer;
         
         // If item invalid, skip
-        if (item == null)
+        if (item is null)
         {
             Logger.Info($"Player '{player.playerUsername}' is not holding any item.");
             return;
         }
         
-        ItemData data = ItemManager.Save(item);
+        StoreItem(item);
         
         // Despawn the held item
         Logger.Debug("Despawn held object...");
         player.DespawnHeldObject();
+    }
+
+    public void StoreItem(GrabbableObject item)
+    {
+        ItemData data = ItemManager.Save(item);
         
-        // Destroy radar icon
-        if (item.radarIcon != null)
-            Destroy(item.radarIcon.gameObject);
+        item.OnBroughtToShip();
         
         // Send store request to server
         Logger.Debug("Sending new item to server...");
@@ -70,7 +77,11 @@ public class ChuteInteract : NetworkBehaviour
 
     private Transform itemRestorePoint = null!;
     private ParticleSystem spawnParticles = null!;
-
+    
+    private readonly Queue<ItemData> spawnQueue = [];
+    private Transform spawnParent = null!;
+    private Coroutine? spawnCoroutine;
+    
     [ServerRpc(RequireOwnership = false)]
     public void SpawnItemServerRpc(ItemData data, int count = 1)
     {
@@ -80,28 +91,11 @@ public class ChuteInteract : NetworkBehaviour
             return;
 
         var items = ItemManager.GetInstances(data, count);
+        foreach (var itemData in items)
+            spawnQueue.Enqueue(itemData);
 
-        // Spawn each item
-        foreach (var singleData in items)
-        {
-            var newItem = Instantiate(item.spawnPrefab) ?? throw new NullReferenceException();
-            newItem.transform.SetParent(GameObject.Find(Constants.SHIP_PATH).transform, false);
-            
-            // Set values
-            var grabObj = newItem.GetComponent<GrabbableObject>();
-            
-            // Call spawn methods
-            grabObj.Start();
-            grabObj.PlayDropSFX();
-            
-            // Spawn item
-            var networkObj = grabObj.NetworkObject;
-            networkObj.Spawn();
-            
-            SpawnItemClientRpc(networkObj, singleData);
-        }
-        
-        Logger.Debug($"Server spawned {items.Count()} new items!");
+        spawnCoroutine ??= StartCoroutine(SpawnCoroutine());
+        Logger.Debug($"Server scheduled to spawn {items.Count()} new items!");
     }
 
     [ClientRpc]
@@ -120,7 +114,7 @@ public class ChuteInteract : NetworkBehaviour
         
         // Set up object
         grabObj.parentObject = itemRestorePoint;
-        
+
         if (item.isScrap)
             grabObj.SetScrapValue(data.SCRAP_VALUE);
             
@@ -135,6 +129,40 @@ public class ChuteInteract : NetworkBehaviour
         spawnParticles.Play();
         
         Logger.Debug("Item setup!");
+    }
+
+    // ReSharper disable Unity.PerformanceAnalysis
+    private IEnumerator SpawnCoroutine()
+    {
+        // Spawn each item
+        while (spawnQueue.Count > 0)
+        {
+            var data = spawnQueue.Dequeue();
+            var item = data.GetItem();
+            
+            if (item is null)
+                continue;
+            
+            var newItem = Instantiate(item.spawnPrefab) ?? throw new NullReferenceException();
+            newItem.transform.SetParent(spawnParent, false);
+            
+            // Set values
+            var grabObj = newItem.GetComponent<GrabbableObject>();
+
+            // Call spawn methods
+            grabObj.Start();
+            grabObj.PlayDropSFX();
+            
+            // Spawn item
+            var networkObj = grabObj.NetworkObject;
+            networkObj.Spawn();
+            
+            SpawnItemClientRpc(networkObj, data);
+            yield return new WaitForSeconds(ShipInventory.CONFIG.spawnDelay.Value);
+        }
+
+        // Mark as completed
+        spawnCoroutine = null;
     }
 
     #endregion
