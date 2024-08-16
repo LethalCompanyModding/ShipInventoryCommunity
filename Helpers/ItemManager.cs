@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using GameNetcodeStuff;
 using ShipInventory.Objects;
 
 namespace ShipInventory.Helpers;
@@ -39,7 +40,7 @@ public static class ItemManager
         UpdateValue();
         
         if (updateAll)
-            ChuteInteract.Instance?.RequestAll();
+            ChuteInteract.Instance?.RequestItemsAll();
     }
 
     #endregion
@@ -68,14 +69,15 @@ public static class ItemManager
     /// </summary>
     public static void UpdateValue()
     {
-        var grabbable = ChuteInteract.Instance?.GetComponent<GrabbableObject>();
+        if (ChuteInteract.Instance == null)
+            return;
+        
+        var grabbable = ChuteInteract.Instance.GetComponent<GrabbableObject>();
         
         // Skip if item invalid
         if (grabbable is null)
             return;
         
-        Logger.Info("UPDATE VALUE");
-
         grabbable.scrapValue = storedItems.Sum(i => i.SCRAP_VALUE);
         grabbable.OnHitGround(); // Update 
     }
@@ -107,9 +109,9 @@ public static class ItemManager
     
     private static List<Item> itemsAllowed => StartOfRound.Instance.allItemsList.itemsList;
     private static string[] BLACKLIST = [];
-    public static void UpdateBlacklist()
+    public static void UpdateBlacklist(string blacklistString)
     {
-        BLACKLIST = ShipInventory.CONFIG.blacklist.Value
+        BLACKLIST = blacklistString
             .Split(',', System.StringSplitOptions.RemoveEmptyEntries)
             .Select(s => s.Trim().ToLower())
             .ToArray();
@@ -123,6 +125,35 @@ public static class ItemManager
         
         // If item in list and not in blacklist
         return itemsAllowed.Contains(item) && !BLACKLIST.Contains(item.itemName.ToLower());
+    }
+
+    public static void UpdateTrigger(InteractTrigger trigger, PlayerControllerB local)
+    {
+        // Holding nothing
+        if (!local.isHoldingObject)
+        {
+            trigger.interactable = false;
+            trigger.disabledHoverTip = Constants.NOT_HOLDING_ITEM;
+            return;
+        }
+
+        // Not in orbit
+        if (!StartOfRound.Instance.inShipPhase && ShipInventory.Config.RequireInOrbit.Value)
+        {
+            trigger.interactable = false;
+            trigger.disabledHoverTip = Constants.NOT_IN_ORBIT;
+            return;
+        }
+        
+        // Item not allowed
+        if (!IsItemAllowed(local.currentlyHeldObjectServer?.itemProperties))
+        {
+            trigger.interactable = false;
+            trigger.disabledHoverTip = Constants.ITEM_NOT_ALLOWED;
+            return;
+        }
+        
+        trigger.interactable = local.isHoldingObject;
     }
 
     #endregion

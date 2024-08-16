@@ -2,6 +2,7 @@ using System.Reflection;
 using BepInEx;
 using HarmonyLib;
 using InteractiveTerminalAPI.UI;
+using LethalConfig;
 using ShipInventory.Applications;
 using ShipInventory.Helpers;
 using ShipInventory.Objects;
@@ -11,13 +12,15 @@ namespace ShipInventory;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency("WhiteSpike.InteractiveTerminalAPI")]
+[BepInDependency("com.sigurd.csync", "5.0.1")] 
+[BepInDependency("ainavt.lc.lethalconfig")]
 public class ShipInventory : BaseUnityPlugin
 {
-    internal static ShipInventoryConfigs CONFIG { get; private set; } = null!; 
+    public new static Config Config = null!;
     
     private void Awake()
     {
-        CONFIG = new ShipInventoryConfigs(Config); 
+        Config = new Config(base.Config);
         
         Helpers.Logger.SetLogger(Logger);
 
@@ -25,6 +28,8 @@ public class ShipInventory : BaseUnityPlugin
         if (!Bundle.LoadBundle(Constants.BUNDLE))
             return;
 
+        LethalConfigManager.SetModIcon(Bundle.LoadAsset<Sprite>(Constants.MOD_ICON));
+        LethalConfigManager.SetModDescription("Adds an inventory to the ship, allowing it to store items and retrieve them.");
         PrepareNetwork();
         Patch();
 
@@ -71,21 +76,93 @@ public class ShipInventory : BaseUnityPlugin
         Helpers.Logger.Debug("RPCs prepared!");
         
         Helpers.Logger.Debug("Loading all prefabs...");
-        NetworkPrefabUtils.LoadPrefab(Constants.VENT_PREFAB, obj => {
-            obj.AddComponent<ChuteInteract>();
-            var grab = obj.AddComponent<VentProp>();
-            
-            // Vent Prop Item
-            var item = ScriptableObject.CreateInstance<Item>();
-            item.isScrap = true;
-            item.lockedInDemo = true;
-            item.itemName = "VENT_CHUTE";
-            item.spawnPrefab = NetworkPrefabUtils.GetPrefab(Constants.VENT_PREFAB);
-            item.saveItemVariable = true;
-        
-            grab.itemProperties = item;
+        NetworkPrefabUtils.LoadPrefab(new NetworkPrefabUtils.PrefabData
+        {
+            name = Constants.VENT_PREFAB,
+            onLoad = LoadVent,
+            onSetup = SetUpVent
+        });
+        NetworkPrefabUtils.LoadPrefab(new NetworkPrefabUtils.PrefabData()
+        {
+            name = Constants.PANEL_PREFAB,
+            onLoad = LoadPanel,
+            onSetup = SetUpPanel
         });
         Helpers.Logger.Debug("All prefabs loaded!");
+    }
+
+    private static void LoadVent(GameObject obj)
+    {
+        obj.AddComponent<ChuteInteract>();
+        var grab = obj.AddComponent<VentProp>();
+            
+        // Vent Prop Item
+        var item = ScriptableObject.CreateInstance<Item>();
+        item.isScrap = true;
+        item.lockedInDemo = true;
+        item.itemName = "VENT_CHUTE";
+        item.spawnPrefab = NetworkPrefabUtils.GetPrefab(Constants.VENT_PREFAB);
+        item.saveItemVariable = true;
+        
+        grab.itemProperties = item;
+    }
+    private static void SetUpVent(GameObject vent)
+    {
+        var chute = vent.GetComponent<ChuteInteract>();
+        ChuteInteract.Instance = chute;
+        
+        // TRIGGER
+        var interact = chute.GetComponent<InteractTrigger>();
+        interact.onInteract.AddListener(chute.StoreHeldItem);
+        interact.timeToHold = 0.5f;
+
+        // TRANSFORM
+        vent.transform.localPosition = new Vector3(1.9f, 1f, -4.5f);
+        vent.transform.localRotation = Quaternion.Euler(35, 0, 0);
+        
+        // GRABBABLE
+        var grabObj = vent.GetComponent<GrabbableObject>();
+        grabObj.isInElevator = true;
+        grabObj.isInShipRoom = true;
+        grabObj.scrapPersistedThroughRounds = true;
+        grabObj.OnHitGround();
+        
+        // Update scrap value of the chute
+        ItemManager.UpdateValue();
+    }
+
+    private static void LoadPanel(GameObject obj)
+    {
+        var autoParent = obj.GetComponent<AutoParentToShip>();
+        autoParent.overrideOffset = true;
+        autoParent.positionOffset = new Vector3(2.05f, 2.25f, -4.25f);
+        autoParent.rotationOffset = new Vector3(90, 180, 0);
+
+        obj.AddComponent<ChutePanel>();
+    }
+    private static void SetUpPanel(GameObject panel)
+    {
+        if (ChutePanel.unlockIndex < 0)
+        {
+            ChutePanel.unlockIndex = StartOfRound.Instance.unlockablesList.unlockables.Count;
+            StartOfRound.Instance.unlockablesList.unlockables.Add(new UnlockableItem
+            {
+                unlockableName = "ShipInventory_ChutePanel",
+                alreadyUnlocked = true,
+                IsPlaceable = true,
+                hasBeenUnlockedByPlayer = true,
+                unlockableType = 1,
+                spawnPrefab = false,
+                canBeStored = false
+            });
+        }
+
+        ChutePanel.Instance = panel.GetComponent<ChutePanel>();
+        
+        var placeable = panel.GetComponentInChildren<PlaceableShipObject>();
+        placeable.unlockableID = ChutePanel.unlockIndex;
+        placeable.overrideWallOffset = true;
+        placeable.wallOffset = 0.05f;
     }
 
     #endregion

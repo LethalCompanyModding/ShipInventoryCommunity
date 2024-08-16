@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
@@ -8,38 +9,86 @@ namespace ShipInventory.Helpers;
 
 public static class NetworkPrefabUtils
 {
-    private static readonly Dictionary<string, Action<GameObject>?> prefabsToAdd = [];
-    private static readonly Dictionary<string, GameObject> prefabsLoaded = [];
+    public class PrefabData
+    {
+        public string name = "";
+        public Action<GameObject>? onLoad;
+        public Action<GameObject>? onSetup;
+        public GameObject? gameObject;
+    }
 
-    public static void LoadPrefab(string name, Action<GameObject>? callback = null) 
-        => prefabsToAdd.Add(name, callback);
+    private static readonly List<PrefabData> prefabs = [];
 
-    public static GameObject? GetPrefab(string name) => prefabsLoaded.GetValueOrDefault(name);
+    public static void LoadPrefab(PrefabData data) => prefabs.Add(data);
+
+    public static GameObject? GetPrefab(string name) 
+        => prefabs.FirstOrDefault(p => p.name == name)?.gameObject;
 
     #region Patches
 
     [HarmonyPatch(typeof(GameNetworkManager))]
     internal class GameNetworkManager_Patches
     {
+        [HarmonyPostfix]
         [HarmonyPatch(nameof(GameNetworkManager.Start))]
-        private static void Postfix(GameNetworkManager __instance)
+        private static void AddPrefabsToNetwork(GameNetworkManager __instance)
         {
-            foreach (var (name, callback) in prefabsToAdd)
+            foreach (var data in prefabs)
             {
-                var prefab = Bundle.LoadAsset<GameObject>(name);
-
+                var prefab = Bundle.LoadAsset<GameObject>(data.name);
+                
                 if (prefab is null)
                     continue;
-            
-                callback?.Invoke(prefab);
+                
+                data.onLoad?.Invoke(prefab);
                 NetworkManager.Singleton.AddNetworkPrefab(prefab);
-                prefabsLoaded.Add(name, prefab);
+                data.gameObject = prefab;
             }
-        
-            prefabsToAdd.Clear();
         }
     }
-    
+
+    [HarmonyPatch(typeof(StartOfRound))]
+    internal class StartOfRound_Patches
+    {
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(StartOfRound.Start))]
+        private static void SetUpPrefabs(StartOfRound __instance)
+        {
+            foreach (var data in prefabs)
+            {
+                GameObject? newObj = null;
+        
+                // Spawn prefab if server
+                if (__instance.IsServer || __instance.IsHost)
+                {
+                    var prefab = GetPrefab(data.name);
+
+                    if (prefab is null)
+                    {
+                        Logger.Error($"The prefab '{data.name}' was not found in the bundle!");
+                        continue;
+                    }
+        
+                    newObj = UnityEngine.Object.Instantiate(prefab);
+
+                    var networkObj = newObj.GetComponent<NetworkBehaviour>().NetworkObject;
+                    networkObj.Spawn();
+                    networkObj.TrySetParent(GameObject.Find(Constants.SHIP_PATH));
+                }
+        
+                newObj ??= GameObject.Find(data.name + "(Clone)");
+
+                if (newObj is null)
+                {
+                    Logger.Error($"The prefab '{data.name}' was not found in the scene!");
+                    continue;
+                }
+                
+                data.onSetup?.Invoke(newObj);
+            }
+        }
+    }
+
     #endregion
 }
 

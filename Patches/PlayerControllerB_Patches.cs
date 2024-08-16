@@ -15,7 +15,7 @@ public class PlayerControllerB_Patches
         if (!__instance.IsClient)
             return;
         
-        // If local not server, skip
+        // If local server, skip
         if (StartOfRound.Instance.localPlayerController.IsServer)
             return;
 

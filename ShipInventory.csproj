@@ -63,9 +63,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="InteractiveTerminalAPI">
-        <HintPath>..\..\SteamLibrary\steamapps\common\Lethal Company\BepInEx\plugins\InteractiveTerminalAPI\InteractiveTerminalAPI.dll</HintPath>
-      </Reference>
+      <Reference Include="$(BepinEx)\CSync\com.sigurd.csync.dll" />
+      <Reference Include="$(BepinEx)\InteractiveTerminalAPI\InteractiveTerminalAPI.dll" />
+      <Reference Include="$(BepinEx)\LethalConfig\LethalConfig.dll" />
     </ItemGroup>
 
     <Import Project="../LC.targets" />

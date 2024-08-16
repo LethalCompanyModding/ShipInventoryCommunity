@@ -7,13 +7,11 @@ public static class Constants
 
     // --- TAGS ---
     public const string STORED_ITEMS = "shipInventoryItems"; // Key for the data of the mod
-    public const string VENT_SPAWN = "ventSpawn"; // Name of the event to spawn from the chute
-    public const string ITEMS = "[items]";
-    public const string TOTAL = "[total]";
-    public const string COUNT = "[count]";
     
     // --- ASSETS ---
     public const string VENT_PREFAB = "VentChute"; // Name of the prefab
+    public const string PANEL_PREFAB = "ChutePanel"; // Name of the prefab
+    public const string MOD_ICON = "icon"; // Name of the mod's icon
     public const string BUNDLE = "ShipInventory.Resources.si-bundle"; // Name of the bundle
     
     // --- LAYERS ---
@@ -25,6 +23,7 @@ public static class Constants
     public const string UNKNOWN = "???";
     public const string NOT_HOLDING_ITEM = "[Nothing to store]"; // Tip when the player has no item
     public const string ITEM_NOT_ALLOWED = "[Item not allowed]"; // Tip when the player has an illegal item
+    public const string NOT_IN_ORBIT = "[Ship must be in orbit]"; // Tip when the ship is not in orbit
     public const string TEXT_RANDOM_RETRIEVE = "You are about to retrieve '{0}' from the ship's inventory.";
     public const string TEXT_ALL_RETRIEVE = "You are about to retrieve everything from the ship's inventory.";
     public const string TEXT_SINGLE_RETRIEVE = "You are about to retrieve '{0}' from the ship's inventory.";
@@ -43,4 +42,17 @@ public static class Constants
     
     public const string PREVIOUS = "[ PREVIOUS ]";
     public const string NEXT = "[ NEXT ]";
+    
+    // --- CONFIGS ---
+    public const string NAME_BLACKLIST = "Blacklist";
+    public const string NAME_SPAWN_DELAY = "Retrieve Rate";
+    public const string NAME_REQUIRES_IN_ORBIT = "In Orbit";
+    public const string NAME_AS_SAFE = "Safe once stored";
+    public const string NAME_STOP_AFTER = "Max Chute Capacity";
+    
+    public const string DESCRIPTION_BLACKLIST = "List of items that are not allowed in the chute.\nThe items' name should be separated by a comma (,).";
+    public const string DESCRIPTION_SPAWN_DELAY = "Time in seconds between each item spawn.";
+    public const string DESCRIPTION_REQUIRE_IN_ORBIT = "Determines if the ship needs to be in orbit in order to put items inside the ship's inventory.";
+    public const string DESCRIPTION_AS_SAFE = "Determines if the ship's inventory acts as a safe.\nIf set to true, this will prevent the ship's inventory from being wiped upon death.";
+    public const string DESCRIPTION_STOP_AFTER = "Determines how many items can be in the chute before waiting to spawn the items.\nThe extra items will simply wait until a slot is available.";
 }

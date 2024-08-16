@@ -16,6 +16,10 @@ public class NetworkObject_Patches
         if (!__instance.TryGetComponent(out VentProp _))
             return true;
 
+        // Prevent if safe
+        if (ShipInventory.Config.ActAsSafe.Value)
+            return false;
+
         // Clear the inventory
         Logger.Debug("Clearing the ship...");
         ItemManager.SetItems([], true);

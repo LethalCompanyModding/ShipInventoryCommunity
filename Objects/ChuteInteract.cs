@@ -137,32 +137,45 @@ public class ChuteInteract : NetworkBehaviour
         // Spawn each item
         while (spawnQueue.Count > 0)
         {
+            // If chute is full, skip
+            if (itemsInChute.Length >= ShipInventory.Config.StopAfter.Value)
+            {
+                ChutePanel.Instance?.SetBlocked();
+                yield return new WaitForEndOfFrame();
+                continue;
+            }
+            
             var data = spawnQueue.Dequeue();
             var item = data.GetItem();
-            
+        
+            ChutePanel.Instance?.SetSpawning(spawnQueue.Count);
+
             if (item is null)
                 continue;
-            
+        
             var newItem = Instantiate(item.spawnPrefab) ?? throw new NullReferenceException();
             newItem.transform.SetParent(spawnParent, false);
-            
+        
             // Set values
             var grabObj = newItem.GetComponent<GrabbableObject>();
 
             // Call spawn methods
             grabObj.Start();
             grabObj.PlayDropSFX();
-            
+        
             // Spawn item
             var networkObj = grabObj.NetworkObject;
             networkObj.Spawn();
-            
+        
             SpawnItemClientRpc(networkObj, data);
-            yield return new WaitForSeconds(ShipInventory.CONFIG.spawnDelay.Value);
+            
+            yield return new WaitForSeconds(ShipInventory.Config.SpawnDelay.Value);
         }
 
         // Mark as completed
         spawnCoroutine = null;
+        
+        ChutePanel.Instance?.SetIdle();
     }
 
     #endregion
@@ -174,7 +187,7 @@ public class ChuteInteract : NetworkBehaviour
         RequestItemsServerRpc(GameNetworkManager.Instance.localPlayerController.playerClientId);
     }
 
-    public void RequestAll()
+    public void RequestItemsAll()
     {
         // Skip if request from client
         if (GameNetworkManager.Instance.localPlayerController.IsClient)
@@ -220,6 +233,7 @@ public class ChuteInteract : NetworkBehaviour
     #endregion
     #region Trigger
 
+    private Collider[] itemsInChute = [];
     private InteractTrigger _trigger = null!;
 
     private void UpdateTrigger()
@@ -238,14 +252,17 @@ public class ChuteInteract : NetworkBehaviour
             return;
 
         // Update interactable
-        var isAllowed = ItemManager.IsItemAllowed(local.currentlyHeldObjectServer?.itemProperties);
-        _trigger.interactable = local.isHoldingObject && isAllowed;
-        _trigger.disabledHoverTip = isAllowed ? Constants.NOT_HOLDING_ITEM : Constants.ITEM_NOT_ALLOWED;
+        ItemManager.UpdateTrigger(_trigger, local);
 
         // Update layer
-        var hasItem = Physics.CheckSphere(itemRestorePoint.position, 0.2f, 1 << LayerMask.NameToLayer(Constants.LAYER_PROPS));
+        // ReSharper disable once Unity.PreferNonAllocApi
+        itemsInChute = Physics.OverlapSphere(
+            itemRestorePoint.position,
+            0.2f,
+            1 << LayerMask.NameToLayer(Constants.LAYER_PROPS)
+        );
         
-        gameObject.layer = LayerMask.NameToLayer(hasItem ? Constants.LAYER_IGNORE : Constants.LAYER_INTERACTABLE);
+        gameObject.layer = LayerMask.NameToLayer(itemsInChute.Length > 0 ? Constants.LAYER_IGNORE : Constants.LAYER_INTERACTABLE);
     }
 
     #endregion
