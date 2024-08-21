@@ -43,6 +43,8 @@ public static class ItemManager
             ChuteInteract.Instance?.RequestItemsAll();
     }
 
+    public static int GetTotalValue() => storedItems.Sum(i => i.SCRAP_VALUE);
+    
     #endregion
     #region Single alternation
 
@@ -78,7 +80,7 @@ public static class ItemManager
         if (grabbable is null)
             return;
         
-        grabbable.scrapValue = storedItems.Sum(i => i.SCRAP_VALUE);
+        grabbable.scrapValue = GetTotalValue();
         grabbable.OnHitGround(); // Update 
     }
 

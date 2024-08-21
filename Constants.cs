@@ -49,10 +49,14 @@ public static class Constants
     public const string NAME_REQUIRES_IN_ORBIT = "In Orbit";
     public const string NAME_AS_SAFE = "Safe once stored";
     public const string NAME_STOP_AFTER = "Max Chute Capacity";
+    public const string NAME_SHOW_CONFIRMATION = "Terminal Confirmation";
+    public const string NAME_SHOW_NEWS = "Panel News";
     
     public const string DESCRIPTION_BLACKLIST = "List of items that are not allowed in the chute.\nThe items' name should be separated by a comma (,).";
     public const string DESCRIPTION_SPAWN_DELAY = "Time in seconds between each item spawn.";
     public const string DESCRIPTION_REQUIRE_IN_ORBIT = "Determines if the ship needs to be in orbit in order to put items inside the ship's inventory.";
     public const string DESCRIPTION_AS_SAFE = "Determines if the ship's inventory acts as a safe.\nIf set to true, this will prevent the ship's inventory from being wiped upon death.";
     public const string DESCRIPTION_STOP_AFTER = "Determines how many items can be in the chute before waiting to spawn the items.\nThe extra items will simply wait until a slot is available.";
+    public const string DESCRIPTION_SHOW_CONFIRMATION = "Determines if the terminal displays a confirmation before retrieving items from the ship's inventory.";
+    public const string DESCRIPTION_SHOW_NEWS = "Determines if the chute's panel should show the random joky texts that don't really mean anything.";
 }

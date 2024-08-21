@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using ShipInventory.Helpers;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -17,8 +18,11 @@ public class ChutePanel : NetworkBehaviour
         header = transform.Find("ChutePanelScreen").Find("Header").GetComponent<TextMeshProUGUI>();
         text = transform.Find("ChutePanelScreen").Find("Text").GetComponent<TextMeshProUGUI>();
 
-        if (NetworkManager.Singleton.IsHost)
-            StartCoroutine(SetNews());
+        if (!NetworkManager.Singleton.IsHost)
+            return;
+        
+        AddNews();
+        StartCoroutine(SetNews());
     }
 
     private TextMeshProUGUI? header;
@@ -53,6 +57,35 @@ public class ChutePanel : NetworkBehaviour
         ("Wanna see <color=yellow>these</color>?", "<color=#D60>DEEZ NUTS")
     ];
 
+    public void SetIdle()
+    {
+        SetServerRpc("<u>CURRENT STATUS</u>", "<color=green>IDLE</color>", true);
+    }
+    
+    public void SetBlocked()
+    {
+        SetServerRpc("<u>CURRENT STATUS</u>", "<color=#870000>BLOCKED</color>");
+
+        isIdling = false;
+    }
+    
+    public void SetSpawning(int remaining)
+    {
+        SetServerRpc("<color=yellow><u>SPAWNING QUEUE</u></color>", $"{remaining} REMAINING");
+        
+        isIdling = false;
+    }
+
+    public void ShowTotal()
+    {
+        SetServerRpc("<u>TOTAL</u>", $"${ItemManager.GetTotalValue()}", true);
+    }
+
+    public void ShowAmount()
+    {
+        SetServerRpc("<u>COUNT</u>", $"<color=purple>{ItemManager.GetTotalValue()}</color>", true);
+    }
+    
     [ServerRpc(RequireOwnership = false)]
     public void SetServerRpc(string _header, string _text, bool isIdle = false)
     {
@@ -67,36 +100,42 @@ public class ChutePanel : NetworkBehaviour
         isIdling = isIdle;
     }
 
-    public void SetIdle()
-    {
-        SetServerRpc("<u>CURRENT STATUS</u>", "<color=green>IDLE</color>", true);
-    }
-    public void SetBlocked()
-    {
-        SetServerRpc("<u>CURRENT STATUS</u>", "<color=#870000>BLOCKED</color>");
+    #endregion
 
-        isIdling = false;
-    }
-    public void SetSpawning(int remaining)
+    #region News
+
+    private readonly List<System.Action> cycledIdles = [];
+    private int cycledIndex;
+
+    private void AddNews()
     {
-        SetServerRpc("<color=yellow><u>SPAWNING QUEUE</u></color>", $"{remaining} REMAINING");
-        
-        isIdling = false;
+        cycledIdles.Add(SetIdle);
+        cycledIdles.Add(ShowTotal);
+        cycledIdles.Add(ShowAmount);
     }
 
     private IEnumerator SetNews()
     {
         while (news.Count > 0)
         {
-            SetIdle();
+            cycledIdles[cycledIndex]?.Invoke();
 
-            yield return new WaitForSeconds(Random.Range(30f, 300f));
+            cycledIndex++;
 
-            if (isIdling)
+            if (cycledIndex >= news.Count)
+                cycledIndex = 0;
+
+            // Show if necessary
+            if (ShipInventory.Config.ShowNews.Value)
             {
-                int index = Random.Range(0, news.Count);
+                yield return new WaitForSeconds(Random.Range(30f, 300f));
+            
+                if (isIdling)
+                {
+                    int index = Random.Range(0, news.Count);
 
-                SetServerRpc(news[index].header, news[index].text);
+                    SetServerRpc(news[index].header, news[index].text);
+                }
             }
             
             yield return new WaitForSeconds(Random.Range(5f, 15f));
@@ -104,8 +143,6 @@ public class ChutePanel : NetworkBehaviour
         
         yield return new WaitForEndOfFrame();
     }
-    
-    
 
     #endregion
 }

@@ -163,6 +163,8 @@ public class ShipInventory : BaseUnityPlugin
         placeable.unlockableID = ChutePanel.unlockIndex;
         placeable.overrideWallOffset = true;
         placeable.wallOffset = 0.05f;
+        
+        panel.SetActive(true);
     }
 
     #endregion

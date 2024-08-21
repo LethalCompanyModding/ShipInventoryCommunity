@@ -83,6 +83,13 @@ public class ShipApplication : InteractiveTerminalApplication
     }
     private void Confirm(string message, Action? callback)
     {
+        // If skip confirmation, skip
+        if (!ShipInventory.Config.ShowConfirmation.Value)
+        {
+            callback?.Invoke();
+            return;
+        }
+            
         var optionMenu = new CursorMenu
         {
             cursorIndex = 0,
