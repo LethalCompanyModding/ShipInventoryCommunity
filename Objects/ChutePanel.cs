@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using ShipInventory.Helpers;
 using TMPro;
 using Unity.Netcode;
@@ -70,7 +71,7 @@ public class ChutePanel : NetworkBehaviour
         => SetServerRpc("<u>TOTAL VALUE:</u>", $"${ItemManager.GetTotalValue()}", true);
 
     public void ShowAmount() 
-        => SetServerRpc("<u>ITEM COUNT:</u>", $"<color=purple> {ItemManager.GetTotalValue()}</color>", true);
+        => SetServerRpc("<u>ITEM COUNT:</u>", $"<color=purple> {ItemManager.GetItems().Count()}</color>", true);
 
     [ServerRpc(RequireOwnership = false)]
     public void SetServerRpc(string _header, string _text, bool isIdle = false) => SetClientRpc(_header, _text, isIdle);

@@ -14,7 +14,6 @@ public static class NetworkPrefabUtils
         public string name = "";
         public Action<GameObject>? onLoad;
         public Action<GameObject>? onSetup;
-        public Action<GameObject>? onSpawned;
         public GameObject? gameObject;
     }
 
@@ -55,6 +54,8 @@ public static class NetworkPrefabUtils
         [HarmonyPatch(nameof(StartOfRound.Start))]
         private static void SetUpPrefabs(StartOfRound __instance)
         {
+            GameObject shipParent = GameObject.Find(Constants.SHIP_PATH);
+            
             foreach (var data in prefabs)
             {
                 GameObject? newObj = null;
@@ -72,15 +73,20 @@ public static class NetworkPrefabUtils
         
                     newObj = UnityEngine.Object.Instantiate(prefab);
                     
-                    data.onSpawned?.Invoke(newObj);
-                    
                     var networkObj = newObj.GetComponent<NetworkBehaviour>().NetworkObject;
                     networkObj.Spawn();
-                    networkObj.TrySetParent(GameObject.Find(Constants.SHIP_PATH));
+                    networkObj.TrySetParent(shipParent);
                 }
-        
-                newObj ??= GameObject.Find(data.name + "(Clone)");
 
+                foreach (Transform child in shipParent.transform)
+                {
+                    if (child.gameObject.name != data.name + "(Clone)")
+                        continue;
+
+                    newObj = child.gameObject;
+                    break;
+                }
+                
                 if (newObj is null)
                 {
                     Logger.Error($"The prefab '{data.name}' was not found in the scene!");
