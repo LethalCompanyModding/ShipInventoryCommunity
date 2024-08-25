@@ -14,6 +14,7 @@ public static class NetworkPrefabUtils
         public string name = "";
         public Action<GameObject>? onLoad;
         public Action<GameObject>? onSetup;
+        public Action<GameObject>? onSpawned;
         public GameObject? gameObject;
     }
 
@@ -70,7 +71,9 @@ public static class NetworkPrefabUtils
                     }
         
                     newObj = UnityEngine.Object.Instantiate(prefab);
-
+                    
+                    data.onSpawned?.Invoke(newObj);
+                    
                     var networkObj = newObj.GetComponent<NetworkBehaviour>().NetworkObject;
                     networkObj.Spawn();
                     networkObj.TrySetParent(GameObject.Find(Constants.SHIP_PATH));

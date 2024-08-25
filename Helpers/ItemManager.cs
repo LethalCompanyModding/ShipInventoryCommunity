@@ -2,6 +2,7 @@
 using System.Linq;
 using GameNetcodeStuff;
 using ShipInventory.Objects;
+using UnityEngine;
 
 namespace ShipInventory.Helpers;
 
@@ -144,6 +145,14 @@ public static class ItemManager
         {
             trigger.interactable = false;
             trigger.disabledHoverTip = Constants.NOT_IN_ORBIT;
+            return;
+        }
+        
+        // Is Full
+        if (storedItems.Count() == ShipInventory.Config.MaxItemCount.Value)
+        {
+            trigger.interactable = false;
+            trigger.disabledHoverTip = Constants.INVENTORY_FULL;
             return;
         }
         

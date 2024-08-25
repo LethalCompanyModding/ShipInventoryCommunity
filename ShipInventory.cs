@@ -86,7 +86,8 @@ public class ShipInventory : BaseUnityPlugin
         {
             name = Constants.PANEL_PREFAB,
             onLoad = LoadPanel,
-            onSetup = SetUpPanel
+            onSetup = SetUpPanel,
+            onSpawned = SpawnPanel
         });
         Helpers.Logger.Debug("All prefabs loaded!");
     }
@@ -140,7 +141,7 @@ public class ShipInventory : BaseUnityPlugin
 
         obj.AddComponent<ChutePanel>();
     }
-    private static void SetUpPanel(GameObject panel)
+    private static void SpawnPanel(GameObject obj)
     {
         if (ChutePanel.unlockIndex < 0)
         {
@@ -157,14 +158,16 @@ public class ShipInventory : BaseUnityPlugin
             });
         }
 
+        obj.GetComponentInChildren<PlaceableShipObject>().unlockableID = ChutePanel.unlockIndex;
+        obj.SetActive(true);
+    }
+    private static void SetUpPanel(GameObject panel)
+    {
         ChutePanel.Instance = panel.GetComponent<ChutePanel>();
         
         var placeable = panel.GetComponentInChildren<PlaceableShipObject>();
-        placeable.unlockableID = ChutePanel.unlockIndex;
         placeable.overrideWallOffset = true;
         placeable.wallOffset = 0.05f;
-        
-        panel.SetActive(true);
     }
 
     #endregion

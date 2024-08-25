@@ -34,7 +34,7 @@ public class ChutePanel : NetworkBehaviour
     #region Status
 
     private bool isIdling;
-    private readonly List<(string header, string text)> news = [
+    private readonly List<(string header, string text)> shitposts = [
         ("THE COMPANY IS", "WATCHING"),
         ("<align=center>THE MESS", "GONE"),
         ("I can spawn a\ndog, you know?", ""),
@@ -57,40 +57,23 @@ public class ChutePanel : NetworkBehaviour
         ("Wanna see <color=yellow>these</color>?", "<color=#D60>DEEZ NUTS")
     ];
 
-    public void SetIdle()
-    {
-        SetServerRpc("<u>CURRENT STATUS</u>", "<color=green>IDLE</color>", true);
-    }
-    
-    public void SetBlocked()
-    {
-        SetServerRpc("<u>CURRENT STATUS</u>", "<color=#870000>BLOCKED</color>");
+    public void SetIdle() 
+        => SetServerRpc("<u>CURRENT STATUS</u>", "<color=green>IDLE</color>", true);
 
-        isIdling = false;
-    }
-    
-    public void SetSpawning(int remaining)
-    {
-        SetServerRpc("<color=yellow><u>SPAWNING QUEUE</u></color>", $"{remaining} REMAINING");
-        
-        isIdling = false;
-    }
+    public void SetBlocked() 
+        => SetServerRpc("<u>CURRENT STATUS</u>", "<color=#870000>BLOCKED</color>");
 
-    public void ShowTotal()
-    {
-        SetServerRpc("<u>TOTAL</u>", $"${ItemManager.GetTotalValue()}", true);
-    }
+    public void SetSpawning(int remaining) 
+        => SetServerRpc("<color=yellow><u>SPAWNING QUEUE</u></color>", $"{remaining} REMAINING");
 
-    public void ShowAmount()
-    {
-        SetServerRpc("<u>COUNT</u>", $"<color=purple>{ItemManager.GetTotalValue()}</color>", true);
-    }
-    
+    public void ShowTotal() 
+        => SetServerRpc("<u>TOTAL VALUE:</u>", $"${ItemManager.GetTotalValue()}", true);
+
+    public void ShowAmount() 
+        => SetServerRpc("<u>ITEM COUNT:</u>", $"<color=purple> {ItemManager.GetTotalValue()}</color>", true);
+
     [ServerRpc(RequireOwnership = false)]
-    public void SetServerRpc(string _header, string _text, bool isIdle = false)
-    {
-        SetClientRpc(_header, _text, isIdle);
-    }
+    public void SetServerRpc(string _header, string _text, bool isIdle = false) => SetClientRpc(_header, _text, isIdle);
 
     [ClientRpc]
     public void SetClientRpc(string _header, string _text, bool isIdle)
@@ -116,29 +99,33 @@ public class ChutePanel : NetworkBehaviour
 
     private IEnumerator SetNews()
     {
-        while (news.Count > 0)
+        while (shitposts.Count > 0)
         {
             cycledIdles[cycledIndex]?.Invoke();
 
             cycledIndex++;
 
-            if (cycledIndex >= news.Count)
+            if (cycledIndex >= cycledIdles.Count)
                 cycledIndex = 0;
+            
+            yield return new WaitForSeconds(ShipInventory.Config.PanelIdleDelay.Value);
 
             // Show if necessary
-            if (ShipInventory.Config.ShowNews.Value)
-            {
-                yield return new WaitForSeconds(Random.Range(30f, 300f));
+            if (!isIdling)
+                continue;
             
-                if (isIdling)
-                {
-                    int index = Random.Range(0, news.Count);
+            if (!ShipInventory.Config.ShowShitpost.Value)
+                continue;
+            
+            if (Random.value > ShipInventory.Config.ShitpostChance.Value / 100f)
+                continue;
+            
+            // Show shitpost
+            int index = Random.Range(0, shitposts.Count);
 
-                    SetServerRpc(news[index].header, news[index].text);
-                }
-            }
+            SetServerRpc(shitposts[index].header, shitposts[index].text);
             
-            yield return new WaitForSeconds(Random.Range(5f, 15f));
+            yield return new WaitForSeconds(ShipInventory.Config.PanelShitpostDelay.Value);
         }
         
         yield return new WaitForEndOfFrame();

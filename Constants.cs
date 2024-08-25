@@ -24,6 +24,7 @@ public static class Constants
     public const string NOT_HOLDING_ITEM = "[Nothing to store]"; // Tip when the player has no item
     public const string ITEM_NOT_ALLOWED = "[Item not allowed]"; // Tip when the player has an illegal item
     public const string NOT_IN_ORBIT = "[Ship must be in orbit]"; // Tip when the ship is not in orbit
+    public const string INVENTORY_FULL = "[Inventory full]"; // Tip when the ship's inventory is full
     public const string TEXT_RANDOM_RETRIEVE = "You are about to retrieve '{0}' from the ship's inventory.";
     public const string TEXT_ALL_RETRIEVE = "You are about to retrieve everything from the ship's inventory.";
     public const string TEXT_SINGLE_RETRIEVE = "You are about to retrieve '{0}' from the ship's inventory.";
@@ -44,19 +45,57 @@ public static class Constants
     public const string NEXT = "[ NEXT ]";
     
     // --- CONFIGS ---
-    public const string NAME_BLACKLIST = "Blacklist";
-    public const string NAME_SPAWN_DELAY = "Retrieve Rate";
-    public const string NAME_REQUIRES_IN_ORBIT = "In Orbit";
-    public const string NAME_AS_SAFE = "Safe once stored";
-    public const string NAME_STOP_AFTER = "Max Chute Capacity";
-    public const string NAME_SHOW_CONFIRMATION = "Terminal Confirmation";
-    public const string NAME_SHOW_NEWS = "Panel News";
+    public const string PANEL_SECTION = "Panel";
+    public const string TERMINAL_SECTION = "Terminal";
+    public const string INVENTORY_SECTION = "Inventory";
+    public const string CHUTE_SECTION = "Chute";
     
-    public const string DESCRIPTION_BLACKLIST = "List of items that are not allowed in the chute.\nThe items' name should be separated by a comma (,).";
+    #region Chute
+
+    public const string NAME_BLACKLIST = "Blacklist";
+    public const string DESCRIPTION_BLACKLIST = "List of items that are not allowed in the chute.\n\nThe items' name should be separated by a comma (,).\nYou can edit the config directly in the file for a better experience.";
+
+    public const string NAME_SPAWN_DELAY = "Retrieve Rate";
     public const string DESCRIPTION_SPAWN_DELAY = "Time in seconds between each item spawn.";
-    public const string DESCRIPTION_REQUIRE_IN_ORBIT = "Determines if the ship needs to be in orbit in order to put items inside the ship's inventory.";
-    public const string DESCRIPTION_AS_SAFE = "Determines if the ship's inventory acts as a safe.\nIf set to true, this will prevent the ship's inventory from being wiped upon death.";
-    public const string DESCRIPTION_STOP_AFTER = "Determines how many items can be in the chute before waiting to spawn the items.\nThe extra items will simply wait until a slot is available.";
-    public const string DESCRIPTION_SHOW_CONFIRMATION = "Determines if the terminal displays a confirmation before retrieving items from the ship's inventory.";
-    public const string DESCRIPTION_SHOW_NEWS = "Determines if the chute's panel should show the random joky texts that don't really mean anything.";
+    
+    public const string NAME_REQUIRES_IN_ORBIT = "Only In Orbit";
+    public const string DESCRIPTION_REQUIRE_IN_ORBIT = "Prevents players from putting items inside the chute when the ship is on a planet.";
+    
+    public const string NAME_STOP_AFTER = "Max Chute Capacity";
+    public const string DESCRIPTION_STOP_AFTER = "Limits the amount of items that can be spawned inside the chute.\n\nThis is to prevent further lag when retrieve too many items.";
+
+    #endregion
+    
+    #region Inventory
+
+    public const string NAME_AS_SAFE = "Safe once stored";
+    public const string DESCRIPTION_AS_SAFE = "Prevents the ship's inventory from clearing when all players die.";
+
+    public const string NAME_MAX_ITEM_COUNT = "Maximum Item Count";
+    public const string DESCRIPTION_MAX_ITEM_COUNT = "Limits the amount of items that can be inside the ship's inventory.\n\nIf the ship's inventory already has too many items, it won't empty the excess.";
+
+    #endregion
+    
+    #region Terminal
+
+    public const string NAME_SHOW_CONFIRMATION = "Terminal Confirmation";
+    public const string DESCRIPTION_SHOW_CONFIRMATION = "Removes the confirmation when retrieving items from the ship's inventory.";
+
+    #endregion
+
+    #region Panel
+
+    public const string NAME_PANEL_IDLE_DELAY = "Idle Cycle Delay";
+    public const string DESCRIPTION_PANEL_IDLE_DELAY = "Time in seconds between each idle statuts.";
+    
+    public const string NAME_SHOW_SHITPOST = "Toggle Shitpost";
+    public const string DESCRIPTION_SHOW_SHITPOST = "Toggles the panel's shitpost feature.";
+
+    public const string NAME_PANEL_SHITPOST_DELAY = "Shitpost Delay";
+    public const string DESCRIPTION_PANEL_SHITPOST_DELAY = "Time in seconds for which a shitpost stays on screen.";
+    
+    public const string NAME_SHITPOST_CHANCE = "Shitpost Chance";
+    public const string DESCRIPTION_SHITPOST_CHANCE = "How likely a shitpost is to show up (%).";
+
+    #endregion
 }
