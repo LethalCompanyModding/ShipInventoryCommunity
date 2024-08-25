@@ -23,13 +23,19 @@ As requested, I added a physical panel for the ship's inventory. Sadly, it only 
 ## Configs
 The mod gives a lot of variety in terms of customizability. This is a list of all the configs available. Note  that the description are different here and in the mod.
 
-| Name             | Description                                                                                        |
-|------------------|----------------------------------------------------------------------------------------------------|
-| Blacklist        | List of items that are not allowed in the chute. This is a restriction on top of  the current one. |
-| Retrieve rate    | Time between each spawn (to prevent freezes/crashes)                                               |
-| In Orbit         | Prevents to put items inside (in case you find it OP)                                              |
-| Safe once stored | If checked, the inventory won't be wiped out when the crew wipes out                               |
-| Max Capacity     | Limit of items in the chute (to prevent excessive lag)                                             |
+| Name                  | Description                                                                                        |
+|-----------------------|----------------------------------------------------------------------------------------------------|
+| Blacklist             | List of items that are not allowed in the chute. This is a restriction on top of  the current one. |
+| Retrieve rate         | Time between each spawn (to prevent freezes/crashes)                                               |
+| Only In Orbit         | Prevents to put items inside (in case you find it OP)                                              |
+| Safe once stored      | If checked, the inventory won't be wiped out when the crew wipes out                               |
+| Max Capacity          | Limit of items in the chute (to prevent excessive lag)                                             |
+| Max Item Count        | Limits the number of items inside the inventory                                                    |
+| Terminal Confirmation | Toggles the confirmation before retrieving items                                                   |
+| Idle Cycle Delay      | How long does the panel stays on a status before switching to the next one                         |
+| Show Shitpost         | Toggles the display of shitpost on the panel                                                       |
+| Shitpost delay        | How long does the panel stays on a shitpost before returning to an idle status                     |
+| Shitpost chance       | How likely a shitpost is to show up                                                                |
 
 ## Save/Load
 When the host saves or loads a save file, the mod will add the stored items inside the file to read them when loading. 
