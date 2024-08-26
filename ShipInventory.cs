@@ -82,12 +82,6 @@ public class ShipInventory : BaseUnityPlugin
             onLoad = LoadVent,
             onSetup = SetUpVent
         });
-        NetworkPrefabUtils.LoadPrefab(new NetworkPrefabUtils.PrefabData
-        {
-            name = Constants.PANEL_PREFAB,
-            onLoad = LoadPanel,
-            onSetup = SetUpPanel
-        });
         Helpers.Logger.Debug("All prefabs loaded!");
     }
 
@@ -129,41 +123,6 @@ public class ShipInventory : BaseUnityPlugin
         
         // Update scrap value of the chute
         ItemManager.UpdateValue();
-    }
-
-    private static void LoadPanel(GameObject obj)
-    {
-        var autoParent = obj.GetComponent<AutoParentToShip>();
-        autoParent.overrideOffset = true;
-        autoParent.positionOffset = new Vector3(2.05f, 2.25f, -4.25f);
-        autoParent.rotationOffset = new Vector3(90, 180, 0);
-        
-        obj.AddComponent<ChutePanel>();
-    }
-    private static void SetUpPanel(GameObject panel)
-    {
-        if (ChutePanel.unlockIndex < 0)
-        {
-            ChutePanel.unlockIndex = StartOfRound.Instance.unlockablesList.unlockables.Count;
-            StartOfRound.Instance.unlockablesList.unlockables.Add(new UnlockableItem
-            {
-                unlockableName = "ShipInventory_ChutePanel",
-                alreadyUnlocked = true,
-                IsPlaceable = true,
-                hasBeenUnlockedByPlayer = true,
-                unlockableType = 1,
-                spawnPrefab = false,
-                canBeStored = false
-            });
-            
-            panel.GetComponentInChildren<PlaceableShipObject>().unlockableID = ChutePanel.unlockIndex;
-        }
-        
-        ChutePanel.Instance = panel.GetComponent<ChutePanel>();
-        
-        var placeable = panel.GetComponentInChildren<PlaceableShipObject>();
-        placeable.overrideWallOffset = true;
-        placeable.wallOffset = 0.05f;
     }
 
     #endregion

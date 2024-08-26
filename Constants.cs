@@ -37,6 +37,7 @@ public static class Constants
     public const string TYPE_RETRIEVE = "Retrieve type";
     public const string RANDOM_RETRIEVE = "Retrieve random";
     public const string ALL_RETRIEVE = "Retrieve all";
+    public const string SHIP_INFO = "Print Status";
     
     public const string POSITIVE_ANSWER = "Yes";
     public const string NEGATIVE_ANSWER = "No";
@@ -45,7 +46,6 @@ public static class Constants
     public const string NEXT = "[ NEXT ]";
     
     // --- CONFIGS ---
-    public const string PANEL_SECTION = "Panel";
     public const string TERMINAL_SECTION = "Terminal";
     public const string INVENTORY_SECTION = "Inventory";
     public const string CHUTE_SECTION = "Chute";
@@ -81,21 +81,8 @@ public static class Constants
     public const string NAME_SHOW_CONFIRMATION = "Terminal Confirmation";
     public const string DESCRIPTION_SHOW_CONFIRMATION = "Removes the confirmation when retrieving items from the ship's inventory.";
 
-    #endregion
-
-    #region Panel
-
-    public const string NAME_PANEL_IDLE_DELAY = "Idle Cycle Delay";
-    public const string DESCRIPTION_PANEL_IDLE_DELAY = "Time in seconds between each idle statuts.";
-    
-    public const string NAME_SHOW_SHITPOST = "Toggle Shitpost";
-    public const string DESCRIPTION_SHOW_SHITPOST = "Toggles the panel's shitpost feature.";
-
-    public const string NAME_PANEL_SHITPOST_DELAY = "Shitpost Delay";
-    public const string DESCRIPTION_PANEL_SHITPOST_DELAY = "Time in seconds for which a shitpost stays on screen.";
-    
-    public const string NAME_SHITPOST_CHANCE = "Shitpost Chance";
-    public const string DESCRIPTION_SHITPOST_CHANCE = "How likely a shitpost is to show up (%).";
+    public const string NAME_NO_STEAM_ID = "Show Steam ID";
+    public const string DESCRIPTION_NO_STEAM_ID = "Replaces the ID shown on the ship's inventory meny by a random ID.";
 
     #endregion
 }

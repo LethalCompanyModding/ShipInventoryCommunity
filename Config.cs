@@ -21,11 +21,7 @@ public class Config : SyncedConfig2<Config>
     [SyncedEntryField] public readonly SyncedEntry<int> MaxItemCount;
     
     [SyncedEntryField] public readonly SyncedEntry<bool> ShowConfirmation;
-
-    [SyncedEntryField] public readonly SyncedEntry<float> PanelIdleDelay;
-    [SyncedEntryField] public readonly SyncedEntry<bool> ShowShitpost;
-    [SyncedEntryField] public readonly SyncedEntry<float> PanelShitpostDelay;
-    [SyncedEntryField] public readonly SyncedEntry<float> ShitpostChance;
+    [SyncedEntryField] public readonly SyncedEntry<bool> NoSteamID;
 
     #endregion
 
@@ -84,35 +80,13 @@ public class Config : SyncedConfig2<Config>
             true,
             new ConfigDescription(Constants.DESCRIPTION_SHOW_CONFIRMATION)
         );
+        
+        NoSteamID = cfg.BindSyncedEntry(
+            new ConfigDefinition(Constants.TERMINAL_SECTION, "NoSteamID"),
+            false,
+            new ConfigDescription(Constants.DESCRIPTION_NO_STEAM_ID)
+        );
 
-        #endregion
-
-        #region Panel
-
-        PanelIdleDelay = cfg.BindSyncedEntry(
-            new ConfigDefinition(Constants.PANEL_SECTION, "PanelIdleDelay"),
-            15f,
-            new ConfigDescription(Constants.DESCRIPTION_PANEL_IDLE_DELAY)
-        );
-        
-        ShowShitpost = cfg.BindSyncedEntry(
-            new ConfigDefinition(Constants.PANEL_SECTION, "ShowShitpost"),
-            true,
-            new ConfigDescription(Constants.DESCRIPTION_SHOW_SHITPOST)
-        );
-        
-        PanelShitpostDelay = cfg.BindSyncedEntry(
-            new ConfigDefinition(Constants.PANEL_SECTION, "PanelShitpostDelay"),
-            15f,
-            new ConfigDescription(Constants.DESCRIPTION_PANEL_SHITPOST_DELAY)
-        );
-        
-        ShitpostChance = cfg.BindSyncedEntry(
-            new ConfigDefinition(Constants.PANEL_SECTION, "ShitpostChance"),
-            5f,
-            new ConfigDescription(Constants.DESCRIPTION_SHITPOST_CHANCE)
-        );
-        
         #endregion
 
         RegisterLethalConfig();
@@ -172,38 +146,9 @@ public class Config : SyncedConfig2<Config>
             Name = Constants.NAME_SHOW_CONFIRMATION,
             RequiresRestart = false
         }));
-
-        #endregion
-
-        #region Panel
-
-        LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(PanelIdleDelay.Entry, new FloatSliderOptions
-        {
-            Name = Constants.NAME_PANEL_IDLE_DELAY,
-            Min = 0.1f,
-            Max = 300,
-            RequiresRestart = false
-        }));
         
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(ShowShitpost.Entry, new BoolCheckBoxOptions
-        {
-            Name = Constants.NAME_SHOW_SHITPOST,
-            RequiresRestart = false
-        }));
-        
-        LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(PanelShitpostDelay.Entry, new FloatSliderOptions
-        {
-            Name = Constants.NAME_PANEL_SHITPOST_DELAY,
-            Min = 0.1f,
-            Max = 300,
-            RequiresRestart = false
-        }));
-        
-        LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(ShitpostChance.Entry, new FloatSliderOptions
-        {
-            Name = Constants.NAME_SHITPOST_CHANCE,
-            Min = 0f,
-            Max = 100f,
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(NoSteamID.Entry, new BoolCheckBoxOptions {
+            Name = Constants.NAME_NO_STEAM_ID,
             RequiresRestart = false
         }));
 

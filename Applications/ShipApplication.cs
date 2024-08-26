@@ -18,11 +18,14 @@ public class ShipApplication : InteractiveTerminalApplication
     private void Main()
     {
         var player = StartOfRound.Instance.localPlayerController;
+        int id = ShipInventory.Config.NoSteamID.Value
+            ? new Random((int)player.playerSteamId).Next()
+            : (int)player.playerSteamId;
 
         string playerStatus = new StringBuilder()
             .Append(HUDManager.Instance.playerLevels[player.playerLevelNumber].levelName)
             .Append(" #")
-            .Append(player.playerSteamId)
+            .Append(id)
             .ToString();
 
         var optionMenu = new CursorMenu
@@ -53,6 +56,11 @@ public class ShipApplication : InteractiveTerminalApplication
                     Name = Constants.ALL_RETRIEVE,
                     Active = _ => ItemManager.GetItems().Any(),
                     Action = RetrieveAll
+                },
+                new CursorElement
+                {
+                    Name = Constants.SHIP_INFO,
+                    Action = GetInfo
                 }
             ]
         };
@@ -314,6 +322,39 @@ public class ShipApplication : InteractiveTerminalApplication
                 options
             ],
         };
+        SwitchScreen(screen, options, true);
+    }
+
+    private void GetInfo()
+    {
+        var options = new CursorMenu
+        {
+            cursorIndex = 0,
+            elements = [
+                new CursorElement
+                {
+                    Name = "Exit",
+                    Action = Main
+                }
+            ]
+        };
+        var screen = new BoxedScreen
+        {
+            Title = "Inventory",
+            elements = [
+                TextElement.Create("Here is the current status of the ship's inventory:"),
+                TextElement.Create(" "),
+                TextElement.Create("Total value: " + ItemManager.GetTotalValue()),
+                TextElement.Create("Number of items: " + ItemManager.GetItems().Count()), 
+                TextElement.Create(" "),
+                TextElement.Create("Maximum Inventory Capacity: " + ShipInventory.Config.MaxItemCount.Value),
+                TextElement.Create("Is Inventory safe: " + (ShipInventory.Config.ActAsSafe.Value ? "<color=green>TRUE" : "<color=red>FALSE") + "</color>"),
+                TextElement.Create("Opened on planets: " + (!ShipInventory.Config.RequireInOrbit.Value ? "<color=green>TRUE" : "<color=red>FALSE") + "</color>"),
+                TextElement.Create(" "),
+                options
+            ]
+        };
+        
         SwitchScreen(screen, options, true);
     }
 }

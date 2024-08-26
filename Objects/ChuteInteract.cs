@@ -140,7 +140,6 @@ public class ChuteInteract : NetworkBehaviour
             // If chute is full, skip
             if (itemsInChute.Length >= ShipInventory.Config.StopAfter.Value)
             {
-                ChutePanel.Instance?.SetBlocked();
                 yield return new WaitForEndOfFrame();
                 continue;
             }
@@ -148,8 +147,6 @@ public class ChuteInteract : NetworkBehaviour
             var data = spawnQueue.Dequeue();
             var item = data.GetItem();
         
-            ChutePanel.Instance?.SetSpawning(spawnQueue.Count);
-
             if (item is null)
                 continue;
         
@@ -174,8 +171,6 @@ public class ChuteInteract : NetworkBehaviour
 
         // Mark as completed
         spawnCoroutine = null;
-        
-        ChutePanel.Instance?.SetIdle();
     }
 
     #endregion
