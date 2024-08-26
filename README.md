@@ -27,6 +27,7 @@ The mod gives a lot of variety in terms of customizability. This is a list of al
 | Max Capacity          | Limit of items in the chute (to prevent excessive lag)                                             |
 | Max Item Count        | Limits the number of items inside the inventory                                                    |
 | Terminal Confirmation | Toggles the confirmation before retrieving items                                                   |
+| No Steam ID           | Replaces the ID shown by a randomized ID                                                           |
 
 ## Save/Load
 When the host saves or loads a save file, the mod will add the stored items inside the file to read them when loading. 
