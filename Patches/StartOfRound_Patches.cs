@@ -25,4 +25,15 @@ internal class StartOfRound_Patches
         );
         Logger.Debug("Loaded stored items!");
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(StartOfRound.ResetShip))]
+    private static void ResetInventory()
+    {
+        // Skip if persist
+        if (ShipInventory.Config.PersistThroughFire.Value)
+            return;
+        
+        ItemManager.SetItems([]);
+    }
 }

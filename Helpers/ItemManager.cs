@@ -2,7 +2,6 @@
 using System.Linq;
 using GameNetcodeStuff;
 using ShipInventory.Objects;
-using UnityEngine;
 
 namespace ShipInventory.Helpers;
 
@@ -78,7 +77,7 @@ public static class ItemManager
         var grabbable = ChuteInteract.Instance.GetComponent<GrabbableObject>();
         
         // Skip if item invalid
-        if (grabbable is null)
+        if (grabbable == null)
             return;
         
         grabbable.scrapValue = GetTotalValue();
@@ -136,15 +135,30 @@ public static class ItemManager
         if (!local.isHoldingObject)
         {
             trigger.interactable = false;
-            trigger.disabledHoverTip = Constants.NOT_HOLDING_ITEM;
+            trigger.disabledHoverTip = Lang.Get("NOT_HOLDING_ITEM");
+            return;
+        }
+        
+        // Debug disable
+        if (ShipInventory.Config.OverrideTrigger.Value == Config.OverrideMode.NEVER)
+        {
+            trigger.interactable = false;
+            trigger.disabledHoverTip = "Disabled by HOST";
             return;
         }
 
+        // Debug enable
+        if (ShipInventory.Config.OverrideTrigger.Value == Config.OverrideMode.ALL)
+        {
+            trigger.interactable = true;
+            return;
+        }
+        
         // Not in orbit
         if (!StartOfRound.Instance.inShipPhase && ShipInventory.Config.RequireInOrbit.Value)
         {
             trigger.interactable = false;
-            trigger.disabledHoverTip = Constants.NOT_IN_ORBIT;
+            trigger.disabledHoverTip = Lang.Get("NOT_IN_ORBIT");
             return;
         }
         
@@ -152,7 +166,7 @@ public static class ItemManager
         if (storedItems.Count() == ShipInventory.Config.MaxItemCount.Value)
         {
             trigger.interactable = false;
-            trigger.disabledHoverTip = Constants.INVENTORY_FULL;
+            trigger.disabledHoverTip = Lang.Get("INVENTORY_FULL");
             return;
         }
         
@@ -160,7 +174,7 @@ public static class ItemManager
         if (!IsItemAllowed(local.currentlyHeldObjectServer?.itemProperties))
         {
             trigger.interactable = false;
-            trigger.disabledHoverTip = Constants.ITEM_NOT_ALLOWED;
+            trigger.disabledHoverTip = Lang.Get("ITEM_NOT_ALLOWED");
             return;
         }
         

@@ -20,10 +20,10 @@ public class ShipInventory : BaseUnityPlugin
     
     private void Awake()
     {
-        Config = new Config(base.Config);
-        
         Helpers.Logger.SetLogger(Logger);
 
+        Config = new Config(base.Config);
+        
         // Load bundle
         if (!Bundle.LoadBundle(Constants.BUNDLE))
             return;
@@ -99,6 +99,8 @@ public class ShipInventory : BaseUnityPlugin
         item.saveItemVariable = true;
         
         grab.itemProperties = item;
+        grab.grabbable = false;
+        grab.grabbableToEnemies = false;
     }
     private static void SetUpVent(GameObject vent)
     {
@@ -116,10 +118,18 @@ public class ShipInventory : BaseUnityPlugin
         
         // GRABBABLE
         var grabObj = vent.GetComponent<GrabbableObject>();
-        grabObj.isInElevator = true;
-        grabObj.isInShipRoom = true;
-        grabObj.scrapPersistedThroughRounds = true;
-        grabObj.OnHitGround();
+
+        if (Config.LetAsItem.Value)
+        {
+            grabObj.isInElevator = true;
+            grabObj.isInShipRoom = true;
+            grabObj.scrapPersistedThroughRounds = true;
+            //grabObj.isHeld = true;
+            //grabObj.isHeldByEnemy = true;
+            grabObj.OnHitGround();
+        }
+        else if (grabObj != null)
+            Destroy(grabObj);
         
         // Update scrap value of the chute
         ItemManager.UpdateValue();

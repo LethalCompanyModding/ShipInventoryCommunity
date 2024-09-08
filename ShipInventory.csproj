@@ -5,7 +5,7 @@
         <AssemblyName>ShipInventory</AssemblyName>
         <Product>ShipInventory</Product>
         <!-- Change to whatever version you're currently on. -->
-        <Version>1.1.0</Version>
+        <Version>1.1.1</Version>
     </PropertyGroup>
 
     <!-- Project Properties -->
@@ -46,6 +46,7 @@
         <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all"/>
         <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" PrivateAssets="all"/>
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all"/>
     </ItemGroup>
 
@@ -57,9 +58,6 @@
       <Compile Remove="Unity Assets\**" />
       <EmbeddedResource Remove="Unity Assets\**" />
       <None Remove="Unity Assets\**" />
-      <Compile Remove="ThunderStore\**" />
-      <EmbeddedResource Remove="ThunderStore\**" />
-      <None Remove="ThunderStore\**" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,0 +1,84 @@
+{
+    "CHUTE_SECTION": "Chute",
+    "NAME_BLACKLIST": "Blacklist",
+    "DESCRIPTION_BLACKLIST": "List of items that are not allowed in the chute.\n\nThe items' name should be separated by a comma (,).\nYou can edit the config directly in the file for a better experience.",
+
+    "NAME_SPAWN_DELAY": "Retrieve Rate",
+    "DESCRIPTION_SPAWN_DELAY": "Time in seconds between each item spawn.",
+
+    "NAME_REQUIRES_IN_ORBIT": "Only In Orbit",
+    "DESCRIPTION_REQUIRE_IN_ORBIT": "Prevents players from putting items inside the chute when the ship is on a planet.",
+
+    "NAME_STOP_AFTER": "Max Chute Capacity",
+    "DESCRIPTION_STOP_AFTER": "Limits the amount of items that can be spawned inside the chute.\n\nThis is to prevent further lag when retrieve too many items.",
+
+    "NAME_LET_AS_ITEM": "Let As Item",
+    "DESCRIPTION_LET_AS_ITEM": "Lets the '{0}' component of the chute.\n\nThis setting can be disabled if enemies or mods conflict with the chute. This can also remove compatibilities with other mods.",
+
+    "INVENTORY_SECTION": "Inventory",
+    "NAME_AS_SAFE": "Safe once stored",
+    "DESCRIPTION_AS_SAFE": "Prevents the ship's inventory from clearing when all players die.",
+
+    "NAME_MAX_ITEM_COUNT": "Maximum Item Count",
+    "DESCRIPTION_MAX_ITEM_COUNT": "Limits the amount of items that can be inside the ship's inventory.\n\nIf the ship's inventory already has too many items, it won't empty the excess.",
+
+    "NAME_PERSIST_THROUGH_FIRE": "Persist through fire",
+    "DESCRIPTION_PERSIST_THROUGH_FIRE": "Prevents the ship's inventory from clearing when the crew gets fired.",
+    
+    "TERMINAL_SECTION": "Terminal",
+    "NAME_SHOW_CONFIRMATION": "Terminal Confirmation",
+    "DESCRIPTION_SHOW_CONFIRMATION": "Removes the confirmation when retrieving items from the ship's inventory.",
+
+    "NAME_NO_STEAM_ID": "Show Steam ID",
+    "DESCRIPTION_NO_STEAM_ID": "Replaces the ID shown on the ship's inventory meny by a random ID.",
+
+    "DEBUG_SECTION": "Debug",
+    "NAME_OVERRIDE_TRIGGER": "Override Trigger",
+    "DESCRIPTION_OVERRIDE_TRIGGER": "Overrides the trigger check.\n\nThis is useful if items get stuck or you want to store illegal items.\n\n{0}: Proceed with the base checks\n{1}: Prevents all items\n{2}: Allows all items\n\nAny crash related to this is your fault.",
+
+    "SINGLE_RETRIEVE": "Retrieve single",
+    "TEXT_SINGLE_RETRIEVE": "You are about to retrieve '{0}' from the ship's inventory.",
+    "SINGLE_RETRIEVE_MESSAGE": "Simply select the desired item to retrieve it.",
+    "SINGLE_ITEM_FORMAT": "{0} (${1})",
+
+    "TYPE_RETRIEVE": "Retrieve type",
+    "TEXT_TYPE_RETRIEVE": "You are about to retrieve {0} instances of '{1}' from the ship's inventory.",
+    "TYPE_RETRIEVE_MESSAGE": "Simply select the desired type to retrieve all the items of this type.",
+    "TYPE_ITEM_FORMAT": "{0} x{1} (${2})",
+
+    "RANDOM_RETRIEVE": "Retrieve random",
+    "TEXT_RANDOM_RETRIEVE": "You are about to retrieve '{0}' from the ship's inventory.",
+
+    "ALL_RETRIEVE": "Retrieve all",
+    "TEXT_ALL_RETRIEVE": "You are about to retrieve everything from the ship's inventory.",
+
+    "SHIP_INFO": "Print Status",
+    "SHIP_INFO_HEADER": "Here is the current status of the ship's inventory:",
+    "SHIP_INFO_TOTAL": "Total value: {0}",
+    "SHIP_INFO_COUNT": "Number of items: {0}",
+    "SHIP_INFO_CAPACITY": "Maximum Inventory Capacity: {0}",
+    "SHIP_INFO_IS_SAFE": "Is Inventory safe: {0}",
+    "SHIP_INFO_IN_ORBIT": "Opened on planets: {0}",
+
+    "CONFIRMATION_TITLE": "Confirmation",
+    "CONFIRMATION_MESSAGE": "Do you really want to proceed?",
+
+    "POSITIVE_ANSWER": "Yes",
+    "NEGATIVE_ANSWER": "No",
+
+    "PREVIOUS": "[ PREVIOUS ]",
+    "NEXT": "[ NEXT ]",
+    "EXIT": "[ EXIT ]",
+    "UNKNOWN": "???",
+
+    "WELCOME_MESSAGE": "Welcome aboard, {0} #{1}",
+    "HOME_MESSAGE": "Please select the desired action to execute from the provided list:",
+    "TERMINAL_TITLE": "Ship's console",
+    "INVENTORY_TITLE": "Inventory",
+    "TRADEMARK": "<color=#666666>       [ PROPERTY OF Halden Eletronics © ]</color>",
+
+    "NOT_HOLDING_ITEM": "[Nothing to store]",
+    "ITEM_NOT_ALLOWED": "[Item not allowed]",
+    "NOT_IN_ORBIT": "[Ship must be in orbit]",
+    "INVENTORY_FULL": "[Inventory full]"
+}

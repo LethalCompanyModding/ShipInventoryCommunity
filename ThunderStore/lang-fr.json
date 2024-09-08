@@ -1,0 +1,84 @@
+{
+    "CHUTE_SECTION": "Chute",
+    "NAME_BLACKLIST": "Liste noire",
+    "DESCRIPTION_BLACKLIST": "Liste des éléments non autorisés dans la chute.\n\nLes noms des éléments doivent être séparés par une virgule (,).\nVous pouvez modifier la configuration directement dans le fichier pour une meilleure expérience.",
+
+    "NAME_SPAWN_DELAY": "Taux de récupération",
+    "DESCRIPTION_SPAWN_DELAY": "Temps en secondes entre chaque apparition d'un élément.",
+    
+    "NAME_REQUIRES_IN_ORBIT": "Uniquement en orbite",
+    "DESCRIPTION_REQUIRE_IN_ORBIT": "Empêche les joueurs de mettre des éléments dans la chute lorsque le vaisseau est sur une planète.",
+    
+    "NAME_STOP_AFTER": "Capacité maximale de la chute",
+    "DESCRIPTION_STOP_AFTER": "Limite le nombre d'éléments pouvant apparaître dans la chute.\n\nCela permet d'éviter un retard supplémentaire lorsque trop d'éléments sont récupérés.",
+
+    "NAME_LET_AS_ITEM": "Laisser comme élément",
+    "DESCRIPTION_LET_AS_ITEM": "Permet le composant '{0}' de la chute.\n\nCette option peut être désactivée si des ennemis ou des mods sont en conflit avec la chute. Cela peut également supprimer les compatibilités avec d'autres mods.",
+
+    "INVENTORY_SECTION": "Inventaire",
+    "NAME_AS_SAFE": "Sécurisé une fois stocké",
+    "DESCRIPTION_AS_SAFE": "Empêche la suppression de l'inventaire du vaisseau lorsque tous les joueurs meurent.",
+
+    "NAME_MAX_ITEM_COUNT": "Nombre maximal d'éléments",
+    "DESCRIPTION_MAX_ITEM_COUNT": "Limite le nombre d'éléments pouvant être dans l'inventaire du vaisseau.\n\nSi l'inventaire du vaisseau contient déjà trop d'éléments, il ne videra pas l'excédent.",
+
+    "NAME_PERSIST_THROUGH_FIRE": "Conservé entre les équipes",
+    "DESCRIPTION_PERSIST_THROUGH_FIRE": "Empêche la suppression de l'inventaire du vaisseau lorsque l'équipe est virée.",
+    
+    "TERMINAL_SECTION": "Terminal",
+    "NAME_SHOW_CONFIRMATION": "Confirmation du terminal",
+    "DESCRIPTION_SHOW_CONFIRMATION": "Supprime la confirmation lors de la récupération d'éléments de l'inventaire du vaisseau.",
+
+    "NAME_NO_STEAM_ID": "Afficher l'ID Steam",
+    "DESCRIPTION_NO_STEAM_ID": "Remplace l'ID affiché dans le menu de l'inventaire du vaisseau par un ID aléatoire.",
+
+    "DEBUG_SECTION": "Débogage",
+    "NAME_OVERRIDE_TRIGGER": "Déclencheur de remplacement",
+    "DESCRIPTION_OVERRIDE_TRIGGER": "Remplace la vérification du déclencheur.\n\nCeci est utile si les éléments se bloquent ou si vous souhaitez stocker des éléments illégaux.\n\n{0} : Procéder avec les vérifications de base\n{1} : Empêche tous les éléments\n{2} : Autorise tous les éléments\n\nTout crash lié à cela est de votre responsabilité.",
+
+    "SINGLE_RETRIEVE": "Récupérer un seul",
+    "TEXT_SINGLE_RETRIEVE": "Vous êtes sur le point de récupérer '{0}' de l'inventaire du vaisseau.",
+    "SINGLE_RETRIEVE_MESSAGE": "Il suffit de sélectionner l'élément désiré pour le récupérer.",
+    "SINGLE_ITEM_FORMAT": "{0} (${1})",
+    
+    "TYPE_RETRIEVE": "Récupérer le type",
+    "TEXT_TYPE_RETRIEVE": "Vous êtes sur le point de récupérer {0} instances de '{1}' de l'inventaire du vaisseau.",
+    "TYPE_RETRIEVE_MESSAGE": "Il suffit de sélectionner le type désiré pour récupérer tous les éléments de ce type.",
+    "TYPE_ITEM_FORMAT": "{0} x{1} (${2})",
+
+    "RANDOM_RETRIEVE": "Récupérer au hasard",
+    "TEXT_RANDOM_RETRIEVE": "Vous êtes sur le point de récupérer '{0}' de l'inventaire du vaisseau.",
+    
+    "ALL_RETRIEVE": "Récupérer tout",
+    "TEXT_ALL_RETRIEVE": "Vous êtes sur le point de récupérer tout le contenu de l'inventaire du vaisseau.",
+
+    "SHIP_INFO": "Imprimer l'état",
+    "SHIP_INFO_HEADER": "Voici l'état actuel de l'inventaire du vaisseau :",
+    "SHIP_INFO_TOTAL": "Valeur totale : {0}",
+    "SHIP_INFO_COUNT": "Nombre d'éléments : {0}",
+    "SHIP_INFO_CAPACITY": "Capacité maximale de l'inventaire : {0}",
+    "SHIP_INFO_IS_SAFE": "L'inventaire est-il sécurisé : {0}",
+    "SHIP_INFO_IN_ORBIT": "Ouvert sur les planètes : {0}",
+
+    "CONFIRMATION_TITLE": "Confirmation",
+    "CONFIRMATION_MESSAGE": "Voulez-vous vraiment continuer ?",
+    
+    "POSITIVE_ANSWER": "Oui",
+    "NEGATIVE_ANSWER": "Non",
+    
+    "PREVIOUS": "[ PRÉCÉDENT ]",
+    "NEXT": "[ SUIVANT ]",
+    "EXIT": "[ SORTIR ]",
+    "UNKNOWN": "???",
+
+    "WELCOME_MESSAGE": "Bienvenue à bord, {0} #{1}",
+    "HOME_MESSAGE": "Veuillez sélectionner l'action souhaitée à exécuter à partir de la liste fournie :",
+    "TERMINAL_TITLE": "Console du vaisseau",
+    "INVENTORY_TITLE": "Inventaire",
+    "TRADEMARK": "<color=#666666>       [ PROPRIÉTÉ DE Halden Eletronics © ]</color>",
+
+    "NOT_HOLDING_ITEM": "[Rien à stocker]",
+    "ITEM_NOT_ALLOWED": "[Élément non autorisé]",
+    "NOT_IN_ORBIT": "[Le vaisseau doit être en orbite]",
+    "INVENTORY_FULL": "[Inventaire plein]"
+}

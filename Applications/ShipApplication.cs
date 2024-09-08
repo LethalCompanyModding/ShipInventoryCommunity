@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using InteractiveTerminalAPI.UI;
 using InteractiveTerminalAPI.UI.Application;
 using InteractiveTerminalAPI.UI.Cursor;
@@ -13,6 +12,51 @@ namespace ShipInventory.Applications;
 
 public class ShipApplication : InteractiveTerminalApplication
 {
+    #region Texts
+
+    private readonly string CONFIRMATION_TITLE = Lang.Get("CONFIRMATION_TITLE");
+    private readonly string CONFIRMATION_MESSAGE = Lang.Get("CONFIRMATION_MESSAGE");
+
+    private readonly string WELCOME_MESSAGE = Lang.Get("WELCOME_MESSAGE");
+    private readonly string TRADEMARK = Lang.Get("TRADEMARK");
+    private readonly string TERMINAL_TITLE = Lang.Get("TERMINAL_TITLE");
+    private readonly string INVENTORY_TITLE = Lang.Get("INVENTORY_TITLE");
+
+    private readonly string HOME_MESSAGE = Lang.Get("HOME_MESSAGE");
+    
+    private readonly string NEXT = Lang.Get("NEXT");
+    private readonly string PREVIOUS = Lang.Get("PREVIOUS");
+    private readonly string UNKNOWN = Lang.Get("UNKNOWN");
+    private readonly string EXIT = Lang.Get("EXIT");
+    
+    private readonly string NEGATIVE_ANSWER = Lang.Get("NEGATIVE_ANSWER");
+    private readonly string POSITIVE_ANSWER = Lang.Get("POSITIVE_ANSWER");
+
+    private readonly string SINGLE_RETRIEVE = Lang.Get("SINGLE_RETRIEVE");
+    private readonly string TEXT_SINGLE_RETRIEVE = Lang.Get("TEXT_SINGLE_RETRIEVE");
+    private readonly string SINGLE_RETRIEVE_MESSAGE = Lang.Get("SINGLE_RETRIEVE_MESSAGE");
+    private readonly string SINGLE_ITEM_FORMAT = Lang.Get("SINGLE_ITEM_FORMAT");
+
+    private readonly string TYPE_RETRIEVE = Lang.Get("TYPE_RETRIEVE");
+    private readonly string TEXT_TYPE_RETRIEVE = Lang.Get("TEXT_TYPE_RETRIEVE");
+    private readonly string TYPE_RETRIEVE_MESSAGE = Lang.Get("TYPE_RETRIEVE_MESSAGE");
+    private readonly string TYPE_ITEM_FORMAT = Lang.Get("TYPE_ITEM_FORMAT");
+    
+    private readonly string RANDOM_RETRIEVE = Lang.Get("RANDOM_RETRIEVE");
+    private readonly string TEXT_RANDOM_RETRIEVE = Lang.Get("TEXT_RANDOM_RETRIEVE");
+    
+    private readonly string ALL_RETRIEVE = Lang.Get("ALL_RETRIEVE");
+    private readonly string TEXT_ALL_RETRIEVE = Lang.Get("TEXT_ALL_RETRIEVE");
+    
+    private readonly string SHIP_INFO = Lang.Get("SHIP_INFO");
+    private readonly string SHIP_INFO_HEADER = Lang.Get("SHIP_INFO_HEADER");
+    private readonly string SHIP_INFO_TOTAL = Lang.Get("SHIP_INFO_TOTAL");
+    private readonly string SHIP_INFO_COUNT = Lang.Get("SHIP_INFO_COUNT");
+    private readonly string SHIP_INFO_CAPACITY = Lang.Get("SHIP_INFO_CAPACITY");
+    private readonly string SHIP_INFO_IS_SAFE = Lang.Get("SHIP_INFO_IS_SAFE");
+    private readonly string SHIP_INFO_IN_ORBIT = Lang.Get("SHIP_INFO_IN_ORBIT");
+    
+    #endregion
     public override void Initialization() => Main();
 
     private void Main()
@@ -22,69 +66,57 @@ public class ShipApplication : InteractiveTerminalApplication
             ? new Random((int)player.playerSteamId).Next()
             : (int)player.playerSteamId;
 
-        string playerStatus = new StringBuilder()
-            .Append(HUDManager.Instance.playerLevels[player.playerLevelNumber].levelName)
-            .Append(" #")
-            .Append(id)
-            .ToString();
-
-        var optionMenu = new CursorMenu
-        {
+        var optionMenu = new CursorMenu {
             cursorIndex = 0,
             elements =
             [
                 new CursorElement
                 {
-                    Name = Constants.SINGLE_RETRIEVE,
+                    Name = SINGLE_RETRIEVE,
                     Active = _ => ItemManager.GetItems().Any(),
                     Action = () => RetrieveSingle(0)
                 },
                 new CursorElement
                 {
-                    Name = Constants.TYPE_RETRIEVE,
+                    Name = TYPE_RETRIEVE,
                     Active = _ => ItemManager.GetItems().Any(),
                     Action = () => RetrieveType(0)
                 },
                 new CursorElement
                 {
-                    Name = Constants.RANDOM_RETRIEVE,
+                    Name = RANDOM_RETRIEVE,
                     Active = _ => ItemManager.GetItems().Any(),
                     Action = RetrieveRandom
                 },
                 new CursorElement
                 {
-                    Name = Constants.ALL_RETRIEVE,
+                    Name = ALL_RETRIEVE,
                     Active = _ => ItemManager.GetItems().Any(),
                     Action = RetrieveAll
                 },
                 new CursorElement
                 {
-                    Name = Constants.SHIP_INFO,
+                    Name = SHIP_INFO,
                     Action = GetInfo
                 }
             ]
         };
 
         var screen = new BoxedScreen {
-            Title = "Ship's console",
+            Title = TERMINAL_TITLE,
             elements =
             [
-                new TextElement
-                {
-                    Text = new StringBuilder().Append("Welcome aboard, ").Append(playerStatus).ToString()
-                },
-                new TextElement { Text = " " },
-                new TextElement
-                {
-                    Text = "Please select the desired action to execute from the provided list:"
-                },
-                new TextElement { Text = " " },
+                TextElement.Create(string.Format(
+                    WELCOME_MESSAGE,
+                    HUDManager.Instance.playerLevels[player.playerLevelNumber].levelName,
+                    id
+                )),
+                TextElement.Create(" "),
+                TextElement.Create(HOME_MESSAGE),
+                TextElement.Create(" "),
                 optionMenu,
-                new TextElement { Text = " " },
-                new TextElement
-                {
-                    Text = "<color=#666666>       [ PROPERTY OF Halden Eletronics © ]</color>"
-                }
+                TextElement.Create(" "),
+                TextElement.Create(TRADEMARK)
             ]
         };
         SwitchScreen(screen, optionMenu, true);
@@ -105,31 +137,25 @@ public class ShipApplication : InteractiveTerminalApplication
             [
                 new CursorElement
                 {
-                    Name = Constants.NEGATIVE_ANSWER,
+                    Name = NEGATIVE_ANSWER,
                     Action = Main
                 },
                 new CursorElement
                 {
-                    Name = Constants.POSITIVE_ANSWER,
+                    Name = POSITIVE_ANSWER,
                     Action = () => callback?.Invoke()
                 }
             ]
         };
 
         var screen = new BoxedScreen {
-            Title = "Confirmation",
+            Title = CONFIRMATION_TITLE,
             elements =
             [
-                new TextElement
-                {
-                    Text = message
-                },
-                new TextElement { Text = " " },
-                new TextElement
-                {
-                    Text = "Do you really want to proceed?"
-                },
-                new TextElement { Text = " " },
+                TextElement.Create(message),
+                TextElement.Create(" "),
+                TextElement.Create(CONFIRMATION_MESSAGE),
+                TextElement.Create(" "),
                 optionMenu
             ]
         };
@@ -144,14 +170,14 @@ public class ShipApplication : InteractiveTerminalApplication
         object randomObj = items.ElementAt(UnityEngine.Random.Range(0, items.Count()));
         
         // Generate message
-        string message = Constants.TEXT_RANDOM_RETRIEVE;
+        string message = TEXT_RANDOM_RETRIEVE;
 
         string name = randomObj switch
         {
             ItemData data => data.GetItem()?.itemName,
             EnemyType enemyType => enemyType.enemyName,
             _ => null
-        } ?? Constants.UNKNOWN;
+        } ?? UNKNOWN;
 
         message = string.Format(message, name);
         
@@ -166,7 +192,7 @@ public class ShipApplication : InteractiveTerminalApplication
     }
     private void RetrieveAll()
     {
-        Confirm(Constants.TEXT_ALL_RETRIEVE, () =>
+        Confirm(TEXT_ALL_RETRIEVE, () =>
         {
             foreach (var group in ItemManager.GetItems().GroupBy(i => i.ID))
             {
@@ -189,7 +215,7 @@ public class ShipApplication : InteractiveTerminalApplication
         {
             elements.Add(new CursorElement
             {
-                Name = Constants.PREVIOUS,
+                Name = PREVIOUS,
                 Action = () => RetrieveSingle(index - 1)
             });
         }
@@ -202,16 +228,22 @@ public class ShipApplication : InteractiveTerminalApplication
             {
                 var i = item.GetItem();
 
-                string name = Constants.UNKNOWN;
+                string name = UNKNOWN;
                 if (i is not null)
-                    name = $"{i.itemName} (${item.SCRAP_VALUE})";
+                {
+                    name = string.Format(
+                        SINGLE_ITEM_FORMAT,
+                        i.itemName,
+                        item.SCRAP_VALUE
+                    );
+                }
                 
                 return new CursorElement
                 {
                     Name = name,
                     Action = () =>
                     {
-                        string message = Constants.TEXT_SINGLE_RETRIEVE;
+                        string message = TEXT_SINGLE_RETRIEVE;
 
                         message = string.Format(message, name);
                         Confirm(message, () =>
@@ -229,7 +261,7 @@ public class ShipApplication : InteractiveTerminalApplication
         {
             elements.Add(new CursorElement
             {
-                Name = Constants.NEXT,
+                Name = NEXT,
                 Action = () => RetrieveSingle(index + 1)
             });
         }
@@ -241,9 +273,9 @@ public class ShipApplication : InteractiveTerminalApplication
         };
         var screen = new BoxedScreen
         {
-            Title = "Inventory",
+            Title = INVENTORY_TITLE,
             elements = [
-                TextElement.Create("Simply select the desired item to retrieve it."),
+                TextElement.Create(SINGLE_RETRIEVE_MESSAGE),
                 TextElement.Create(" "),
                 options
             ],
@@ -260,7 +292,7 @@ public class ShipApplication : InteractiveTerminalApplication
         {
             elements.Add(new CursorElement
             {
-                Name = Constants.PREVIOUS,
+                Name = PREVIOUS,
                 Action = () => RetrieveType(index - 1)
             });
         }
@@ -274,18 +306,25 @@ public class ShipApplication : InteractiveTerminalApplication
                 var i = group.First().GetItem();
                 var amount = group.Count();
 
-                string name = Constants.UNKNOWN;
+                string name = UNKNOWN;
                 if (i is not null)
-                    name = $"{i.itemName} x{amount} (${group.Sum(data => data.SCRAP_VALUE)})";
+                {
+                    name = string.Format(
+                        TYPE_ITEM_FORMAT,
+                        i.itemName,
+                        amount,
+                        group.Sum(data => data.SCRAP_VALUE)
+                    );
+                }
                 
                 return new CursorElement
                 {
                     Name = name,
                     Action = () =>
                     {
-                        string message = Constants.TEXT_TYPE_RETRIEVE;
+                        string message = TEXT_TYPE_RETRIEVE;
 
-                        message = string.Format(message, amount, i?.itemName ?? Constants.UNKNOWN);
+                        message = string.Format(message, amount, i?.itemName ?? UNKNOWN);
                         Confirm(message, () =>
                         {
                             ChuteInteract.Instance?.SpawnItemServerRpc(
@@ -304,7 +343,7 @@ public class ShipApplication : InteractiveTerminalApplication
         {
             elements.Add(new CursorElement
             {
-                Name = Constants.NEXT,
+                Name = NEXT,
                 Action = () => RetrieveType(index + 1)
             });
         }
@@ -315,9 +354,9 @@ public class ShipApplication : InteractiveTerminalApplication
             elements = elements.ToArray()
         };
         var screen = new BoxedScreen {
-            Title = "Inventory",
+            Title = INVENTORY_TITLE,
             elements = [
-                TextElement.Create("Simply select the desired type to retrieve all the items of this type."),
+                TextElement.Create(TYPE_RETRIEVE_MESSAGE),
                 TextElement.Create(" "),
                 options
             ],
@@ -333,23 +372,23 @@ public class ShipApplication : InteractiveTerminalApplication
             elements = [
                 new CursorElement
                 {
-                    Name = "Exit",
+                    Name = EXIT,
                     Action = Main
                 }
             ]
         };
         var screen = new BoxedScreen
         {
-            Title = "Inventory",
+            Title = INVENTORY_TITLE,
             elements = [
-                TextElement.Create("Here is the current status of the ship's inventory:"),
+                TextElement.Create(SHIP_INFO_HEADER),
                 TextElement.Create(" "),
-                TextElement.Create("Total value: " + ItemManager.GetTotalValue()),
-                TextElement.Create("Number of items: " + ItemManager.GetItems().Count()), 
+                TextElement.Create(string.Format(SHIP_INFO_TOTAL, ItemManager.GetTotalValue())),
+                TextElement.Create(string.Format(SHIP_INFO_COUNT, ItemManager.GetItems().Count())), 
                 TextElement.Create(" "),
-                TextElement.Create("Maximum Inventory Capacity: " + ShipInventory.Config.MaxItemCount.Value),
-                TextElement.Create("Is Inventory safe: " + (ShipInventory.Config.ActAsSafe.Value ? "<color=green>TRUE" : "<color=red>FALSE") + "</color>"),
-                TextElement.Create("Opened on planets: " + (!ShipInventory.Config.RequireInOrbit.Value ? "<color=green>TRUE" : "<color=red>FALSE") + "</color>"),
+                TextElement.Create(string.Format(SHIP_INFO_CAPACITY, ShipInventory.Config.MaxItemCount.Value)),
+                TextElement.Create(string.Format(SHIP_INFO_IS_SAFE, (ShipInventory.Config.ActAsSafe.Value ? "<color=green>" + POSITIVE_ANSWER : "<color=red>" + NEGATIVE_ANSWER) + "</color>")),
+                TextElement.Create(string.Format(SHIP_INFO_IN_ORBIT, (!ShipInventory.Config.RequireInOrbit.Value ? "<color=green>" + POSITIVE_ANSWER : "<color=red>" + NEGATIVE_ANSWER) + "</color>")),
                 TextElement.Create(" "),
                 options
             ]
