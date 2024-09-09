@@ -23,7 +23,7 @@ A clear description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Mods used**
-List all the mods that you use. You can skip the mods you think don't affect this mod.
+List all the mods that you use. You can skip the mods you think don't affect this mod. If possible, give the link to the mod and the version used.
 
 **Additional context**
 Add any other context about the problem here.
