@@ -57,6 +57,7 @@ public class ShipApplication : InteractiveTerminalApplication
     private readonly string SHIP_INFO_IN_ORBIT = Lang.Get("SHIP_INFO_IN_ORBIT");
     
     #endregion
+    
     public override void Initialization() => Main();
 
     private void Main()
@@ -67,31 +68,35 @@ public class ShipApplication : InteractiveTerminalApplication
             : (int)player.playerSteamId;
 
         var optionMenu = new CursorMenu {
-            cursorIndex = 0,
+            cursorIndex = ItemManager.GetItems().Any() ? 0 : 4,
             elements =
             [
                 new CursorElement
                 {
                     Name = SINGLE_RETRIEVE,
                     Active = _ => ItemManager.GetItems().Any(),
+                    SelectInactive = false,
                     Action = () => RetrieveSingle(0)
                 },
                 new CursorElement
                 {
                     Name = TYPE_RETRIEVE,
                     Active = _ => ItemManager.GetItems().Any(),
+                    SelectInactive = false,
                     Action = () => RetrieveType(0)
                 },
                 new CursorElement
                 {
                     Name = RANDOM_RETRIEVE,
                     Active = _ => ItemManager.GetItems().Any(),
+                    SelectInactive = false,
                     Action = RetrieveRandom
                 },
                 new CursorElement
                 {
                     Name = ALL_RETRIEVE,
                     Active = _ => ItemManager.GetItems().Any(),
+                    SelectInactive = false,
                     Action = RetrieveAll
                 },
                 new CursorElement

@@ -1,49 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿using System.Linq;
 using HarmonyLib;
 using ShipInventory.Helpers;
-using ShipInventory.Objects;
 
 namespace ShipInventory.Patches;
 
 [HarmonyPatch(typeof(GameNetworkManager))]
 public class GameNetworkManager_Patches
 {
-    /// <summary>
-    /// Removes the chute from the selection of items to save
-    /// </summary>
-    [HarmonyTranspiler]
-    [HarmonyPatch(nameof(GameNetworkManager.SaveItemsInShip))]
-    private static IEnumerable<CodeInstruction> RemoveChuteFromSelection(
-        MethodBase original, IEnumerable<CodeInstruction> instructions)
-    {
-        var enumerator = instructions.GetEnumerator();
-
-        while (enumerator.MoveNext())
-        {
-            var instruction = enumerator.Current;
-            
-            // If instruction invalid, skip
-            if (instruction == null)
-                break;
-
-            yield return instruction;
-            
-            // Skip if not array stored
-            if (instruction.opcode != OpCodes.Stloc_0)
-                continue;
-
-            // Add instructor after storing all objects
-            yield return new CodeInstruction(OpCodes.Ldloca_S, System.Convert.ToByte(0));
-            yield return new CodeInstruction(OpCodes.Call,
-                AccessTools.Method(typeof(VentProp), nameof(VentProp.RemoveChute))
-            );
-        }
-        enumerator.Dispose();
-    }
-    
     /// <summary>
     /// Saves the inventory into the file
     /// </summary>

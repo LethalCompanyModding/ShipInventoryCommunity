@@ -25,7 +25,6 @@ public class Config : SyncedConfig2<Config>
     [SyncedEntryField] public readonly SyncedEntry<bool> NoSteamID;
 
     [SyncedEntryField] public readonly SyncedEntry<OverrideMode> OverrideTrigger;
-    [SyncedEntryField] public readonly SyncedEntry<bool> LetAsItem;
     public enum OverrideMode { NONE, NEVER, ALL }
 
     #endregion
@@ -124,15 +123,6 @@ public class Config : SyncedConfig2<Config>
             ))
         );
         
-        LetAsItem = cfg.BindSyncedEntry(
-            new ConfigDefinition(DEBUG, "LetAsItem"),
-            false,
-            new ConfigDescription(string.Format(
-                Lang.Get("DESCRIPTION_LET_AS_ITEM"),
-                nameof(GrabbableObject)
-            ))
-        );
-
         #endregion
 
         if (LethalConfigCompatibility.enabled)

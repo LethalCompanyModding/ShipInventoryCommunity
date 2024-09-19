@@ -99,17 +99,9 @@ public static class LethalConfigCompatibility
             RequiresRestart = false
         }));
         
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.LetAsItem.Entry, new BoolCheckBoxOptions {
-            Name = Lang.Get("NAME_LET_AS_ITEM"),
-            RequiresRestart = true
-        }));
-
         #endregion
         
-        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(config.LangUsed, new TextInputFieldOptions {
-            Description = "Language to use for the texts.\n\nThe translation has to be found next to the DLL.",
-            RequiresRestart = true
-        }));
+        LethalConfigManager.SkipAutoGenFor(config.LangUsed);
         
         ConfigManager.Register(config); 
     }

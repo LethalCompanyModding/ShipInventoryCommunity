@@ -91,7 +91,6 @@ public class ShipInventory : BaseUnityPlugin
     private static void LoadVent(GameObject obj)
     {
         obj.AddComponent<ChuteInteract>();
-        var grab = obj.AddComponent<VentProp>();
             
         // Vent Prop Item
         var item = ScriptableObject.CreateInstance<Item>();
@@ -100,10 +99,6 @@ public class ShipInventory : BaseUnityPlugin
         item.itemName = "VENT_CHUTE";
         item.spawnPrefab = NetworkPrefabUtils.GetPrefab(Constants.VENT_PREFAB);
         item.saveItemVariable = true;
-        
-        grab.itemProperties = item;
-        grab.grabbable = false;
-        grab.grabbableToEnemies = false;
     }
     private static void SetUpVent(GameObject vent)
     {
@@ -118,21 +113,6 @@ public class ShipInventory : BaseUnityPlugin
         // TRANSFORM
         vent.transform.localPosition = new Vector3(1.9f, 1f, -4.5f);
         vent.transform.localRotation = Quaternion.Euler(35, 0, 0);
-        
-        // GRABBABLE
-        var grabObj = vent.GetComponent<GrabbableObject>();
-
-        if (Config.LetAsItem.Value)
-        {
-            grabObj.isInElevator = true;
-            grabObj.isInShipRoom = true;
-            grabObj.scrapPersistedThroughRounds = true;
-            //grabObj.isHeld = true;
-            //grabObj.isHeldByEnemy = true;
-            grabObj.OnHitGround();
-        }
-        else if (grabObj != null)
-            Destroy(grabObj);
         
         // Update scrap value of the chute
         chute.UpdateValue();
