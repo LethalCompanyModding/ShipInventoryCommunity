@@ -12,9 +12,7 @@ public class VentProp : GrabbableObject
             Destroy(radarIcon.gameObject);
     }
     
-    public override void Update()
-    {
-    }
+    public override void Update() { /* Cancel the update for grabbable */ }
     
     public static void RemoveChute(ref GrabbableObject[] list)
     {

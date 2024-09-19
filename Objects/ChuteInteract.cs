@@ -24,6 +24,21 @@ public class ChuteInteract : NetworkBehaviour
         
         base.OnNetworkSpawn();
     }
+    
+    /// <summary>
+    /// Updates the value of the chute
+    /// </summary>
+    public void UpdateValue()
+    {
+        var grabbable = GetComponent<GrabbableObject>();
+        
+        // Skip if item invalid
+        if (grabbable == null)
+            return;
+        
+        grabbable.scrapValue = ItemManager.GetTotalValue();
+        grabbable.OnHitGround(); // Update 
+    }
 
     #region Store Items
     
@@ -47,7 +62,7 @@ public class ChuteInteract : NetworkBehaviour
 
     public void StoreItem(GrabbableObject item)
     {
-        ItemData data = ItemManager.Save(item);
+        ItemData data = new ItemData(item);
         
         item.OnBroughtToShip();
         
@@ -233,17 +248,24 @@ public class ChuteInteract : NetworkBehaviour
 
     private void UpdateTrigger()
     {
-        if (NetworkManager.Singleton is null)
-            return;
-        
         // If no trigger, skip
         if (!_trigger)
             return;
-
-        var local = GameNetworkManager.Instance?.localPlayerController;
+        
+        if (GameNetworkManager.Instance is null)
+            return;
+        
+        if (NetworkManager.Singleton is null)
+            return;
+        
+        var local = GameNetworkManager.Instance.localPlayerController;
         
         // If player invalid, skip
         if (local is null)
+            return;
+        
+        // If player outside the ship, skip
+        if (!local.isInHangarShipRoom)
             return;
 
         // Update interactable

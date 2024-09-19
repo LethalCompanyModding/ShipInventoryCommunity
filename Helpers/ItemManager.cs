@@ -12,7 +12,7 @@ public static class ItemManager
     /// </summary>
     private static IEnumerable<ItemData> storedItems = [];
 
-    #region Getter/Setter
+    #region Getters
 
     /// <summary>
     /// Copies the items stored in the ship's inventory
@@ -31,22 +31,22 @@ public static class ItemManager
         
         return storedItems.Where(d => d.ID == data.ID).Take(count);
     }
-    
+
+    public static int GetTotalValue() => storedItems.Sum(i => i.SCRAP_VALUE);
+
+    #endregion
+    #region Setters
+
     public static void SetItems(IEnumerable<ItemData> newItems, bool updateAll = false)
     {
         Logger.Debug($"Setting items from {storedItems.Count()} to {newItems.Count()}...");
         storedItems = newItems;
         
-        UpdateValue();
+        ChuteInteract.Instance?.UpdateValue();
         
         if (updateAll)
             ChuteInteract.Instance?.RequestItemsAll();
     }
-
-    public static int GetTotalValue() => storedItems.Sum(i => i.SCRAP_VALUE);
-    
-    #endregion
-    #region Single alternation
 
     /// <summary>
     /// Adds the given item to the cached inventory
@@ -64,52 +64,9 @@ public static class ItemManager
     }
 
     #endregion
-    #region Grabbable Object
-
-    /// <summary>
-    /// Updates the value of the chute
-    /// </summary>
-    public static void UpdateValue()
-    {
-        if (ChuteInteract.Instance == null)
-            return;
-        
-        var grabbable = ChuteInteract.Instance.GetComponent<GrabbableObject>();
-        
-        // Skip if item invalid
-        if (grabbable == null)
-            return;
-        
-        grabbable.scrapValue = GetTotalValue();
-        grabbable.OnHitGround(); // Update 
-    }
-
-    #endregion
-    #region Item Data
-    
-    public static ItemData Save(GrabbableObject item)
-    {
-        ItemData data = default;
-
-        data.ID = itemsAllowed.FindIndex(i => i == item.itemProperties);
-        
-        if (item.itemProperties.isScrap)
-            data.SCRAP_VALUE = item.scrapValue;
-        
-        if (item.itemProperties.saveItemVariable)
-            data.SAVE_DATA = item.GetItemDataToSave();
-        
-        return data;
-    }
-
-    public static Item? GetItem(ItemData data) => itemsAllowed.Count > data.ID && data.ID >= 0 
-        ? itemsAllowed[data.ID] 
-        : null;
-    
-    #endregion
     #region Blacklist
-    
-    private static List<Item> itemsAllowed => StartOfRound.Instance.allItemsList.itemsList;
+
+    internal static readonly Dictionary<string, Item> ALLOWED_ITEMS = [];
     private static string[] BLACKLIST = [];
     public static void UpdateBlacklist(string blacklistString)
     {
@@ -119,20 +76,10 @@ public static class ItemManager
             .ToArray();
     }
 
-    public static bool IsItemAllowed(Item? item)
-    {
-        // If no item, valid
-        if (item is null)
-            return true;
-        
-        // If item in list and not in blacklist
-        return itemsAllowed.Contains(item) && !BLACKLIST.Contains(item.itemName.ToLower());
-    }
-
     public static void UpdateTrigger(InteractTrigger trigger, PlayerControllerB local)
     {
         // Holding nothing
-        if (!local.isHoldingObject)
+        if (!local.isHoldingObject || local.currentlyHeldObjectServer == null)
         {
             trigger.interactable = false;
             trigger.disabledHoverTip = Lang.Get("NOT_HOLDING_ITEM");
@@ -170,8 +117,18 @@ public static class ItemManager
             return;
         }
         
-        // Item not allowed
-        if (!IsItemAllowed(local.currentlyHeldObjectServer?.itemProperties))
+        var item = local.currentlyHeldObjectServer.itemProperties;
+
+        // If blacklisted
+        if (BLACKLIST.Contains(item.itemName.ToLower()))
+        {
+            trigger.interactable = false;
+            trigger.disabledHoverTip = Lang.Get("ITEM_BLACKLISTED");
+            return;
+        }
+        
+        // If item not allowed
+        if (!ALLOWED_ITEMS.ContainsKey(item.itemName))
         {
             trigger.interactable = false;
             trigger.disabledHoverTip = Lang.Get("ITEM_NOT_ALLOWED");

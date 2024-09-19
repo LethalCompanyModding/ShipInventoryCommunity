@@ -1,9 +1,11 @@
+using System;
+using System.Linq;
 using System.Reflection;
 using BepInEx;
 using HarmonyLib;
 using InteractiveTerminalAPI.UI;
-using LethalConfig;
 using ShipInventory.Applications;
+using ShipInventory.Compatibility;
 using ShipInventory.Helpers;
 using ShipInventory.Objects;
 using UnityEngine;
@@ -13,7 +15,7 @@ namespace ShipInventory;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency("WhiteSpike.InteractiveTerminalAPI")]
 [BepInDependency("com.sigurd.csync", "5.0.1")] 
-[BepInDependency("ainavt.lc.lethalconfig")]
+[BepInDependency(LethalConfigCompatibility.LETHAL_CONFIG, BepInDependency.DependencyFlags.SoftDependency)]
 public class ShipInventory : BaseUnityPlugin
 {
     public new static Config Config = null!;
@@ -21,15 +23,16 @@ public class ShipInventory : BaseUnityPlugin
     private void Awake()
     {
         Helpers.Logger.SetLogger(Logger);
-
-        Config = new Config(base.Config);
         
         // Load bundle
         if (!Bundle.LoadBundle(Constants.BUNDLE))
+        {
+            Helpers.Logger.Error("Failed to load the bundle. This mod will not continue further.");
             return;
+        }
 
-        LethalConfigManager.SetModIcon(Bundle.LoadAsset<Sprite>(Constants.MOD_ICON));
-        LethalConfigManager.SetModDescription("Adds an inventory to the ship, allowing it to store items and retrieve them.");
+        Config = new Config(base.Config);
+        
         PrepareNetwork();
         Patch();
 
@@ -132,7 +135,22 @@ public class ShipInventory : BaseUnityPlugin
             Destroy(grabObj);
         
         // Update scrap value of the chute
-        ItemManager.UpdateValue();
+        chute.UpdateValue();
+    }
+
+    #endregion
+    #region Items
+
+    public static void PrepareItems()
+    {
+        foreach (var item in Resources.FindObjectsOfTypeAll<Item>())
+        {
+            // Must have spawn prefab
+            if (item.spawnPrefab == null)
+                continue;
+
+            ItemManager.ALLOWED_ITEMS.TryAdd(item.itemName, item);
+        }
     }
 
     #endregion

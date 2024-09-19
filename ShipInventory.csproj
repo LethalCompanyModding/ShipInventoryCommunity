@@ -54,20 +54,20 @@
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all"/>
     </ItemGroup>
 
+    <!-- Dependencies -->
     <ItemGroup>
-      <Compile Remove="Unity Assets\**" />
-      <EmbeddedResource Remove="Unity Assets\**" />
-      <None Remove="Unity Assets\**" />
+      <Reference Include="$(BepinEx)\Sigurd-CSync\CSync\com.sigurd.csync.dll" />
+      <Reference Include="$(BepinEx)\WhiteSpike-Interactive_Terminal_API\InteractiveTerminalAPI\InteractiveTerminalAPI.dll" />
+      <Reference Include="$(BepinEx)\AinaVT-LethalConfig\LethalConfig\LethalConfig.dll" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="$(BepinEx)\CSync\com.sigurd.csync.dll" />
-      <Reference Include="$(BepinEx)\InteractiveTerminalAPI\InteractiveTerminalAPI.dll" />
-      <Reference Include="$(BepinEx)\LethalConfig\LethalConfig.dll" />
-    </ItemGroup>
-
+    <!-- Targets -->
+    <PropertyGroup>
+        <Profile>Ship Inventory</Profile>
+    </PropertyGroup>
     <Import Project="../LC.targets" />
-<Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
-    <Exec Command="netcode-patch -nv 1.5.2 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')"/>
-</Target>
+
+    <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
+        <Exec Command="netcode-patch -nv 1.5.2 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')"/>
+    </Target>
 </Project>

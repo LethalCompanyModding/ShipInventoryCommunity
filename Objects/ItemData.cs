@@ -1,21 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
 using ShipInventory.Helpers;
 using Unity.Netcode;
 
 namespace ShipInventory.Objects;
 
+/// <summary>
+/// Data transferred between the clients and the host
+/// </summary>
 [Serializable]
 public struct ItemData : INetworkSerializable
 {
-    public int ID;
+    public string ID;
     public int SCRAP_VALUE;
     public int SAVE_DATA;
 
-    public ItemData()
+    public ItemData(GrabbableObject item)
     {
+        ID = item.itemProperties.itemName;
+    
+        if (item.itemProperties.isScrap)
+            SCRAP_VALUE = item.scrapValue;
+    
+        if (item.itemProperties.saveItemVariable)
+            SAVE_DATA = item.GetItemDataToSave();
     }
 
-    public Item? GetItem() => ItemManager.GetItem(this);
+    public Item? GetItem() => ItemManager.ALLOWED_ITEMS.GetValueOrDefault(ID);
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {

@@ -1,9 +1,7 @@
 ﻿using BepInEx.Configuration;
 using CSync.Extensions;
 using CSync.Lib;
-using LethalConfig;
-using LethalConfig.ConfigItems;
-using LethalConfig.ConfigItems.Options;
+using ShipInventory.Compatibility;
 using ShipInventory.Helpers;
 
 namespace ShipInventory;
@@ -137,95 +135,7 @@ public class Config : SyncedConfig2<Config>
 
         #endregion
 
-        RegisterLethalConfig();
-    }
-
-    private void RegisterLethalConfig()
-    {
-        #region Chute
-        
-        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(Blacklist.Entry, new TextInputFieldOptions {
-            Name = Lang.Get("NAME_BLACKLIST"),
-            TrimText = true,
-            NumberOfLines = 10,
-            RequiresRestart = false,
-        }));
-        
-        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(SpawnDelay.Entry, new FloatInputFieldOptions {
-            Name = Lang.Get("NAME_SPAWN_DELAY"),
-            Min = 0,
-            Max = float.MaxValue,
-            RequiresRestart = false
-        }));
-        
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(RequireInOrbit.Entry, new BoolCheckBoxOptions {
-            Name = Lang.Get("NAME_REQUIRES_IN_ORBIT"),
-            RequiresRestart = false
-        }));
-
-        LethalConfigManager.AddConfigItem(new IntSliderConfigItem(StopAfter.Entry, new IntSliderOptions {
-            Name = Lang.Get("NAME_STOP_AFTER"),
-            Min = 1,
-            Max = 1_969_420,
-            RequiresRestart = false
-        }));
-        
-        #endregion
-
-        #region Inventory
-
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(ActAsSafe.Entry, new BoolCheckBoxOptions {
-            Name = Lang.Get("NAME_AS_SAFE"),
-            RequiresRestart = false
-        }));
-        
-        LethalConfigManager.AddConfigItem(new IntSliderConfigItem(MaxItemCount.Entry, new IntSliderOptions {
-            Name = Lang.Get("NAME_MAX_ITEM_COUNT"),
-            Min = 1,
-            Max = 1_969_420,
-            RequiresRestart = false
-        }));
-        
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(PersistThroughFire.Entry, new BoolCheckBoxOptions {
-            Name = Lang.Get("NAME_PERSIST_THROUGH_FIRE"),
-            RequiresRestart = false
-        }));
-
-        #endregion
-        
-        #region Terminal
-
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(ShowConfirmation.Entry, new BoolCheckBoxOptions {
-            Name = Lang.Get("NAME_SHOW_CONFIRMATION"),
-            RequiresRestart = false
-        }));
-        
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(NoSteamID.Entry, new BoolCheckBoxOptions {
-            Name = Lang.Get("NAME_NO_STEAM_ID"),
-            RequiresRestart = false
-        }));
-
-        #endregion
-
-        #region Debug
-        
-        LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<OverrideMode>(OverrideTrigger.Entry, new EnumDropDownOptions {
-            Name = Lang.Get("NAME_OVERRIDE_TRIGGER"),
-            RequiresRestart = false
-        }));
-        
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(LetAsItem.Entry, new BoolCheckBoxOptions {
-            Name = Lang.Get("NAME_LET_AS_ITEM"),
-            RequiresRestart = true
-        }));
-
-        #endregion
-        
-        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(LangUsed, new TextInputFieldOptions {
-            Description = "Language to use for the texts.\n\nThe translation has to be found next to the DLL.",
-            RequiresRestart = true
-        }));
-        
-        ConfigManager.Register(this); 
+        if (LethalConfigCompatibility.enabled)
+            LethalConfigCompatibility.AddConfigs(this);
     }
 }

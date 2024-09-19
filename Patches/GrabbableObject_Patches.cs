@@ -6,6 +6,9 @@ namespace ShipInventory.Patches;
 [HarmonyPatch(typeof(GrabbableObject))]
 public class GrabbableObject_Patches
 {
+    /// <summary>
+    /// Prevents the update of the sub text
+    /// </summary>
     [HarmonyPrefix]
     [HarmonyPatch(nameof(GrabbableObject.SetScrapValue))]
     private static bool PreventSubTextUpdate(GrabbableObject __instance, int setValueTo)
