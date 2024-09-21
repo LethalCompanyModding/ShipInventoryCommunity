@@ -22,7 +22,6 @@ public class Config : SyncedConfig2<Config>
     [SyncedEntryField] public readonly SyncedEntry<bool> PersistThroughFire;
     
     [SyncedEntryField] public readonly SyncedEntry<bool> ShowConfirmation;
-    [SyncedEntryField] public readonly SyncedEntry<bool> NoSteamID;
 
     [SyncedEntryField] public readonly SyncedEntry<OverrideMode> OverrideTrigger;
     public enum OverrideMode { NONE, NEVER, ALL }
@@ -100,12 +99,6 @@ public class Config : SyncedConfig2<Config>
             new ConfigDescription(Lang.Get("DESCRIPTION_SHOW_CONFIRMATION"))
         );
         
-        NoSteamID = cfg.BindSyncedEntry(
-            new ConfigDefinition(TERMINAL, "NoSteamID"),
-            false,
-            new ConfigDescription(Lang.Get("DESCRIPTION_NO_STEAM_ID"))
-        );
-
         #endregion
 
         #region Debug

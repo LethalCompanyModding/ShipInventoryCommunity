@@ -20,8 +20,6 @@ public class ChuteInteract : NetworkBehaviour
         itemRestorePoint = transform.Find("DropNode");
         spawnParticles = GetComponentInChildren<ParticleSystem>();
         
-        spawnParent = GameObject.Find(Constants.SHIP_PATH).transform;
-        
         base.OnNetworkSpawn();
     }
     
@@ -94,7 +92,6 @@ public class ChuteInteract : NetworkBehaviour
     private ParticleSystem spawnParticles = null!;
     
     private readonly Queue<ItemData> spawnQueue = [];
-    private Transform spawnParent = null!;
     private Coroutine? spawnCoroutine;
     
     [ServerRpc(RequireOwnership = false)]
@@ -128,8 +125,6 @@ public class ChuteInteract : NetworkBehaviour
         var grabObj = obj.GetComponent<GrabbableObject>();
         
         // Set up object
-        grabObj.parentObject = itemRestorePoint;
-
         if (item.isScrap)
             grabObj.SetScrapValue(data.SCRAP_VALUE);
             
@@ -138,7 +133,6 @@ public class ChuteInteract : NetworkBehaviour
 
         grabObj.isInShipRoom = true;
         grabObj.isInElevator = true;
-        grabObj.OnHitGround();
 
         // Play particles
         spawnParticles.Play();
@@ -166,11 +160,17 @@ public class ChuteInteract : NetworkBehaviour
                 continue;
         
             var newItem = Instantiate(item.spawnPrefab) ?? throw new NullReferenceException();
-            newItem.transform.SetParent(spawnParent, false);
+            newItem.transform.SetParent(itemRestorePoint, false);
         
             // Set values
             var grabObj = newItem.GetComponent<GrabbableObject>();
+            grabObj.transform.localPosition = Vector3.zero;
 
+            if (grabObj.itemProperties.itemSpawnsOnGround)
+                grabObj.transform.localRotation = Quaternion.Euler(grabObj.itemProperties.restingRotation);
+            else
+                grabObj.OnHitGround();
+            
             // Call spawn methods
             grabObj.Start();
             grabObj.PlayDropSFX();

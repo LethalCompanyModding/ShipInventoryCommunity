@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Reflection;
 using BepInEx;
 using HarmonyLib;
@@ -36,7 +34,7 @@ public class ShipInventory : BaseUnityPlugin
         PrepareNetwork();
         Patch();
 
-        InteractiveTerminalManager.RegisterApplication<ShipApplication>("ship", true);
+        InteractiveTerminalManager.RegisterApplication<ShipApplication2>("ship", true);
         
         Helpers.Logger.Info($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
     }

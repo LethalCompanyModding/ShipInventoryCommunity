@@ -84,11 +84,6 @@ public static class LethalConfigCompatibility
             Name = Lang.Get("NAME_SHOW_CONFIRMATION"),
             RequiresRestart = false
         }));
-        
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.NoSteamID.Entry, new BoolCheckBoxOptions {
-            Name = Lang.Get("NAME_NO_STEAM_ID"),
-            RequiresRestart = false
-        }));
 
         #endregion
 
