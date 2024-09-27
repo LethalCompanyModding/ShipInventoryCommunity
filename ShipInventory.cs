@@ -34,7 +34,7 @@ public class ShipInventory : BaseUnityPlugin
         PrepareNetwork();
         Patch();
 
-        InteractiveTerminalManager.RegisterApplication<ShipApplication2>("ship", true);
+        InteractiveTerminalManager.RegisterApplication<ShipApplication>("ship", true);
         
         Helpers.Logger.Info($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
     }

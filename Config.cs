@@ -22,6 +22,7 @@ public class Config : SyncedConfig2<Config>
     [SyncedEntryField] public readonly SyncedEntry<bool> PersistThroughFire;
     
     [SyncedEntryField] public readonly SyncedEntry<bool> ShowConfirmation;
+    [SyncedEntryField] public readonly SyncedEntry<bool> YesPlease;
 
     [SyncedEntryField] public readonly SyncedEntry<OverrideMode> OverrideTrigger;
     public enum OverrideMode { NONE, NEVER, ALL }
@@ -97,6 +98,12 @@ public class Config : SyncedConfig2<Config>
             new ConfigDefinition(TERMINAL, "ShowConfirmation"),
             true,
             new ConfigDescription(Lang.Get("DESCRIPTION_SHOW_CONFIRMATION"))
+        );
+        
+        YesPlease = cfg.BindSyncedEntry(
+            new ConfigDefinition(TERMINAL, "YesPlease"),
+            true,
+            new ConfigDescription(Lang.Get("DESCRIPTION_YES_PLEASE"))
         );
         
         #endregion

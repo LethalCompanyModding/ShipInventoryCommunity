@@ -84,6 +84,11 @@ public static class LethalConfigCompatibility
             Name = Lang.Get("NAME_SHOW_CONFIRMATION"),
             RequiresRestart = false
         }));
+        
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.YesPlease.Entry, new BoolCheckBoxOptions {
+            Name = Lang.Get("NAME_YES_PLEASE"),
+            RequiresRestart = false
+        }));
 
         #endregion
 

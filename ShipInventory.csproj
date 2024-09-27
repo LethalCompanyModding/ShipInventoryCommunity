@@ -5,7 +5,7 @@
         <AssemblyName>ShipInventory</AssemblyName>
         <Product>ShipInventory</Product>
         <!-- Change to whatever version you're currently on. -->
-        <Version>1.1.1</Version>
+        <Version>1.1.2</Version>
     </PropertyGroup>
 
     <!-- Project Properties -->
@@ -65,8 +65,21 @@
     <PropertyGroup>
         <Profile>Ship Inventory</Profile>
     </PropertyGroup>
-    <Import Project="../LC.targets" />
+    
+    <!-- BUILD EVENTS -->
+    <Target Name="MakeThunderStore" BeforeTargets="Build" Condition="!Exists('$(ProjectDir)ThunderStore')">
+        <Exec Command="mkdir ThunderStore"/>
+    </Target>
+    
+    <Target Name="CopyREADME" AfterTargets="Build" Condition="Exists('$(ProjectDir)/README.md')">
+        <Copy SourceFiles="$(ProjectDir)/README.md" DestinationFiles="$(ProjectDir)ThunderStore/README.md"/>
+    </Target>
+    
+    <Target Name="CopyLangs" AfterTargets="Build" Condition="Exists('$(ProjectDir)/Lang')">
+        <Exec Command="xcopy &quot;$(ProjectDir)Lang\*.*&quot; &quot;$(ProjectDir)ThunderStore\$(FolderName)&quot; /Y /I /E" />
+    </Target>
 
+    <Import Project="../LC.targets" />
     <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
         <Exec Command="netcode-patch -nv 1.5.2 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')"/>
     </Target>
