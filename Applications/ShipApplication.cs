@@ -1,24 +1,25 @@
-﻿using System.Collections.Generic;
 using System.Linq;
 using InteractiveTerminalAPI.UI;
 using InteractiveTerminalAPI.UI.Application;
 using InteractiveTerminalAPI.UI.Cursor;
+using InteractiveTerminalAPI.UI.Page;
 using InteractiveTerminalAPI.UI.Screen;
 using ShipInventory.Helpers;
 using ShipInventory.Objects;
+using static UnityEngine.InputSystem.InputAction;
 
 namespace ShipInventory.Applications;
 
-public class ShipApplication : InteractiveTerminalApplication
+public class ShipApplication : PageApplication
 {
     #region General Texts
 
     private readonly string INVENTORY_TITLE = Lang.Get("INVENTORY_TITLE");
     private readonly string TERMINAL_TITLE = Lang.Get("TERMINAL_TITLE");
 
-    private readonly string NEXT = Lang.Get("NEXT");
-    private readonly string PREVIOUS = Lang.Get("PREVIOUS");
     private readonly string UNKNOWN = Lang.Get("UNKNOWN");
+
+    private const int ENTRIES_PER_PAGE = 10;
     
     #endregion
     
@@ -32,7 +33,12 @@ public class ShipApplication : InteractiveTerminalApplication
 
     private readonly string TRADEMARK = Lang.Get("TRADEMARK");
 
-    private void MainScreen()
+    protected override int GetEntriesPerPage<T>(T[] entries)
+    {
+        return ENTRIES_PER_PAGE;
+    }
+
+    private void MainScreen(int selectedIndex = 0)
     {
         var player = StartOfRound.Instance.localPlayerController;
 
@@ -46,13 +52,11 @@ public class ShipApplication : InteractiveTerminalApplication
         };
 
         var optionMenu = new CursorMenu {
-            cursorIndex = ItemManager.GetItems().Any() ? 0 : elements.Length - 1,
+            cursorIndex = ItemManager.GetItems().Any() ? selectedIndex : elements.Length - 1,
             elements = elements
         };
 
-        var screen = new BoxedScreen {
-            Title = TERMINAL_TITLE,
-            elements =
+        var screen = CreateScreen(TERMINAL_TITLE,
             [
                 TextElement.Create(string.Format(
                     WELCOME_MESSAGE,
@@ -63,10 +67,9 @@ public class ShipApplication : InteractiveTerminalApplication
                 TextElement.Create(HOME_MESSAGE),
                 TextElement.Create(" "),
                 optionMenu,
-                TextElement.Create(" "),
-                TextElement.Create(TRADEMARK)
             ]
-        };
+        );
+        currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
         SwitchScreen(screen, optionMenu, true);
     }
 
@@ -80,27 +83,58 @@ public class ShipApplication : InteractiveTerminalApplication
     private string BoolToString(bool value) => value
         ? $"<color=green>{POSITIVE_ANSWER}</color>"
         : $"<color=red>{NEGATIVE_ANSWER}</color>";
-    
-    private readonly string EXIT = Lang.Get("EXIT");
 
-    private CursorElement ExitElement() => new()
+    private System.Action<CallbackContext>? LastExitPerformedAction = null;
+
+    void RegisterExitAction(System.Action<CallbackContext> action)
     {
-        Name = EXIT,
-        Action = MainScreen
-    };
-    
+        LastExitPerformedAction = action;
+        InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= OnScreenExit;
+        InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed += action;
+    }
+
+    void UnregisterExitAction()
+    {
+        InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= LastExitPerformedAction;
+        // If OnScreenExit is not already registered, this is a no-op
+        // Ensures OnScreenExit is never double-registered
+        InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= OnScreenExit;
+        InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed += OnScreenExit;
+        LastExitPerformedAction = null;
+    }
+
+    private BoxedScreen CreateScreen(string title, ITextElement[] elements)
+    {
+        UnregisterExitAction();
+
+        return new()
+        {
+            Title = title,
+            elements =
+            [
+                .. elements,
+                TextElement.Create(" "),
+                TextElement.Create(TRADEMARK),
+            ]
+        };
+    }
+
     private readonly string CONFIRMATION_TITLE = Lang.Get("CONFIRMATION_TITLE");
     private readonly string CONFIRMATION_MESSAGE = Lang.Get("CONFIRMATION_MESSAGE");
+
+    private System.Action? ConfirmExitCallback = null;
     
-    private void ConfirmElement(string message, System.Action? callback)
+    private void ConfirmElement(string message, System.Action confirmCallback, System.Action? declineCallback = null)
     {
         // If skip confirmation, skip
         if (!ShipInventory.Config.ShowConfirmation.Value)
         {
-            callback?.Invoke();
+            confirmCallback?.Invoke();
             return;
         }
-            
+
+        ConfirmExitCallback = declineCallback;
+
         var optionMenu = new CursorMenu
         {
             cursorIndex = ShipInventory.Config.YesPlease.Value ? 1 : 0,
@@ -109,19 +143,23 @@ public class ShipApplication : InteractiveTerminalApplication
                 new CursorElement
                 {
                     Name = NEGATIVE_ANSWER,
-                    Action = MainScreen
+                    Action = () => {
+                        if (declineCallback != null) {
+                            declineCallback.Invoke();
+                        } else {
+                            MainScreen();
+                        }
+                    }
                 },
                 new CursorElement
                 {
                     Name = POSITIVE_ANSWER,
-                    Action = () => callback?.Invoke()
+                    Action = () => confirmCallback?.Invoke()
                 }
             ]
         };
-    
-        var screen = new BoxedScreen {
-            Title = CONFIRMATION_TITLE,
-            elements =
+
+        var screen = CreateScreen(CONFIRMATION_TITLE,
             [
                 TextElement.Create(message),
                 TextElement.Create(" "),
@@ -129,12 +167,20 @@ public class ShipApplication : InteractiveTerminalApplication
                 TextElement.Create(" "),
                 optionMenu
             ]
-        };
+        );
+        currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
         SwitchScreen(screen, optionMenu, true);
+
+        RegisterExitAction(OnConfirmExit);
+    }
+
+    void OnConfirmExit(CallbackContext context)
+    {
+        ConfirmExitCallback?.Invoke();
     }
 
     #endregion
-    
+
     #region Info Screen
 
     private readonly string SHIP_INFO = Lang.Get("SHIP_INFO");
@@ -156,30 +202,33 @@ public class ShipApplication : InteractiveTerminalApplication
         var options = new CursorMenu
         {
             cursorIndex = 0,
-            elements = [ ExitElement() ]
+            elements = []
         };
-        
-        var screen = new BoxedScreen
-        {
-            Title = INVENTORY_TITLE,
-            elements = [
+        var screen = CreateScreen(INVENTORY_TITLE,
+            [
                 TextElement.Create(SHIP_INFO_HEADER),
                 TextElement.Create(" "),
                 TextElement.Create(string.Format(SHIP_INFO_TOTAL, ItemManager.GetTotalValue())),
                 TextElement.Create(string.Format(
-                    SHIP_INFO_COUNT, 
+                    SHIP_INFO_COUNT,
                     ItemManager.GetItems().Count(),
                     ShipInventory.Config.MaxItemCount.Value
-                )), 
+                )),
                 TextElement.Create(" "),
                 TextElement.Create(string.Format(SHIP_INFO_IS_SAFE, BoolToString(ShipInventory.Config.ActAsSafe.Value))),
                 TextElement.Create(string.Format(SHIP_INFO_IN_ORBIT, BoolToString(!ShipInventory.Config.RequireInOrbit.Value))),
-                TextElement.Create(" "),
-                options
             ]
-        };
+        );
         
+        currentPage = PageCursorElement.Create(0, [screen], [options]);
         SwitchScreen(screen, options, true);
+
+        RegisterExitAction(OnInfoExit);
+    }
+
+    void OnInfoExit(CallbackContext context)
+    {
+        MainScreen(4);
     }
 
     #endregion
@@ -194,87 +243,100 @@ public class ShipApplication : InteractiveTerminalApplication
     private CursorElement RetrieveSingleElement() => new()
     {
         Name = SINGLE_RETRIEVE,
-        Action = () => RetrieveSingle(0)
+        Active = _ => ItemManager.GetItems().Any(),
+        SelectInactive = false,
+        Action = () => RetrieveSingle()
     };
     
-    private List<CursorElement> GetSinglePage(int index)
+    private void RetrieveSingle(int selectedIndex = 0)
     {
         var items = ItemManager.GetItems();
-        var elements = new List<CursorElement>();
-        
-        // Add previous button
-        if (index > 0)
-        {
-            elements.Add(new CursorElement
-            {
-                Name = PREVIOUS,
-                Action = () => RetrieveSingle(index - 1)
-            });
-        }
+        int cursorCount = items.Count();
+        (ItemData[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(items.ToArray());
 
-        foreach (var item in items.Skip(index * Constants.ITEMS_PER_PAGE).Take(Constants.ITEMS_PER_PAGE))
+        for (int i = 0; i < pageGroups.Length; i++)
         {
-            var i = item.GetItem();
-
-            string name = UNKNOWN;
-            if (i is not null)
+            int localI = i;
+            CursorElement[] elements = new CursorElement[pageGroups[i].Length];
+            for (int j = 0; j < elements.Length; j++)
             {
-                name = string.Format(
-                    SINGLE_ITEM_FORMAT,
-                    i.itemName,
-                    item.SCRAP_VALUE
-                );
-            }
-                
-            var groupElement = new CursorElement
-            {
-                Name = name,
-                Action = () =>
+                int localJ = j;
+                var itemData = pageGroups[i][j];
+                if (itemData.Equals(default(ItemData)))
+                    // It's normal to have default entries (the array is page-sized, but there may be fewer entries)
+                    continue;
+                var item = itemData.GetItem();
+                string name = UNKNOWN;
+                if (item is not null)
                 {
-                    string message = TEXT_SINGLE_RETRIEVE;
-
-                    message = string.Format(message, name);
-                    ConfirmElement(message, () =>
-                    {
-                        ChuteInteract.Instance?.SpawnItemServerRpc(item);
-                        UnityEngine.Object.Destroy(InteractiveTerminalManager.Instance);
-                    });
+                    name = string.Format(
+                        SINGLE_ITEM_FORMAT,
+                        item.itemName,
+                        itemData.SCRAP_VALUE
+                    );
                 }
-            };
-                
-            elements.Add(groupElement);
-        }
-        
-        // Add next button
-        if (items.Count() > Constants.ITEMS_PER_PAGE * (index + 1))
-        {
-            elements.Add(new CursorElement
+
+                elements[j] = new CursorElement()
+                {
+                    Name = name,
+                    Action = () =>
+                    {
+                        string message = TEXT_SINGLE_RETRIEVE;
+
+                        message = string.Format(message, name);
+                        ConfirmElement(message, () =>
+                        {
+                            ChuteInteract.Instance?.SpawnItemServerRpc(itemData);
+                            if (cursorCount > 1)
+                            {
+                                RetrieveSingle(localI * ENTRIES_PER_PAGE + localJ);
+                            }
+                            else
+                            {
+                                MainScreen(0);
+                            }
+                        }, () => {
+                            RetrieveSingle(localI * ENTRIES_PER_PAGE + localJ);
+                        });
+                    }
+                };
+            }
+
+            cursorMenus[i] = new CursorMenu()
             {
-                Name = NEXT,
-                Action = () => RetrieveSingle(index + 1)
-            });
+                cursorIndex = 0,
+                elements = elements
+            };
+            screens[i] = CreateScreen(INVENTORY_TITLE,
+                [
+                    TextElement.Create(SINGLE_RETRIEVE_MESSAGE),
+                    TextElement.Create(" "),
+                    cursorMenus[i],
+                ]
+            );
         }
 
-        return elements;
+        if (selectedIndex >= cursorCount)
+        {
+            selectedIndex = cursorCount - 1;
+        }
+
+        int currentPageIndex = selectedIndex / ENTRIES_PER_PAGE;
+        int currentCursorIndex = selectedIndex % ENTRIES_PER_PAGE;
+
+        // Set the current page's cursor
+        cursorMenus[currentPageIndex].cursorIndex = currentCursorIndex;
+
+        currentPage = PageCursorElement.Create(currentPageIndex, screens, cursorMenus);
+        currentCursorMenu = currentPage.GetCurrentCursorMenu();
+        currentScreen = currentPage.GetCurrentScreen();
+
+        RegisterExitAction(OnRetrieveSingleExit);
     }
 
-    private void RetrieveSingle(int index)
+    void OnRetrieveSingleExit(CallbackContext context)
     {
-        var options = new CursorMenu
-        {
-            cursorIndex = 0,
-            elements = GetSinglePage(index).ToArray()
-        };
-        var screen = new BoxedScreen
-        {
-            Title = INVENTORY_TITLE,
-            elements = [
-                TextElement.Create(SINGLE_RETRIEVE_MESSAGE),
-                TextElement.Create(" "),
-                options
-            ],
-        };
-        SwitchScreen(screen, options, true);
+        MainScreen(0);
     }
 
     #endregion
@@ -289,92 +351,104 @@ public class ShipApplication : InteractiveTerminalApplication
     private CursorElement RetrieveTypeElement() => new()
     {
         Name = TYPE_RETRIEVE,
-        Action = () => RetrieveType(0)
+        Active = _ => ItemManager.GetItems().Any(),
+        SelectInactive = false,
+        Action = () => RetrieveType()
     };
 
-    private List<CursorElement> GetTypePage(int index)
+    private void RetrieveType(int selectedIndex = 0)
     {
-        var items = ItemManager.GetItems().GroupBy(i => i.ID);
-        var elements = new List<CursorElement>();
-        
-        // Add previous button
-        if (index > 0)
-        {
-            elements.Add(new CursorElement
-            {
-                Name = PREVIOUS,
-                Action = () => RetrieveType(index - 1)
-            });
-        }
+        var types = ItemManager.GetItems().GroupBy(i => i.ID);
+        int cursorCount = types.Count();
+        (IGrouping<string, ItemData>[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(types.ToArray());
 
-        foreach (var group in items.Skip(index * Constants.ITEMS_PER_PAGE).Take(Constants.ITEMS_PER_PAGE))
+        for (int i = 0; i < pageGroups.Length; i++)
         {
-            var i = group.First().GetItem();
-            var amount = group.Count();
+            int localI = i;
+            CursorElement[] elements = new CursorElement[pageGroups[i].Length];
+            for (int j = 0; j < elements.Length; j++)
+            {
+                int localJ = j;
+                var group = pageGroups[i][j];
+                if (group == null)
+                    // It's normal to have null entries (the array is page-sized, but there may be fewer entries)
+                    continue;
+                var item = group.First().GetItem();
+                var amount = group.Count();
 
-            string name = UNKNOWN;
-            if (i is not null)
-            {
-                name = string.Format(
-                    TYPE_ITEM_FORMAT,
-                    i.itemName,
-                    amount,
-                    group.Sum(data => data.SCRAP_VALUE)
-                );
-            }
-                
-            var groupElement = new CursorElement
-            {
-                Name = name,
-                Action = () =>
+                string name = UNKNOWN;
+                if (item is not null)
                 {
-                    string message = TEXT_TYPE_RETRIEVE;
-
-                    message = string.Format(message, amount, i?.itemName ?? UNKNOWN);
-                    ConfirmElement(message, () =>
-                    {
-                        ChuteInteract.Instance?.SpawnItemServerRpc(
-                            group.First(),
-                            amount
-                        );
-                        UnityEngine.Object.Destroy(InteractiveTerminalManager.Instance);
-                    });
+                    name = string.Format(
+                        TYPE_ITEM_FORMAT,
+                        item.itemName,
+                        amount,
+                        group.Sum(data => data.SCRAP_VALUE)
+                    );
                 }
-            };
-            elements.Add(groupElement);
-        }
-        
-        // Add next button
-        if (items.Count() > Constants.ITEMS_PER_PAGE * (index + 1))
-        {
-            elements.Add(new CursorElement
+
+                elements[j] = new CursorElement()
+                {
+                    Name = name,
+                    Action = () =>
+                    {
+                        string message = TEXT_TYPE_RETRIEVE;
+
+                        message = string.Format(message, amount, item?.itemName ?? UNKNOWN);
+                        ConfirmElement(message, () =>
+                        {
+                            ChuteInteract.Instance?.SpawnItemServerRpc(
+                                group.First(),
+                                amount
+                            );
+                            if (cursorCount > 1)
+                            {
+                                RetrieveType(localI * ENTRIES_PER_PAGE + localJ);
+                            }
+                            else
+                            {
+                                MainScreen(1);
+                            }
+                        }, () => RetrieveType(localI * ENTRIES_PER_PAGE + localJ));
+                    }
+                };
+            }
+
+            cursorMenus[i] = new CursorMenu()
             {
-                Name = NEXT,
-                Action = () => RetrieveType(index + 1)
-            });
+                cursorIndex = 0,
+                elements = elements
+            };
+            screens[i] = CreateScreen(INVENTORY_TITLE,
+                [
+                    TextElement.Create(TYPE_RETRIEVE_MESSAGE),
+                    TextElement.Create(" "),
+                    cursorMenus[i]
+                ]
+            );
         }
 
-        return elements;
-    }
-    
-    private void RetrieveType(int index)
-    {
-        var options = new CursorMenu
+        if (selectedIndex >= cursorCount)
         {
-            cursorIndex = 0,
-            elements = GetTypePage(index).ToArray()
-        };
-        
-        var screen = new BoxedScreen {
-            Title = INVENTORY_TITLE,
-            elements = [
-                TextElement.Create(TYPE_RETRIEVE_MESSAGE),
-                TextElement.Create(" "),
-                options
-            ],
-        };
-        
-        SwitchScreen(screen, options, true);
+            selectedIndex = cursorCount - 1;
+        }
+
+        int currentPageIndex = selectedIndex / ENTRIES_PER_PAGE;
+        int currentCursorIndex = selectedIndex % ENTRIES_PER_PAGE;
+
+        // Set the current page's cursor
+        cursorMenus[currentPageIndex].cursorIndex = currentCursorIndex;
+
+        currentPage = PageCursorElement.Create(currentPageIndex, screens, cursorMenus);
+        currentCursorMenu = currentPage.GetCurrentCursorMenu();
+        currentScreen = currentPage.GetCurrentScreen();
+
+        RegisterExitAction(OnRetrieveTypeExit);
+    }
+
+    void OnRetrieveTypeExit(CallbackContext context)
+    {
+        MainScreen(1);
     }
 
     #endregion
@@ -387,6 +461,8 @@ public class ShipApplication : InteractiveTerminalApplication
     private CursorElement RetrieveRandomElement() => new()
     {
         Name = RANDOM_RETRIEVE,
+        Active = _ => ItemManager.GetItems().Any(),
+        SelectInactive = false,
         Action = RetrieveRandom
     };
     
@@ -416,7 +492,7 @@ public class ShipApplication : InteractiveTerminalApplication
                 ChuteInteract.Instance?.SpawnItemServerRpc(data);
 
             UnityEngine.Object.Destroy(InteractiveTerminalManager.Instance);
-        });
+        }, () => MainScreen(2));
     }
 
     #endregion
@@ -429,6 +505,8 @@ public class ShipApplication : InteractiveTerminalApplication
     private CursorElement RetrieveAllElement() => new()
     {
         Name = ALL_RETRIEVE,
+        Active = _ => ItemManager.GetItems().Any(),
+        SelectInactive = false,
         Action = RetrieveAll
     };
     
@@ -445,7 +523,7 @@ public class ShipApplication : InteractiveTerminalApplication
             }
             
             UnityEngine.Object.Destroy(InteractiveTerminalManager.Instance);
-        });
+        }, () => MainScreen(3));
     }
 
     #endregion
