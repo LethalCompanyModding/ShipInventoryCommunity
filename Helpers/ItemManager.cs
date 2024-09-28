@@ -28,7 +28,12 @@ public static class ItemManager
         // If item invalid
         if (item is null)
             return [];
+
+        // Take only one
+        if (count == 1)
+            return storedItems.Where(d => d.Equals(data)).Take(1);
         
+        // Take all with id
         return storedItems.Where(d => d.ID == data.ID).Take(count);
     }
 

@@ -27,3 +27,6 @@ This mod supports different languages. To add or create a new language, simply c
 This mod was originally created for 2 reasons:
 1. One of my friends kept throwing scrap off the ship, making us lose.
 2. I got lag spikes when around the ship (which I assumed is because of the items).
+
+### Special thank to:
+- **minimusubi**: rework of the terminal UI

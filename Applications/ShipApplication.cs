@@ -15,16 +15,12 @@ public class ShipApplication : PageApplication
     #region General Texts
 
     private readonly string INVENTORY_TITLE = Lang.Get("INVENTORY_TITLE");
-    private readonly string TERMINAL_TITLE = Lang.Get("TERMINAL_TITLE");
 
     private readonly string UNKNOWN = Lang.Get("UNKNOWN");
 
-    private const int ENTRIES_PER_PAGE = 10;
-    
     #endregion
     
-    /// <inheritdoc/>
-    public override void Initialization() => MainScreen();
+    public override void Initialization() => MainScreen(0);
 
     #region Main Screen
     
@@ -33,12 +29,10 @@ public class ShipApplication : PageApplication
 
     private readonly string TRADEMARK = Lang.Get("TRADEMARK");
 
-    protected override int GetEntriesPerPage<T>(T[] entries)
-    {
-        return ENTRIES_PER_PAGE;
-    }
+    protected override int GetEntriesPerPage<T>(T[] entries) => GetEntriesPerPage();
+    private static int GetEntriesPerPage() => Constants.ITEMS_PER_PAGE;
 
-    private void MainScreen(int selectedIndex = 0)
+    private void MainScreen(int selectedIndex)
     {
         var player = StartOfRound.Instance.localPlayerController;
 
@@ -56,7 +50,7 @@ public class ShipApplication : PageApplication
             elements = elements
         };
 
-        var screen = CreateScreen(TERMINAL_TITLE,
+        var screen = CreateScreen(INVENTORY_TITLE,
             [
                 TextElement.Create(string.Format(
                     WELCOME_MESSAGE,
@@ -84,16 +78,16 @@ public class ShipApplication : PageApplication
         ? $"<color=green>{POSITIVE_ANSWER}</color>"
         : $"<color=red>{NEGATIVE_ANSWER}</color>";
 
-    private System.Action<CallbackContext>? LastExitPerformedAction = null;
+    private System.Action<CallbackContext>? LastExitPerformedAction;
 
-    void RegisterExitAction(System.Action<CallbackContext> action)
+    private void RegisterExitAction(System.Action<CallbackContext> action)
     {
         LastExitPerformedAction = action;
         InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= OnScreenExit;
         InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed += action;
     }
 
-    void UnregisterExitAction()
+    private void UnregisterExitAction()
     {
         InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= LastExitPerformedAction;
         // If OnScreenExit is not already registered, this is a no-op
@@ -113,8 +107,9 @@ public class ShipApplication : PageApplication
             elements =
             [
                 .. elements,
-                TextElement.Create(" "),
-                TextElement.Create(TRADEMARK),
+                .. ShipInventory.Config.ShowTrademark.Value 
+                    ? new ITextElement[] { TextElement.Create(" "), TextElement.Create(TRADEMARK) } 
+                    : []
             ]
         };
     }
@@ -122,9 +117,9 @@ public class ShipApplication : PageApplication
     private readonly string CONFIRMATION_TITLE = Lang.Get("CONFIRMATION_TITLE");
     private readonly string CONFIRMATION_MESSAGE = Lang.Get("CONFIRMATION_MESSAGE");
 
-    private System.Action? ConfirmExitCallback = null;
+    private System.Action? ConfirmExitCallback;
     
-    private void ConfirmElement(string message, System.Action confirmCallback, System.Action? declineCallback = null)
+    private void ConfirmElement(string message, System.Action? confirmCallback, System.Action? declineCallback = null)
     {
         // If skip confirmation, skip
         if (!ShipInventory.Config.ShowConfirmation.Value)
@@ -147,7 +142,7 @@ public class ShipApplication : PageApplication
                         if (declineCallback != null) {
                             declineCallback.Invoke();
                         } else {
-                            MainScreen();
+                            MainScreen(0);
                         }
                     }
                 },
@@ -174,7 +169,7 @@ public class ShipApplication : PageApplication
         RegisterExitAction(OnConfirmExit);
     }
 
-    void OnConfirmExit(CallbackContext context)
+    private void OnConfirmExit(CallbackContext context)
     {
         ConfirmExitCallback?.Invoke();
     }
@@ -184,8 +179,9 @@ public class ShipApplication : PageApplication
     #region Info Screen
 
     private readonly string SHIP_INFO = Lang.Get("SHIP_INFO");
+    
+    private readonly string STATUS_TITLE = Lang.Get("STATUS_TITLE");
 
-    private readonly string SHIP_INFO_HEADER = Lang.Get("SHIP_INFO_HEADER");
     private readonly string SHIP_INFO_TOTAL = Lang.Get("SHIP_INFO_TOTAL");
     private readonly string SHIP_INFO_COUNT = Lang.Get("SHIP_INFO_COUNT");
     private readonly string SHIP_INFO_KEEP_HEADER = Lang.Get("SHIP_INFO_KEEP_HEADER");
@@ -206,10 +202,8 @@ public class ShipApplication : PageApplication
             cursorIndex = 0,
             elements = []
         };
-        var screen = CreateScreen(INVENTORY_TITLE,
+        var screen = CreateScreen(STATUS_TITLE,
             [
-                TextElement.Create(SHIP_INFO_HEADER),
-                TextElement.Create(" "),
                 TextElement.Create(string.Format(SHIP_INFO_TOTAL, ItemManager.GetTotalValue())),
                 TextElement.Create(string.Format(
                     SHIP_INFO_COUNT,
@@ -218,6 +212,7 @@ public class ShipApplication : PageApplication
                 )),
                 TextElement.Create(" "),
                 TextElement.Create(string.Format(SHIP_INFO_IN_ORBIT, BoolToString(!ShipInventory.Config.RequireInOrbit.Value))),
+                TextElement.Create(" "),
                 TextElement.Create(SHIP_INFO_KEEP_HEADER),
                 TextElement.Create(string.Format(SHIP_INFO_KEEP_ON_WIPE, BoolToString(ShipInventory.Config.ActAsSafe.Value))),
                 TextElement.Create(string.Format(SHIP_INFO_KEEP_ON_FIRE, BoolToString(ShipInventory.Config.PersistThroughFire.Value))),
@@ -230,10 +225,7 @@ public class ShipApplication : PageApplication
         RegisterExitAction(OnInfoExit);
     }
 
-    void OnInfoExit(CallbackContext context)
-    {
-        MainScreen(4);
-    }
+    private void OnInfoExit(CallbackContext context) => MainScreen(4);
 
     #endregion
     
@@ -251,62 +243,64 @@ public class ShipApplication : PageApplication
         SelectInactive = false,
         Action = () => RetrieveSingle()
     };
+
+    private CursorElement RenderSingle(ItemData itemData, bool onlyGroup, int index)
+    {
+        var item = itemData.GetItem();
+        string name = UNKNOWN;
+        if (item is not null)
+        {
+            name = string.Format(
+                SINGLE_ITEM_FORMAT,
+                item.itemName,
+                itemData.SCRAP_VALUE
+            );
+        }
+
+        var element = new CursorElement
+        {
+            Name = name,
+            Action = () =>
+            {
+                string message = TEXT_SINGLE_RETRIEVE;
+
+                message = string.Format(message, name);
+                ConfirmElement(message, () =>
+                {
+                    ChuteInteract.Instance?.SpawnItemServerRpc(itemData);
+                    if (onlyGroup)
+                        MainScreen(0);
+                    else
+                        RetrieveSingle(index);
+                }, () => RetrieveSingle(index));
+            }
+        };
+        
+        return element;
+    }
     
     private void RetrieveSingle(int selectedIndex = 0)
     {
+        var ENTRIES_PER_PAGE = GetEntriesPerPage();
+
         var items = ItemManager.GetItems();
         int cursorCount = items.Count();
         (ItemData[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(items.ToArray());
 
         for (int i = 0; i < pageGroups.Length; i++)
         {
-            int localI = i;
-            CursorElement[] elements = new CursorElement[pageGroups[i].Length];
+            var elements = new CursorElement[pageGroups[i].Length];
             for (int j = 0; j < elements.Length; j++)
             {
-                int localJ = j;
                 var itemData = pageGroups[i][j];
                 if (itemData.Equals(default(ItemData)))
                     // It's normal to have default entries (the array is page-sized, but there may be fewer entries)
                     continue;
-                var item = itemData.GetItem();
-                string name = UNKNOWN;
-                if (item is not null)
-                {
-                    name = string.Format(
-                        SINGLE_ITEM_FORMAT,
-                        item.itemName,
-                        itemData.SCRAP_VALUE
-                    );
-                }
 
-                elements[j] = new CursorElement()
-                {
-                    Name = name,
-                    Action = () =>
-                    {
-                        string message = TEXT_SINGLE_RETRIEVE;
-
-                        message = string.Format(message, name);
-                        ConfirmElement(message, () =>
-                        {
-                            ChuteInteract.Instance?.SpawnItemServerRpc(itemData);
-                            if (cursorCount > 1)
-                            {
-                                RetrieveSingle(localI * ENTRIES_PER_PAGE + localJ);
-                            }
-                            else
-                            {
-                                MainScreen(0);
-                            }
-                        }, () => {
-                            RetrieveSingle(localI * ENTRIES_PER_PAGE + localJ);
-                        });
-                    }
-                };
+                elements[j] = RenderSingle(itemData, cursorCount == 1, i * ENTRIES_PER_PAGE + j);
             }
 
-            cursorMenus[i] = new CursorMenu()
+            cursorMenus[i] = new CursorMenu
             {
                 cursorIndex = 0,
                 elements = elements
@@ -338,10 +332,7 @@ public class ShipApplication : PageApplication
         RegisterExitAction(OnRetrieveSingleExit);
     }
 
-    void OnRetrieveSingleExit(CallbackContext context)
-    {
-        MainScreen(0);
-    }
+    private void OnRetrieveSingleExit(CallbackContext context) => MainScreen(0);
 
     #endregion
 
@@ -360,65 +351,72 @@ public class ShipApplication : PageApplication
         Action = () => RetrieveType()
     };
 
+    private CursorElement RenderType(IGrouping<string, ItemData> group, bool onlyGroup, int index)
+    {
+        var item = group.First().GetItem();
+        var amount = group.Count();
+
+        string name = UNKNOWN;
+        if (item is not null)
+        {
+            name = string.Format(
+                TYPE_ITEM_FORMAT,
+                item.itemName,
+                amount,
+                group.Sum(data => data.SCRAP_VALUE)
+            );
+        }
+
+        var element = new CursorElement
+        {
+            Name = name,
+            Action = () =>
+            {
+                string message = TEXT_TYPE_RETRIEVE;
+
+                message = string.Format(message, amount, item?.itemName ?? UNKNOWN);
+                ConfirmElement(message, () =>
+                {
+                    ChuteInteract.Instance?.SpawnItemServerRpc(
+                        group.First(),
+                        amount
+                    );
+                    
+                    if (onlyGroup)
+                        MainScreen(1);
+                    else
+                        RetrieveType(index);
+                }, () => RetrieveType(index));
+            }
+        };
+        
+        return element;
+    }
+
     private void RetrieveType(int selectedIndex = 0)
     {
+        var ENTRIES_PER_PAGE = GetEntriesPerPage();
+        
         var types = ItemManager.GetItems().GroupBy(i => i.ID);
         int cursorCount = types.Count();
         (IGrouping<string, ItemData>[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(types.ToArray());
 
         for (int i = 0; i < pageGroups.Length; i++)
         {
-            int localI = i;
-            CursorElement[] elements = new CursorElement[pageGroups[i].Length];
+            var elements = new CursorElement[pageGroups[i].Length];
             for (int j = 0; j < elements.Length; j++)
             {
-                int localJ = j;
                 var group = pageGroups[i][j];
+                
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (group == null)
                     // It's normal to have null entries (the array is page-sized, but there may be fewer entries)
                     continue;
-                var item = group.First().GetItem();
-                var amount = group.Count();
-
-                string name = UNKNOWN;
-                if (item is not null)
-                {
-                    name = string.Format(
-                        TYPE_ITEM_FORMAT,
-                        item.itemName,
-                        amount,
-                        group.Sum(data => data.SCRAP_VALUE)
-                    );
-                }
-
-                elements[j] = new CursorElement()
-                {
-                    Name = name,
-                    Action = () =>
-                    {
-                        string message = TEXT_TYPE_RETRIEVE;
-
-                        message = string.Format(message, amount, item?.itemName ?? UNKNOWN);
-                        ConfirmElement(message, () =>
-                        {
-                            ChuteInteract.Instance?.SpawnItemServerRpc(
-                                group.First(),
-                                amount
-                            );
-                            if (cursorCount > 1)
-                            {
-                                RetrieveType(localI * ENTRIES_PER_PAGE + localJ);
-                            }
-                            else
-                            {
-                                MainScreen(1);
-                            }
-                        }, () => RetrieveType(localI * ENTRIES_PER_PAGE + localJ));
-                    }
-                };
+                
+                elements[j] = RenderType(group, cursorCount == 1, i * ENTRIES_PER_PAGE + j);
             }
 
-            cursorMenus[i] = new CursorMenu()
+            cursorMenus[i] = new CursorMenu
             {
                 cursorIndex = 0,
                 elements = elements
@@ -450,10 +448,7 @@ public class ShipApplication : PageApplication
         RegisterExitAction(OnRetrieveTypeExit);
     }
 
-    void OnRetrieveTypeExit(CallbackContext context)
-    {
-        MainScreen(1);
-    }
+    private void OnRetrieveTypeExit(CallbackContext context) => MainScreen(1);
 
     #endregion
 
@@ -516,7 +511,12 @@ public class ShipApplication : PageApplication
     
     private void RetrieveAll()
     {
-        ConfirmElement(TEXT_ALL_RETRIEVE, () =>
+        string text = string.Format(
+            TEXT_ALL_RETRIEVE,
+            ItemManager.GetItems().Sum(i => i.SCRAP_VALUE)
+        );
+        
+        ConfirmElement(text, () =>
         {
             foreach (var group in ItemManager.GetItems().GroupBy(i => i.ID))
             {

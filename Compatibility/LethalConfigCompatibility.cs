@@ -89,6 +89,11 @@ public static class LethalConfigCompatibility
             Name = Lang.Get("NAME_YES_PLEASE"),
             RequiresRestart = false
         }));
+        
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.ShowTrademark.Entry, new BoolCheckBoxOptions {
+            Name = Lang.Get("NAME_SHOW_TRADEMARK"),
+            RequiresRestart = false
+        }));
 
         #endregion
 

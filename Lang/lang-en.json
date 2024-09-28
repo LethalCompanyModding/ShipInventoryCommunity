@@ -24,10 +24,13 @@
 
     "TERMINAL_SECTION": "Terminal",
     "NAME_SHOW_CONFIRMATION": "Terminal Confirmation",
-    "DESCRIPTION_SHOW_CONFIRMATION": "Removes the confirmation when retrieving items from the ship's inventory.",
+    "DESCRIPTION_SHOW_CONFIRMATION": "Removes the confirmation when retrieving items.",
 
     "NAME_YES_PLEASE": "Yes Please!",
-    "DESCRIPTION_YES_PLEASE": "Automatically places the cursor on the 'YES' option when retrieving items from the ship's inventory.",
+    "DESCRIPTION_YES_PLEASE": "Automatically places the cursor on the 'YES' option when retrieving items.",
+
+    "NAME_SHOW_TRADEMARK": "Show Trademark",
+    "DESCRIPTION_SHOW_TRADEMARK": "Determines if the mod shows the company's trademark in the terminal.",
 
     "NAME_NO_STEAM_ID": "Show Steam ID",
     "DESCRIPTION_NO_STEAM_ID": "Replaces the ID shown on the ship's inventory menu by a random ID.",
@@ -37,29 +40,28 @@
     "DESCRIPTION_OVERRIDE_TRIGGER": "Overrides the trigger check.\n\nThis is useful if items get stuck or you want to store illegal items.\n\n{0}: Proceed with the base checks\n{1}: Prevents all items\n{2}: Allows all items\n\nAny crash related to this is your fault.",
 
     "SINGLE_RETRIEVE": "Retrieve single",
-    "TEXT_SINGLE_RETRIEVE": "You are about to retrieve '{0}' from the ship's inventory.",
-    "SINGLE_RETRIEVE_MESSAGE": "Simply select the desired item to retrieve it.",
+    "TEXT_SINGLE_RETRIEVE": "You are about to retrieve '{0}'.",
+    "SINGLE_RETRIEVE_MESSAGE": "Select the desired item to retrieve it.",
     "SINGLE_ITEM_FORMAT": "{0} (${1})",
 
     "TYPE_RETRIEVE": "Retrieve type",
-    "TEXT_TYPE_RETRIEVE": "You are about to retrieve {0} instances of '{1}' from the ship's inventory.",
-    "TYPE_RETRIEVE_MESSAGE": "Simply select the desired type to retrieve all the items of this type.",
+    "TEXT_TYPE_RETRIEVE": "You are about to retrieve {0} instances of '{1}'.",
+    "TYPE_RETRIEVE_MESSAGE": "Select the desired type to retrieve all the items of this type.",
     "TYPE_ITEM_FORMAT": "{0} x{1} (${2})",
 
     "RANDOM_RETRIEVE": "Retrieve random",
-    "TEXT_RANDOM_RETRIEVE": "You are about to retrieve '{0}' from the ship's inventory.",
+    "TEXT_RANDOM_RETRIEVE": "You are about to retrieve '{0}'.",
 
     "ALL_RETRIEVE": "Retrieve all",
-    "TEXT_ALL_RETRIEVE": "You are about to retrieve everything from the ship's inventory.",
+    "TEXT_ALL_RETRIEVE": "You are about to retrieve everything (${0}).",
 
     "SHIP_INFO": "Print status",
-    "SHIP_INFO_HEADER":       "Here is the current status of the ship's inventory:",
     "SHIP_INFO_TOTAL":        "Total value: ${0}",
     "SHIP_INFO_COUNT":        "Number of items: {0} / {1}",
-    "SHIP_INFO_IN_ORBIT":     "Usable on moons: {0}",
-    "SHIP_INFO_KEEP_HEADER":  "Keep inventory...",
-    "SHIP_INFO_KEEP_ON_WIPE": "  on crew wipe: {0}",
-    "SHIP_INFO_KEEP_ON_FIRE": "  when fired: {0}",
+    "SHIP_INFO_IN_ORBIT":     "Opened on moons: {0}",
+    "SHIP_INFO_KEEP_HEADER":  "Keep inventory",
+    "SHIP_INFO_KEEP_ON_WIPE": "├─ On Crew Wipe: {0}",
+    "SHIP_INFO_KEEP_ON_FIRE": "└─ When Fired  : {0}",
 
     "CONFIRMATION_TITLE": "Confirmation",
     "CONFIRMATION_MESSAGE": "Do you really want to proceed?",
@@ -73,9 +75,9 @@
     "UNKNOWN": "???",
 
     "WELCOME_MESSAGE": "Welcome aboard, {0} {1}",
-    "HOME_MESSAGE": "Please select the desired action to execute from the provided list:",
-    "TERMINAL_TITLE": "Ship's console",
+    "HOME_MESSAGE": "Select the desired action to execute from the provided list:",
     "INVENTORY_TITLE": "Inventory",
+    "STATUS_TITLE": "Status",
     "TRADEMARK": "<color=#666666>       [ PROPERTY OF Halden Eletronics © ]</color>",
 
     "NOT_HOLDING_ITEM": "[Nothing to store]",
