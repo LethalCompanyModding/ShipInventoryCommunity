@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using InteractiveTerminalAPI.UI;
 using InteractiveTerminalAPI.UI.Application;
 using InteractiveTerminalAPI.UI.Cursor;
@@ -188,7 +188,9 @@ public class ShipApplication : PageApplication
     private readonly string SHIP_INFO_HEADER = Lang.Get("SHIP_INFO_HEADER");
     private readonly string SHIP_INFO_TOTAL = Lang.Get("SHIP_INFO_TOTAL");
     private readonly string SHIP_INFO_COUNT = Lang.Get("SHIP_INFO_COUNT");
-    private readonly string SHIP_INFO_IS_SAFE = Lang.Get("SHIP_INFO_IS_SAFE");
+    private readonly string SHIP_INFO_KEEP_HEADER = Lang.Get("SHIP_INFO_KEEP_HEADER");
+    private readonly string SHIP_INFO_KEEP_ON_WIPE = Lang.Get("SHIP_INFO_KEEP_ON_WIPE");
+    private readonly string SHIP_INFO_KEEP_ON_FIRE = Lang.Get("SHIP_INFO_KEEP_ON_FIRE");
     private readonly string SHIP_INFO_IN_ORBIT = Lang.Get("SHIP_INFO_IN_ORBIT");
     
     private CursorElement InfoCursorElement() => new()
@@ -215,8 +217,10 @@ public class ShipApplication : PageApplication
                     ShipInventory.Config.MaxItemCount.Value
                 )),
                 TextElement.Create(" "),
-                TextElement.Create(string.Format(SHIP_INFO_IS_SAFE, BoolToString(ShipInventory.Config.ActAsSafe.Value))),
                 TextElement.Create(string.Format(SHIP_INFO_IN_ORBIT, BoolToString(!ShipInventory.Config.RequireInOrbit.Value))),
+                TextElement.Create(SHIP_INFO_KEEP_HEADER),
+                TextElement.Create(string.Format(SHIP_INFO_KEEP_ON_WIPE, BoolToString(ShipInventory.Config.ActAsSafe.Value))),
+                TextElement.Create(string.Format(SHIP_INFO_KEEP_ON_FIRE, BoolToString(ShipInventory.Config.PersistThroughFire.Value))),
             ]
         );
         
