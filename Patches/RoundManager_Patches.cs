@@ -13,6 +13,13 @@ public class RoundManager_Patches
     [HarmonyPatch(nameof(RoundManager.DespawnPropsAtEndOfRound))]
     private static void ClearInventory(RoundManager __instance)
     {
+        if (!__instance.IsServer)
+            return;
+        
+        // Prevent if a player is alive
+        if (!StartOfRound.Instance.allPlayersDead)
+            return;
+        
         // Prevent if safe
         if (ShipInventory.Config.ActAsSafe.Value)
             return;
