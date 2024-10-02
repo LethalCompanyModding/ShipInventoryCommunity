@@ -90,12 +90,15 @@ public class ShipApplication : PageApplication
 
     private void UnregisterExitAction()
     {
-        InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= LastExitPerformedAction;
+        if (LastExitPerformedAction != null)
+        {
+            InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= LastExitPerformedAction;
+            LastExitPerformedAction = null;
+        }
         // If OnScreenExit is not already registered, this is a no-op
         // Ensures OnScreenExit is never double-registered
         InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= OnScreenExit;
         InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed += OnScreenExit;
-        LastExitPerformedAction = null;
     }
 
     private BoxedScreen CreateScreen(string title, ITextElement[] elements)
