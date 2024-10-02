@@ -82,6 +82,7 @@ public class ShipApplication : PageApplication
 
     private void RegisterExitAction(System.Action<CallbackContext> action)
     {
+        UnregisterExitAction();
         LastExitPerformedAction = action;
         InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= OnScreenExit;
         InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed += action;
