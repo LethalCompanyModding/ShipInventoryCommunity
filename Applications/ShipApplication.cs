@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using InteractiveTerminalAPI.UI;
 using InteractiveTerminalAPI.UI.Application;
 using InteractiveTerminalAPI.UI.Cursor;
@@ -490,7 +490,7 @@ public class ShipApplication : PageApplication
             if (randomObj is ItemData data)
                 ChuteInteract.Instance?.SpawnItemServerRpc(data);
 
-            UnityEngine.Object.Destroy(InteractiveTerminalManager.Instance);
+            MainScreen(2);
         }, () => MainScreen(2));
     }
 
@@ -526,7 +526,7 @@ public class ShipApplication : PageApplication
                 );
             }
             
-            UnityEngine.Object.Destroy(InteractiveTerminalManager.Instance);
+            MainScreen(3);
         }, () => MainScreen(3));
     }
 
