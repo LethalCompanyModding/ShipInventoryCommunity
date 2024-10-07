@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System.Linq;
+using HarmonyLib;
 using ShipInventory.Helpers;
 
 namespace ShipInventory.Patches;
@@ -7,25 +8,33 @@ namespace ShipInventory.Patches;
 public class RoundManager_Patches
 {
     /// <summary>
-    /// Clears the inventory and prevents the despawn
+    /// Clears the inventory
     /// </summary>
     [HarmonyPostfix]
     [HarmonyPatch(nameof(RoundManager.DespawnPropsAtEndOfRound))]
     private static void ClearInventory(RoundManager __instance)
     {
+        
         if (!__instance.IsServer)
             return;
         
-        // Prevent if a player is alive
-        if (!StartOfRound.Instance.allPlayersDead)
-            return;
-        
-        // Prevent if safe
-        if (ShipInventory.Config.ActAsSafe.Value)
-            return;
+        // Set all items to persist
+        var items = ItemManager.GetItems().ToList();
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            var data = items[i];
+            data.PERSISTED_THROUGH_ROUNDS = true;
+            items[i] = data;
+        }
 
         // Clear the inventory
-        Logger.Debug("Clearing the ship...");
-        ItemManager.SetItems([], true);
+        if (StartOfRound.Instance.allItemsList && !ShipInventory.Config.ActAsSafe.Value)
+        {
+            items.Clear();
+            Logger.Debug("Clearing the ship...");
+        }
+        
+        ItemManager.SetItems(items, true);
     }
 }

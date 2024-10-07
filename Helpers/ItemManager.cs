@@ -138,11 +138,12 @@ public static class ItemManager
             trigger.disabledHoverTip = Lang.Get("INVENTORY_FULL");
             return;
         }
-        
-        var item = local.currentlyHeldObjectServer.itemProperties;
+
+        var item = local.currentlyHeldObjectServer;
+        var properties = item.itemProperties;
 
         // If blacklisted
-        if (BLACKLIST.Contains(item.itemName.ToLower()))
+        if (BLACKLIST.Contains(properties.itemName.ToLower()))
         {
             trigger.interactable = false;
             trigger.disabledHoverTip = Lang.Get("ITEM_BLACKLISTED");
@@ -150,7 +151,7 @@ public static class ItemManager
         }
         
         // If item not allowed
-        if (!ALLOWED_ITEMS.ContainsKey(item.itemName))
+        if (!ALLOWED_ITEMS.ContainsKey(properties.itemName) || item.itemUsedUp)
         {
             trigger.interactable = false;
             trigger.disabledHoverTip = Lang.Get("ITEM_NOT_ALLOWED");

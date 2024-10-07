@@ -121,6 +121,8 @@ public class ChuteInteract : NetworkBehaviour
         // Set up object
         if (item.isScrap)
             grabObj.SetScrapValue(data.SCRAP_VALUE);
+
+        grabObj.scrapPersistedThroughRounds = data.PERSISTED_THROUGH_ROUNDS;
             
         if (item.saveItemVariable)
             grabObj.LoadItemSaveData(data.SAVE_DATA);
@@ -267,9 +269,10 @@ public class ChuteInteract : NetworkBehaviour
 
         // Update layer
         // ReSharper disable once Unity.PreferNonAllocApi
-        itemsInChute = Physics.OverlapSphere(
+        itemsInChute = Physics.OverlapBox(
             itemRestorePoint.position,
-            0.2f,
+            new Vector3(1f, 0.25f, 1.25f) / 2,
+            itemRestorePoint.rotation,
             1 << LayerMask.NameToLayer(Constants.LAYER_PROPS)
         );
         

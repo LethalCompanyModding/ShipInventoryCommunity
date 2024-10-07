@@ -42,4 +42,27 @@ internal class StartOfRound_Patches
         
         ItemManager.SetItems([]);
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(StartOfRound.GetValueOfAllScrap))]
+    private static void GetValueOfAllScrap(ref int __result, bool onlyScrapCollected, bool onlyNewScrap)
+    {
+        foreach (var data in ItemManager.GetItems())
+        {
+            // Don't count scrap from earlier rounds
+            if (data.PERSISTED_THROUGH_ROUNDS)
+                continue;
+            
+            var item = data.GetItem();
+            
+            if (item == null)
+                continue;
+            
+            // Dont count non-scrap
+            if (!item.isScrap)
+                continue;
+
+            __result += data.SCRAP_VALUE;
+        }
+    }
 }
