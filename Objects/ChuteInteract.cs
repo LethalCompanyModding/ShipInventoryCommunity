@@ -51,22 +51,16 @@ public class ChuteInteract : NetworkBehaviour
             return;
         }
         
-        StoreItem(item);
+        // Update scrap collected
+        item.isInShipRoom = false;
+        player.SetItemInElevator(true, true, item);
+        
+        // Send store request to server
+        ItemManager.StoreItem(item);
         
         // Despawn the held item
         Logger.Debug("Despawn held object...");
         player.DespawnHeldObject();
-    }
-
-    public void StoreItem(GrabbableObject item)
-    {
-        ItemData data = new ItemData(item);
-        
-        item.OnBroughtToShip();
-        
-        // Send store request to server
-        Logger.Debug("Sending new item to server...");
-        StoreItemServerRpc(data);
     }
 
     [ServerRpc(RequireOwnership = false)]

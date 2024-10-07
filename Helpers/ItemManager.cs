@@ -69,11 +69,28 @@ public static class ItemManager
     }
 
     #endregion
+    #region Store Item
+
+    public static void StoreItem(GrabbableObject item)
+    {
+        if (ChuteInteract.Instance == null)
+            return;
+
+        ItemData data = new ItemData(item);
+        
+        item.OnBroughtToShip();
+        
+        // Send store request to server
+        Logger.Debug("Sending new item to server...");
+        ChuteInteract.Instance.StoreItemServerRpc(data);
+    }
+
+    #endregion
     #region Blacklist
 
     internal static readonly Dictionary<string, Item> ALLOWED_ITEMS = [];
     private static string[] BLACKLIST = [];
-    public static void UpdateBlacklist(string blacklistString)
+    internal static void UpdateBlacklist(string blacklistString)
     {
         BLACKLIST = blacklistString
             .Split(',', System.StringSplitOptions.RemoveEmptyEntries)
@@ -81,7 +98,7 @@ public static class ItemManager
             .ToArray();
     }
 
-    public static void UpdateTrigger(InteractTrigger trigger, PlayerControllerB local)
+    internal static void UpdateTrigger(InteractTrigger trigger, PlayerControllerB local)
     {
         // Holding nothing
         if (!local.isHoldingObject || local.currentlyHeldObjectServer == null)
