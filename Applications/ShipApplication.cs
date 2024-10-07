@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using InteractiveTerminalAPI.UI;
 using InteractiveTerminalAPI.UI.Application;
 using InteractiveTerminalAPI.UI.Cursor;
@@ -82,6 +82,7 @@ public class ShipApplication : PageApplication
 
     private void RegisterExitAction(System.Action<CallbackContext> action)
     {
+        UnregisterExitAction();
         LastExitPerformedAction = action;
         InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= OnScreenExit;
         InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed += action;
@@ -89,12 +90,15 @@ public class ShipApplication : PageApplication
 
     private void UnregisterExitAction()
     {
-        InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= LastExitPerformedAction;
+        if (LastExitPerformedAction != null)
+        {
+            InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= LastExitPerformedAction;
+            LastExitPerformedAction = null;
+        }
         // If OnScreenExit is not already registered, this is a no-op
         // Ensures OnScreenExit is never double-registered
         InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= OnScreenExit;
         InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed += OnScreenExit;
-        LastExitPerformedAction = null;
     }
 
     private BoxedScreen CreateScreen(string title, ITextElement[] elements)
@@ -490,7 +494,7 @@ public class ShipApplication : PageApplication
             if (randomObj is ItemData data)
                 ChuteInteract.Instance?.SpawnItemServerRpc(data);
 
-            UnityEngine.Object.Destroy(InteractiveTerminalManager.Instance);
+            MainScreen(2);
         }, () => MainScreen(2));
     }
 
@@ -526,7 +530,7 @@ public class ShipApplication : PageApplication
                 );
             }
             
-            UnityEngine.Object.Destroy(InteractiveTerminalManager.Instance);
+            MainScreen(3);
         }, () => MainScreen(3));
     }
 
