@@ -29,7 +29,7 @@ public class RoundManager_Patches
         }
 
         // Clear the inventory
-        if (StartOfRound.Instance.allItemsList && !ShipInventory.Config.ActAsSafe.Value)
+        if (StartOfRound.Instance.allPlayersDead && !ShipInventory.Config.ActAsSafe.Value)
         {
             items.Clear();
             Logger.Debug("Clearing the ship...");
