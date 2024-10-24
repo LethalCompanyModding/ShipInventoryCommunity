@@ -51,12 +51,13 @@ public class ChuteInteract : NetworkBehaviour
             return;
         }
         
-        // Update scrap collected
-        item.isInShipRoom = false;
-        player.SetItemInElevator(true, true, item);
-        
         // Send store request to server
         ItemManager.StoreItem(item);
+        
+        // Update scrap collected
+        item.isInShipRoom = false;
+        item.scrapPersistedThroughRounds = true; // stfu collect pop up
+        player.SetItemInElevator(true, true, item);
         
         // Despawn the held item
         Logger.Debug("Despawn held object...");
@@ -129,6 +130,7 @@ public class ChuteInteract : NetworkBehaviour
 
         grabObj.isInShipRoom = true;
         grabObj.isInElevator = true;
+        grabObj.StartCoroutine(PlayDropSound(grabObj));
 
         // Play particles
         spawnParticles.Play();
@@ -152,7 +154,7 @@ public class ChuteInteract : NetworkBehaviour
             var data = spawnQueue.Dequeue();
             var item = data.GetItem();
         
-            if (item is null)
+            if (item == null)
                 continue;
         
             var newItem = Instantiate(item.spawnPrefab) ?? throw new NullReferenceException();
@@ -166,10 +168,6 @@ public class ChuteInteract : NetworkBehaviour
                 grabObj.transform.localRotation = Quaternion.Euler(grabObj.itemProperties.restingRotation);
             else
                 grabObj.OnHitGround();
-            
-            // Call spawn methods
-            grabObj.Start();
-            grabObj.PlayDropSFX();
         
             // Spawn item
             var networkObj = grabObj.NetworkObject;
@@ -184,6 +182,14 @@ public class ChuteInteract : NetworkBehaviour
         spawnCoroutine = null;
     }
 
+    private static IEnumerator PlayDropSound(GrabbableObject grabbable)
+    {
+        yield return null;
+        yield return null;
+        grabbable.PlayDropSFX();
+        grabbable.OnHitGround();
+    }
+    
     #endregion
     #region Request Items
 

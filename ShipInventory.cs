@@ -127,6 +127,16 @@ public class ShipInventory : BaseUnityPlugin
             if (item.spawnPrefab == null)
                 continue;
 
+            GrabbableObject grabObj = item.spawnPrefab.GetComponent<GrabbableObject>();
+            
+            // If invalid object, skip
+            if (grabObj == null)
+                continue;
+            
+            // If a body, skip
+            if (grabObj is RagdollGrabbableObject)
+                continue;
+            
             ItemManager.ALLOWED_ITEMS.TryAdd(item.itemName, item);
         }
     }
