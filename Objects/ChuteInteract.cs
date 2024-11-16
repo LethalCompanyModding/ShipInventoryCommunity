@@ -61,7 +61,7 @@ public class ChuteInteract : NetworkBehaviour
         
         // Despawn the held item
         Logger.Debug("Despawn held object...");
-        player.DespawnHeldObject();
+        player.DestroyItemInSlotAndSync(player.currentItemSlot);
     }
 
     [ServerRpc(RequireOwnership = false)]
