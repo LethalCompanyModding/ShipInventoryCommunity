@@ -16,10 +16,12 @@ public class Config : SyncedConfig2<Config>
     [SyncedEntryField] public readonly SyncedEntry<float> SpawnDelay;
     [SyncedEntryField] public readonly SyncedEntry<bool> RequireInOrbit;
     [SyncedEntryField] public readonly SyncedEntry<int> StopAfter;
+    [SyncedEntryField] public readonly SyncedEntry<PermissionLevel> ChutePermission;
     
     [SyncedEntryField] public readonly SyncedEntry<bool> ActAsSafe;
     [SyncedEntryField] public readonly SyncedEntry<int> MaxItemCount;
     [SyncedEntryField] public readonly SyncedEntry<bool> PersistThroughFire;
+    [SyncedEntryField] public readonly SyncedEntry<PermissionLevel> InventoryPermission;
     
     [SyncedEntryField] public readonly SyncedEntry<bool> ShowConfirmation;
     [SyncedEntryField] public readonly SyncedEntry<bool> YesPlease;
@@ -27,6 +29,8 @@ public class Config : SyncedConfig2<Config>
 
     [SyncedEntryField] public readonly SyncedEntry<OverrideMode> OverrideTrigger;
     public enum OverrideMode { NONE, NEVER, ALL }
+    
+    public enum PermissionLevel { HOST_ONLY, CLIENTS_ONLY, EVERYONE, NO_ONE  }
 
     #endregion
 
@@ -65,6 +69,12 @@ public class Config : SyncedConfig2<Config>
             new ConfigDescription(Lang.Get("DESCRIPTION_STOP_AFTER"))
         );
 
+        ChutePermission = cfg.BindSyncedEntry(
+            new ConfigDefinition(CHUTE, "ChutePermission"),
+            PermissionLevel.EVERYONE,
+            new ConfigDescription(Lang.Get("DESCRIPTION_CHUTE_PERMISSION"))
+        );
+
         #endregion
 
         #region Inventory
@@ -87,6 +97,12 @@ public class Config : SyncedConfig2<Config>
             new ConfigDefinition(INVENTORY, "PersistThroughFire"),
             false,
             new ConfigDescription(Lang.Get("DESCRIPTION_PERSIST_THROUGH_FIRE"))
+        );
+        
+        InventoryPermission = cfg.BindSyncedEntry(
+            new ConfigDefinition(INVENTORY, "InventoryPermission"),
+            PermissionLevel.EVERYONE,
+            new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_PERMISSION"))
         );
         
         #endregion

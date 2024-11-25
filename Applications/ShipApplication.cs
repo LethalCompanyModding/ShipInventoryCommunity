@@ -73,10 +73,28 @@ public class ShipApplication : PageApplication
 
     private readonly string POSITIVE_ANSWER = Lang.Get("POSITIVE_ANSWER");
     private readonly string NEGATIVE_ANSWER = Lang.Get("NEGATIVE_ANSWER");
+    private readonly string BLOCKED_ANSWER = Lang.Get("BLOCKED_ANSWER");
     
     private string BoolToString(bool value) => value
         ? $"<color=green>{POSITIVE_ANSWER}</color>"
         : $"<color=red>{NEGATIVE_ANSWER}</color>";
+
+    private static bool CanRetrieve()
+    {
+        var player = StartOfRound.Instance.localPlayerController;
+        var permission = ShipInventory.Config.InventoryPermission.Value;
+
+        switch (permission)
+        {
+            case Config.PermissionLevel.NO_ONE:
+            case Config.PermissionLevel.HOST_ONLY when !player.IsHost:
+            case Config.PermissionLevel.CLIENTS_ONLY when player.IsHost:
+                return false;
+            case Config.PermissionLevel.EVERYONE:
+            default:
+                return true;
+        }
+    }
 
     private System.Action<CallbackContext>? LastExitPerformedAction;
 
@@ -121,6 +139,9 @@ public class ShipApplication : PageApplication
     private readonly string CONFIRMATION_TITLE = Lang.Get("CONFIRMATION_TITLE");
     private readonly string CONFIRMATION_MESSAGE = Lang.Get("CONFIRMATION_MESSAGE");
 
+    private readonly string PERMISSION_MISSING_TITLE = Lang.Get("PERMISSION_MISSING_TITLE");
+    private readonly string PERMISSION_MISSING_MESSAGE = Lang.Get("PERMISSION_MISSING_MESSAGE");
+
     private System.Action? ConfirmExitCallback;
     
     private void ConfirmElement(string message, System.Action? confirmCallback, System.Action? declineCallback = null)
@@ -133,19 +154,27 @@ public class ShipApplication : PageApplication
         }
 
         ConfirmExitCallback = declineCallback;
+        bool canRetrieve = CanRetrieve();
+        
+        // Elements
+        CursorElement[] elements;
+        int cursorIndex = 0;
 
-        var optionMenu = new CursorMenu
+        if (canRetrieve)
         {
-            cursorIndex = ShipInventory.Config.YesPlease.Value ? 1 : 0,
             elements =
             [
                 new CursorElement
                 {
                     Name = NEGATIVE_ANSWER,
-                    Action = () => {
-                        if (declineCallback != null) {
+                    Action = () =>
+                    {
+                        if (declineCallback != null)
+                        {
                             declineCallback.Invoke();
-                        } else {
+                        }
+                        else
+                        {
                             MainScreen(0);
                         }
                     }
@@ -155,28 +184,71 @@ public class ShipApplication : PageApplication
                     Name = POSITIVE_ANSWER,
                     Action = () => confirmCallback?.Invoke()
                 }
-            ]
+            ];
+
+            if (ShipInventory.Config.YesPlease.Value)
+                cursorIndex = 1;
+        }
+        else
+        {
+            elements =
+            [
+                new CursorElement
+                {
+                    Name = BLOCKED_ANSWER,
+                    Action = () =>
+                    {
+                        if (declineCallback != null)
+                        {
+                            declineCallback.Invoke();
+                        }
+                        else
+                        {
+                            MainScreen(0);
+                        }
+                    }
+                }
+            ];
+        }
+
+        var optionMenu = new CursorMenu
+        {
+            cursorIndex = cursorIndex,
+            elements = elements
         };
 
-        var screen = CreateScreen(CONFIRMATION_TITLE,
+        // Screen
+        BoxedScreen screen;
+        
+        if (canRetrieve)
+        {
+            screen = CreateScreen(CONFIRMATION_TITLE,
+                [
+                    TextElement.Create(message),
+                    TextElement.Create(" "),
+                    TextElement.Create(CONFIRMATION_MESSAGE),
+                    TextElement.Create(" "),
+                    optionMenu
+                ]
+            );
+        }
+        else
+        {
+            screen = CreateScreen(PERMISSION_MISSING_TITLE,
             [
-                TextElement.Create(message),
-                TextElement.Create(" "),
-                TextElement.Create(CONFIRMATION_MESSAGE),
+                TextElement.Create(PERMISSION_MISSING_MESSAGE),
                 TextElement.Create(" "),
                 optionMenu
-            ]
-        );
+            ]);
+        }
+            
         currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
         SwitchScreen(screen, optionMenu, true);
 
         RegisterExitAction(OnConfirmExit);
     }
 
-    private void OnConfirmExit(CallbackContext context)
-    {
-        ConfirmExitCallback?.Invoke();
-    }
+    private void OnConfirmExit(CallbackContext context) => ConfirmExitCallback?.Invoke();
 
     #endregion
 

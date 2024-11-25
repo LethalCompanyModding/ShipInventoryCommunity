@@ -12,6 +12,9 @@
     "NAME_STOP_AFTER": "Max Chute Capacity",
     "DESCRIPTION_STOP_AFTER": "Limits the amount of items that can be spawned inside the chute.\n\nThis is to prevent further lag when retrieve too many items.",
 
+    "NAME_CHUTE_PERMISSION": "Store Permission",
+    "DESCRIPTION_CHUTE_PERMISSION": "Allows certain employees to store items in the chute.",
+    
     "INVENTORY_SECTION": "Inventory",
     "NAME_AS_SAFE": "Safe once stored",
     "DESCRIPTION_AS_SAFE": "Prevents the ship's inventory from clearing when all players die.",
@@ -21,6 +24,9 @@
 
     "NAME_PERSIST_THROUGH_FIRE": "Persist through fire",
     "DESCRIPTION_PERSIST_THROUGH_FIRE": "Prevents the ship's inventory from clearing when the crew gets fired.",
+
+    "NAME_INVENTORY_PERMISSION": "Retrieve Permission",
+    "DESCRIPTION_INVENTORY_PERMISSION": "Allows certain employees to retrieve items from the inventory.",
 
     "TERMINAL_SECTION": "Terminal",
     "NAME_SHOW_CONFIRMATION": "Terminal Confirmation",
@@ -65,9 +71,13 @@
 
     "CONFIRMATION_TITLE": "Confirmation",
     "CONFIRMATION_MESSAGE": "Do you really want to proceed?",
+    
+    "PERMISSION_MISSING_TITLE": "Not Authorized",
+    "PERMISSION_MISSING_MESSAGE": "You do not have the necessary permissions to complete this task.",
 
     "POSITIVE_ANSWER": "Yes",
     "NEGATIVE_ANSWER": "No",
+    "BLOCKED_ANSWER": "Understood",
 
     "PREVIOUS": "[ PREVIOUS ]",
     "NEXT": "[ NEXT ]",
@@ -82,6 +92,7 @@
 
     "NOT_HOLDING_ITEM": "[Nothing to store]",
     "ITEM_BLACKLISTED": "[Item blacklisted]",
+    "CHUTE_PERMISSION_MISSING": "[Employee cannot operate]",
     "ITEM_NOT_ALLOWED": "[Item not allowed]",
     "NOT_IN_ORBIT": "[Ship must be in orbit]",
     "INVENTORY_FULL": "[Inventory full]"

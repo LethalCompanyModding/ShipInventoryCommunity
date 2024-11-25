@@ -55,6 +55,11 @@ public static class LethalConfigCompatibility
             RequiresRestart = false
         }));
         
+        LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<Config.PermissionLevel>(config.ChutePermission.Entry, new EnumDropDownOptions
+        {
+            Name = Lang.Get("NAME_CHUTE_PERMISSION")
+        }));
+        
         #endregion
 
         #region Inventory
@@ -74,6 +79,11 @@ public static class LethalConfigCompatibility
         LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.PersistThroughFire.Entry, new BoolCheckBoxOptions {
             Name = Lang.Get("NAME_PERSIST_THROUGH_FIRE"),
             RequiresRestart = false
+        }));
+        
+        LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<Config.PermissionLevel>(config.InventoryPermission.Entry, new EnumDropDownOptions
+        {
+            Name = Lang.Get("NAME_INVENTORY_PERMISSION")
         }));
 
         #endregion

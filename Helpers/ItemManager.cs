@@ -98,6 +98,9 @@ public static class ItemManager
             .ToArray();
     }
 
+    #endregion
+    #region Trigger
+
     internal static void UpdateTrigger(InteractTrigger trigger, PlayerControllerB local)
     {
         // Holding nothing
@@ -107,7 +110,9 @@ public static class ItemManager
             trigger.disabledHoverTip = Lang.Get("NOT_HOLDING_ITEM");
             return;
         }
-        
+
+        #region Debug
+
         // Debug disable
         if (ShipInventory.Config.OverrideTrigger.Value == Config.OverrideMode.NEVER)
         {
@@ -123,6 +128,26 @@ public static class ItemManager
             return;
         }
         
+        #endregion
+
+        #region Permissions
+
+        switch (ShipInventory.Config.ChutePermission.Value)
+        {
+            // No one
+            case Config.PermissionLevel.NO_ONE:
+            case Config.PermissionLevel.HOST_ONLY when !local.IsHost:
+            case Config.PermissionLevel.CLIENTS_ONLY when local.IsHost:
+                trigger.interactable = false;
+                trigger.disabledHoverTip = Lang.Get("CHUTE_PERMISSION_MISSING");
+                return;
+            case Config.PermissionLevel.EVERYONE:
+            default:
+                break; // Nothing
+        }
+
+        #endregion
+
         // Not in orbit
         if (!StartOfRound.Instance.inShipPhase && ShipInventory.Config.RequireInOrbit.Value)
         {

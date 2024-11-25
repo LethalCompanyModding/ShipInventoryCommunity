@@ -1,6 +1,11 @@
 # Changelog
 
-## [1.1.4](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.4)(2024-09-28)
+## [1.1.6]()
+
+## [1.1.5]() (2024-10-24)
+Not sure what changed, since dates are messed up.
+
+## [1.1.4](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.4) (2024-09-28)
 ### Fixes:
 * The inventory now clears only when all players died
 
