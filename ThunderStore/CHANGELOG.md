@@ -1,8 +1,16 @@
 # Changelog
 
-## [1.1.6]()
+## [1.1.6](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.6) (2024-11-25)
+<p style="color:#AAAA00">Previous saves are not compatible</p>
 
-## [1.1.5]() (2024-10-24)
+### Fixes:
+* Changed how items are stored, using IDs instead of names
+
+### Additions:
+* Permission to store items in the chute
+* Permission to retrieve items from the inventory
+
+## [1.1.5](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.5) (2024-10-24)
 Not sure what changed, since dates are messed up.
 
 ## [1.1.4](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.4) (2024-09-28)
