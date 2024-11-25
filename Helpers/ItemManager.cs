@@ -88,7 +88,7 @@ public static class ItemManager
     #endregion
     #region Blacklist
 
-    internal static readonly Dictionary<string, Item> ALLOWED_ITEMS = [];
+    internal static readonly Dictionary<int, Item> ALLOWED_ITEMS = [];
     private static string[] BLACKLIST = [];
     internal static void UpdateBlacklist(string blacklistString)
     {
@@ -151,7 +151,7 @@ public static class ItemManager
         }
         
         // If item not allowed
-        if (!ALLOWED_ITEMS.ContainsKey(properties.itemName) || item.itemUsedUp)
+        if (!ALLOWED_ITEMS.ContainsKey(properties.GetInstanceID()) || item.itemUsedUp)
         {
             trigger.interactable = false;
             trigger.disabledHoverTip = Lang.Get("ITEM_NOT_ALLOWED");

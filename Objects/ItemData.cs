@@ -11,14 +11,14 @@ namespace ShipInventory.Objects;
 [Serializable]
 public struct ItemData : INetworkSerializable
 {
-    public string ID;
+    public int ID;
     public int SCRAP_VALUE;
     public int SAVE_DATA;
     public bool PERSISTED_THROUGH_ROUNDS;
     
     public ItemData(GrabbableObject item)
     {
-        ID = item.itemProperties.itemName;
+        ID = item.itemProperties.GetInstanceID();
     
         if (item.itemProperties.isScrap)
             SCRAP_VALUE = item.scrapValue;

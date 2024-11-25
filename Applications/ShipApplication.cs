@@ -355,7 +355,7 @@ public class ShipApplication : PageApplication
         Action = () => RetrieveType()
     };
 
-    private CursorElement RenderType(IGrouping<string, ItemData> group, bool onlyGroup, int index)
+    private CursorElement RenderType(IGrouping<int, ItemData> group, bool onlyGroup, int index)
     {
         var item = group.First().GetItem();
         var amount = group.Count();
@@ -403,7 +403,7 @@ public class ShipApplication : PageApplication
         
         var types = ItemManager.GetItems().GroupBy(i => i.ID);
         int cursorCount = types.Count();
-        (IGrouping<string, ItemData>[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(types.ToArray());
+        (IGrouping<int, ItemData>[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(types.ToArray());
 
         for (int i = 0; i < pageGroups.Length; i++)
         {

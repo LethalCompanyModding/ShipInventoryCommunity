@@ -121,6 +121,7 @@ public class ShipInventory : BaseUnityPlugin
 
     public static void PrepareItems()
     {
+        Helpers.Logger.Debug("Preparing items...");
         foreach (var item in Resources.FindObjectsOfTypeAll<Item>())
         {
             // Must have spawn prefab
@@ -137,8 +138,10 @@ public class ShipInventory : BaseUnityPlugin
             if (grabObj is RagdollGrabbableObject)
                 continue;
             
-            ItemManager.ALLOWED_ITEMS.TryAdd(item.itemName, item);
+            Helpers.Logger.Debug($"Adding the item '{item.itemName}' with the ID '{item.GetInstanceID()}'.");
+            ItemManager.ALLOWED_ITEMS.TryAdd(item.GetInstanceID(), item);
         }
+        Helpers.Logger.Debug("Items prepared!");
     }
 
     #endregion
