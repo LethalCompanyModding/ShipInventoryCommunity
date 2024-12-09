@@ -7,6 +7,7 @@
     "BepInEx-BepInExPack-5.4.2100",
     "WhiteSpike-Interactive_Terminal_API-1.1.3",
     "Sigurd-CSync-5.0.1",
-    "AinaVT-LethalConfig-1.4.2"
+    "AinaVT-LethalConfig-1.4.2",
+    "Evaisa-LethalLib-0.16.1"
   ]
 }

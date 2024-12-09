@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.7](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.7) ()
+<p style="color:#AAAA00">Previous saves are not compatible (again)</p>
+
+## Fixes:
+* Changed how items are stored, using mod and item names instead of IDs
+
+## Additions:
+* Fallback item if an item is not found
+
 ## [1.1.6](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.6) (2024-11-25)
 <p style="color:#AAAA00">Previous saves are not compatible</p>
 
