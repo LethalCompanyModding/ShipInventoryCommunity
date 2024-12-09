@@ -322,16 +322,11 @@ public class ShipApplication : PageApplication
 
     private CursorElement RenderSingle(ItemData itemData, bool onlyGroup, int index)
     {
-        var item = itemData.GetItem();
-        string name = UNKNOWN;
-        if (item is not null)
-        {
-            name = string.Format(
-                SINGLE_ITEM_FORMAT,
-                item.itemName,
-                itemData.SCRAP_VALUE
-            );
-        }
+        string name = string.Format(
+            SINGLE_ITEM_FORMAT,
+            itemData.GetItemName(),
+            itemData.SCRAP_VALUE
+        );
 
         var element = new CursorElement
         {
@@ -427,21 +422,16 @@ public class ShipApplication : PageApplication
         Action = () => RetrieveType()
     };
 
-    private CursorElement RenderType(IGrouping<int, ItemData> group, bool onlyGroup, int index)
+    private CursorElement RenderType(IGrouping<string, ItemData> group, bool onlyGroup, int index)
     {
-        var item = group.First().GetItem();
         var amount = group.Count();
 
-        string name = UNKNOWN;
-        if (item is not null)
-        {
-            name = string.Format(
-                TYPE_ITEM_FORMAT,
-                item.itemName,
-                amount,
-                group.Sum(data => data.SCRAP_VALUE)
-            );
-        }
+        string name = string.Format(
+            TYPE_ITEM_FORMAT,
+            group.First().GetItemName(),
+            amount,
+            group.Sum(data => data.SCRAP_VALUE)
+        );
 
         var element = new CursorElement
         {
@@ -450,7 +440,7 @@ public class ShipApplication : PageApplication
             {
                 string message = TEXT_TYPE_RETRIEVE;
 
-                message = string.Format(message, amount, item?.itemName ?? UNKNOWN);
+                message = string.Format(message, amount, name);
                 ConfirmElement(message, () =>
                 {
                     ChuteInteract.Instance?.SpawnItemServerRpc(
@@ -475,7 +465,7 @@ public class ShipApplication : PageApplication
         
         var types = ItemManager.GetItems().GroupBy(i => i.ID);
         int cursorCount = types.Count();
-        (IGrouping<int, ItemData>[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(types.ToArray());
+        (IGrouping<string, ItemData>[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(types.ToArray());
 
         for (int i = 0; i < pageGroups.Length; i++)
         {
@@ -546,25 +536,15 @@ public class ShipApplication : PageApplication
         // Random object
         var items = ItemManager.GetItems();
 
-        object randomObj = items.ElementAt(UnityEngine.Random.Range(0, items.Count()));
+        ItemData data = items.ElementAt(UnityEngine.Random.Range(0, items.Count()));
         
         // Generate message
-        string message = TEXT_RANDOM_RETRIEVE;
-
-        string name = randomObj switch
-        {
-            ItemData data => data.GetItem()?.itemName,
-            EnemyType enemyType => enemyType.enemyName,
-            _ => null
-        } ?? UNKNOWN;
-
-        message = string.Format(message, name);
+        string message = string.Format(TEXT_RANDOM_RETRIEVE, data.GetItemName());
         
         ConfirmElement(message, () =>
         {
             // Spawn random
-            if (randomObj is ItemData data)
-                ChuteInteract.Instance?.SpawnItemServerRpc(data);
+            ChuteInteract.Instance?.SpawnItemServerRpc(data);
 
             MainScreen(2);
         }, () => MainScreen(2));

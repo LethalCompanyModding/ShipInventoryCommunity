@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Reflection;
 using BepInEx;
 using HarmonyLib;
@@ -12,7 +13,8 @@ namespace ShipInventory;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency("WhiteSpike.InteractiveTerminalAPI")]
-[BepInDependency("com.sigurd.csync", "5.0.1")] 
+[BepInDependency("com.sigurd.csync", "5.0.1")]
+[BepInDependency("evaisa.lethallib", "0.16.1")]
 [BepInDependency(LethalConfigCompatibility.LETHAL_CONFIG, BepInDependency.DependencyFlags.SoftDependency)]
 public class ShipInventory : BaseUnityPlugin
 {
@@ -122,25 +124,8 @@ public class ShipInventory : BaseUnityPlugin
     public static void PrepareItems()
     {
         Helpers.Logger.Debug("Preparing items...");
-        foreach (var item in Resources.FindObjectsOfTypeAll<Item>())
-        {
-            // Must have spawn prefab
-            if (item.spawnPrefab == null)
-                continue;
-
-            GrabbableObject grabObj = item.spawnPrefab.GetComponent<GrabbableObject>();
-            
-            // If invalid object, skip
-            if (grabObj == null)
-                continue;
-            
-            // If a body, skip
-            if (grabObj is RagdollGrabbableObject)
-                continue;
-            
-            Helpers.Logger.Debug($"Adding the item '{item.itemName}' with the ID '{item.GetInstanceID()}'.");
-            ItemManager.ALLOWED_ITEMS.TryAdd(item.GetInstanceID(), item);
-        }
+        var allItems = Resources.FindObjectsOfTypeAll<Item>();
+        ItemData.FALLBACK_ITEM = allItems.FirstOrDefault(i => i.itemName == "Gold bar") ?? allItems[0];
         Helpers.Logger.Debug("Items prepared!");
     }
 

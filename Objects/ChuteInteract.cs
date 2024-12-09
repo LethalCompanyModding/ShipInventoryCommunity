@@ -92,11 +92,6 @@ public class ChuteInteract : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void SpawnItemServerRpc(ItemData data, int count = 1)
     {
-        var item = data.GetItem();
-        
-        if (item is null)
-            return;
-
         var items = ItemManager.GetInstances(data, count);
         foreach (var itemData in items)
             spawnQueue.Enqueue(itemData);
@@ -114,7 +109,7 @@ public class ChuteInteract : NetworkBehaviour
         
         var item = data.GetItem();
 
-        if (!networkObject.TryGet(out var obj) || item == null)
+        if (!networkObject.TryGet(out var obj))
             return;
 
         var grabObj = obj.GetComponent<GrabbableObject>();
@@ -153,9 +148,6 @@ public class ChuteInteract : NetworkBehaviour
             
             var data = spawnQueue.Dequeue();
             var item = data.GetItem();
-        
-            if (item == null)
-                continue;
         
             var newItem = Instantiate(item.spawnPrefab) ?? throw new NullReferenceException();
             newItem.transform.SetParent(itemRestorePoint, false);

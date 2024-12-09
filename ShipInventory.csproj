@@ -59,6 +59,7 @@
       <Reference Include="$(BepinEx)\Sigurd-CSync\CSync\com.sigurd.csync.dll" />
       <Reference Include="$(BepinEx)\WhiteSpike-Interactive_Terminal_API\InteractiveTerminalAPI\InteractiveTerminalAPI.dll" />
       <Reference Include="$(BepinEx)\AinaVT-LethalConfig\LethalConfig\LethalConfig.dll" />
+      <Reference Include="$(BepinEx)\Evaisa-LethalLib\LethalLib\LethalLib.dll" />
     </ItemGroup>
 
     <!-- Targets -->

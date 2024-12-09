@@ -18,17 +18,11 @@ public static class ItemManager
     /// Copies the items stored in the ship's inventory
     /// </summary>
     public static IEnumerable<ItemData> GetItems() => new List<ItemData>(
-        storedItems.OrderBy(i => i.GetItem()?.itemName).ThenBy(i => i.SCRAP_VALUE)
+        storedItems.OrderBy(i => i.GetItemName()).ThenBy(i => i.SCRAP_VALUE)
     );
 
     public static IEnumerable<ItemData> GetInstances(ItemData data, int count)
     {
-        var item = data.GetItem();
-        
-        // If item invalid
-        if (item is null)
-            return [];
-
         // Take only one
         if (count == 1)
             return storedItems.Where(d => d.Equals(data)).Take(1);
@@ -88,7 +82,6 @@ public static class ItemManager
     #endregion
     #region Blacklist
 
-    internal static readonly Dictionary<int, Item> ALLOWED_ITEMS = [];
     private static string[] BLACKLIST = [];
     internal static void UpdateBlacklist(string blacklistString)
     {
@@ -176,7 +169,7 @@ public static class ItemManager
         }
         
         // If item not allowed
-        if (!ALLOWED_ITEMS.ContainsKey(properties.GetInstanceID()) || item.itemUsedUp)
+        if (properties.spawnPrefab == null || properties.spawnPrefab.GetComponent<RagdollGrabbableObject>() != null || item.itemUsedUp)
         {
             trigger.interactable = false;
             trigger.disabledHoverTip = Lang.Get("ITEM_NOT_ALLOWED");
