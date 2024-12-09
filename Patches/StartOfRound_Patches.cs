@@ -1,4 +1,6 @@
-﻿using HarmonyLib;
+﻿using System.Collections.Generic;
+using HarmonyLib;
+using Newtonsoft.Json;
 using ShipInventory.Helpers;
 using ShipInventory.Objects;
 using Logger = ShipInventory.Helpers.Logger;
@@ -15,18 +17,42 @@ internal class StartOfRound_Patches
     [HarmonyPatch(nameof(StartOfRound.LoadShipGrabbableItems))]
     private static void LoadStoredItems()
     {
+        string currentSaveFileName = GameNetworkManager.Instance.currentSaveFileName;
+
+        // If key missing, skip
+        if (!ES3.KeyExists(Constants.STORED_ITEMS, currentSaveFileName))
+        {
+            ItemManager.SetItems([]);
+            return;
+        }
+
+        Logger.Debug("Loading stored items...");
+
+        try
+        {
+            string json = ES3.Load<string>(Constants.STORED_ITEMS, currentSaveFileName);
+            var items = JsonConvert.DeserializeObject<IEnumerable<ItemData>>(json);
+
+            if (items == null)
+            {
+                items = [];
+                Logger.Error("Could not load items from the save file.");
+            }
+            
+            ItemManager.SetItems(items);
+            Logger.Debug("Loaded stored items!");
+        }
+        catch (System.Exception ex)
+        {
+            Logger.Error($"Failed to load stored items. {ex}");
+        }
+        
         // If key missing, skip
         if (!ES3.KeyExists(Constants.STORED_ITEMS, GameNetworkManager.Instance.currentSaveFileName))
         {
             ItemManager.SetItems([]);
             return;
         }
-        
-        Logger.Debug("Loading stored items...");
-        ItemManager.SetItems(
-            ES3.Load<ItemData[]>(Constants.STORED_ITEMS, GameNetworkManager.Instance.currentSaveFileName)
-        );
-        Logger.Debug("Loaded stored items!");
     }
 
     /// <summary>

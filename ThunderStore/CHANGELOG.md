@@ -1,6 +1,11 @@
 # Changelog
 
-## [1.1.7](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.7) ()
+## [1.1.8](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.8) (2024-12-09)
+
+## Fixes:
+* Saving the items in the inventory now works
+
+## [1.1.7](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.7) (2024-12-08)
 <p style="color:#AAAA00">Previous saves are not compatible (again)</p>
 
 ## Fixes:
