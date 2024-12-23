@@ -27,16 +27,13 @@ public class Config : SyncedConfig2<Config>
     [SyncedEntryField] public readonly SyncedEntry<bool> YesPlease;
     [SyncedEntryField] public readonly SyncedEntry<bool> ShowTrademark;
 
-    [SyncedEntryField] public readonly SyncedEntry<OverrideMode> OverrideTrigger;
-    public enum OverrideMode { NONE, NEVER, ALL }
-    
     public enum PermissionLevel { HOST_ONLY, CLIENTS_ONLY, EVERYONE, NO_ONE  }
 
     #endregion
 
     public Config(ConfigFile cfg) : base(MyPluginInfo.PLUGIN_GUID)
     {
-        LangUsed = cfg.Bind("Language", "Lang", "en");
+        LangUsed = cfg.Bind("Language", "Language", Lang.DEFAULT_LANG);
         Lang.LoadLang(LangUsed.Value);
         
         #region Chute
@@ -127,23 +124,6 @@ public class Config : SyncedConfig2<Config>
             new ConfigDefinition(TERMINAL, "ShowTrademark"),
             true,
             new ConfigDescription(Lang.Get("DESCRIPTION_SHOW_TRADEMARK"))
-        );
-        
-        #endregion
-
-        #region Debug
-
-        string DEBUG = Lang.Get("DEBUG_SECTION");
-
-        OverrideTrigger = cfg.BindSyncedEntry(
-            new ConfigDefinition(DEBUG, "OverrideTrigger"),
-            OverrideMode.NONE,
-            new ConfigDescription(string.Format(
-                Lang.Get("DESCRIPTION_OVERRIDE_TRIGGER"),
-                nameof(OverrideMode.NONE),
-                nameof(OverrideMode.NEVER),
-                nameof(OverrideMode.ALL)
-            ))
         );
         
         #endregion

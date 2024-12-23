@@ -41,10 +41,6 @@
     "NAME_NO_STEAM_ID": "Show Steam ID",
     "DESCRIPTION_NO_STEAM_ID": "Replaces the ID shown on the ship's inventory menu by a random ID.",
 
-    "DEBUG_SECTION": "Debug",
-    "NAME_OVERRIDE_TRIGGER": "Override Trigger",
-    "DESCRIPTION_OVERRIDE_TRIGGER": "Overrides the trigger check.\n\nThis is useful if items get stuck or you want to store illegal items.\n\n{0}: Proceed with the base checks\n{1}: Prevents all items\n{2}: Allows all items\n\nAny crash related to this is your fault.",
-
     "SINGLE_RETRIEVE": "Retrieve single",
     "TEXT_SINGLE_RETRIEVE": "You are about to retrieve '{0}'.",
     "SINGLE_RETRIEVE_MESSAGE": "Select the desired item to retrieve it.",

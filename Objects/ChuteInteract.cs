@@ -7,6 +7,7 @@ using ShipInventory.Helpers;
 using Unity.Netcode;
 using UnityEngine;
 using Logger = ShipInventory.Helpers.Logger;
+// ReSharper disable Unity.PreferNonAllocApi
 
 namespace ShipInventory.Objects;
 
@@ -240,6 +241,7 @@ public class ChuteInteract : NetworkBehaviour
     private Collider[] itemsInChute = [];
     private InteractTrigger _trigger = null!;
 
+    // ReSharper disable Unity.PerformanceAnalysis
     private void UpdateTrigger()
     {
         // If no trigger, skip
@@ -263,22 +265,32 @@ public class ChuteInteract : NetworkBehaviour
             return;
 
         // Update interactable
-        ItemManager.UpdateTrigger(_trigger, local);
+        _trigger.UpdateChuteTrigger(local);
 
-        // Update layer
-        // ReSharper disable once Unity.PreferNonAllocApi
         itemsInChute = Physics.OverlapBox(
             itemRestorePoint.position,
             new Vector3(1f, 0.25f, 1.25f) / 2,
             itemRestorePoint.rotation,
-            1 << LayerMask.NameToLayer(Constants.LAYER_PROPS)
+            1 << LAYER_PROPS
         );
-        
-        gameObject.layer = LayerMask.NameToLayer(itemsInChute.Length > 0 ? Constants.LAYER_IGNORE : Constants.LAYER_INTERACTABLE);
+
+        // Update layer
+        gameObject.layer = itemsInChute.Length > 0 ? LAYER_IGNORE : LAYER_INTERACTABLE;
     }
 
     #endregion
     #region MonoBehaviour
+
+    private int LAYER_IGNORE = -1; 
+    private int LAYER_INTERACTABLE = -1;
+    private int LAYER_PROPS = -1;
+    
+    private void Start()
+    {
+        LAYER_IGNORE = LayerMask.NameToLayer(Constants.LAYER_IGNORE);
+        LAYER_INTERACTABLE = LayerMask.NameToLayer(Constants.LAYER_INTERACTABLE);
+        LAYER_PROPS = LayerMask.NameToLayer(Constants.LAYER_PROPS);
+    }
 
     private void Update() => UpdateTrigger();
 

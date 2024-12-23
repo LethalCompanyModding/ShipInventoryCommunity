@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using GameNetcodeStuff;
 using ShipInventory.Objects;
 
 namespace ShipInventory.Helpers;
@@ -32,6 +32,8 @@ public static class ItemManager
     }
 
     public static int GetTotalValue() => storedItems.Sum(i => i.SCRAP_VALUE);
+
+    public static int GetCount() => storedItems.Count();
 
     #endregion
     #region Setters
@@ -82,102 +84,15 @@ public static class ItemManager
     #endregion
     #region Blacklist
 
-    private static string[] BLACKLIST = [];
+    private static readonly HashSet<string> BLACKLIST = [];
     internal static void UpdateBlacklist(string blacklistString)
     {
-        BLACKLIST = blacklistString
-            .Split(',', System.StringSplitOptions.RemoveEmptyEntries)
-            .Select(s => s.Trim().ToLower())
-            .ToArray();
+        BLACKLIST.Clear();
+        foreach (var s in blacklistString.Split(',', StringSplitOptions.RemoveEmptyEntries))
+            BLACKLIST.Add(s);
     }
 
-    #endregion
-    #region Trigger
-
-    internal static void UpdateTrigger(InteractTrigger trigger, PlayerControllerB local)
-    {
-        // Holding nothing
-        if (!local.isHoldingObject || local.currentlyHeldObjectServer == null)
-        {
-            trigger.interactable = false;
-            trigger.disabledHoverTip = Lang.Get("NOT_HOLDING_ITEM");
-            return;
-        }
-
-        #region Debug
-
-        // Debug disable
-        if (ShipInventory.Config.OverrideTrigger.Value == Config.OverrideMode.NEVER)
-        {
-            trigger.interactable = false;
-            trigger.disabledHoverTip = "Disabled by HOST";
-            return;
-        }
-
-        // Debug enable
-        if (ShipInventory.Config.OverrideTrigger.Value == Config.OverrideMode.ALL)
-        {
-            trigger.interactable = true;
-            return;
-        }
-        
-        #endregion
-
-        #region Permissions
-
-        switch (ShipInventory.Config.ChutePermission.Value)
-        {
-            // No one
-            case Config.PermissionLevel.NO_ONE:
-            case Config.PermissionLevel.HOST_ONLY when !local.IsHost:
-            case Config.PermissionLevel.CLIENTS_ONLY when local.IsHost:
-                trigger.interactable = false;
-                trigger.disabledHoverTip = Lang.Get("CHUTE_PERMISSION_MISSING");
-                return;
-            case Config.PermissionLevel.EVERYONE:
-            default:
-                break; // Nothing
-        }
-
-        #endregion
-
-        // Not in orbit
-        if (!StartOfRound.Instance.inShipPhase && ShipInventory.Config.RequireInOrbit.Value)
-        {
-            trigger.interactable = false;
-            trigger.disabledHoverTip = Lang.Get("NOT_IN_ORBIT");
-            return;
-        }
-        
-        // Is Full
-        if (storedItems.Count() == ShipInventory.Config.MaxItemCount.Value)
-        {
-            trigger.interactable = false;
-            trigger.disabledHoverTip = Lang.Get("INVENTORY_FULL");
-            return;
-        }
-
-        var item = local.currentlyHeldObjectServer;
-        var properties = item.itemProperties;
-
-        // If blacklisted
-        if (BLACKLIST.Contains(properties.itemName.ToLower()))
-        {
-            trigger.interactable = false;
-            trigger.disabledHoverTip = Lang.Get("ITEM_BLACKLISTED");
-            return;
-        }
-        
-        // If item not allowed
-        if (properties.spawnPrefab == null || properties.spawnPrefab.GetComponent<RagdollGrabbableObject>() != null || item.itemUsedUp)
-        {
-            trigger.interactable = false;
-            trigger.disabledHoverTip = Lang.Get("ITEM_NOT_ALLOWED");
-            return;
-        }
-        
-        trigger.interactable = local.isHoldingObject;
-    }
+    public static bool IsBlacklisted(Item item) => BLACKLIST.Contains(item.itemName.ToLower());
 
     #endregion
 }

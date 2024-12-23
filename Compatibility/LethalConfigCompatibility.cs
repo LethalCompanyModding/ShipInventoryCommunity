@@ -106,15 +106,6 @@ public static class LethalConfigCompatibility
         }));
 
         #endregion
-
-        #region Debug
-        
-        LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<Config.OverrideMode>(config.OverrideTrigger.Entry, new EnumDropDownOptions {
-            Name = Lang.Get("NAME_OVERRIDE_TRIGGER"),
-            RequiresRestart = false
-        }));
-        
-        #endregion
         
         LethalConfigManager.SkipAutoGenFor(config.LangUsed);
         

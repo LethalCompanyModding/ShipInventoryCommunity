@@ -1,41 +1,51 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 
 namespace ShipInventory.Helpers;
 
-public class Lang
+internal static class Lang
 {
-    private static string? PATH;
-    private static JObject? LANG;
-
-    public static bool LoadLang(string lang) {
-        if (PATH == null)
-        {
-            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-            UriBuilder uri = new UriBuilder(codeBase);
-            PATH = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
-        }
-        
-        if (PATH == null)
+    public const string DEFAULT_LANG = "en";
+    
+    /// <summary>
+    /// Loads the given language
+    /// </summary>
+    public static bool LoadLang(string lang)
+    {
+        string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+        UriBuilder uri = new UriBuilder(codeBase);
+            
+        string? dllPath = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
+            
+        if (dllPath == null)
             return false;
 
-        string fileName = $"lang-{lang}.json";
-        string file = Path.Combine(PATH, fileName);
+        string file = Path.Combine(dllPath, "langs", $"{lang}.json");
 
         if (!File.Exists(file))
         {
-            Logger.Error($"The file '{fileName}' was not found at '{PATH}'.");
-            return lang != "en" && LoadLang("en");
+            Logger.Error($"Could not find the file '{file}'.");
+            return lang != DEFAULT_LANG && LoadLang(DEFAULT_LANG);
         }
 
-        string output = File.ReadAllText(file);
-        LANG = JObject.Parse(output);
+        var json = JObject.Parse(File.ReadAllText(file));
         
-        Logger.Info($"Lang '{lang}' loaded!");
+        tokens.Clear();
+        foreach (var (key, value) in json)
+            tokens[key] = value?.ToString() ?? key;
+
+        Logger.Info($"Language '{lang}' loaded!");
         return true;
     }
 
-    public static string Get(string id) => LANG?.GetValue(id)?.ToString() ?? id;
+    #region Strings
+
+    private static readonly Dictionary<string, string> tokens = [];
+
+    public static string Get(string id) => tokens.GetValueOrDefault(id, id);
+
+    #endregion
 }
