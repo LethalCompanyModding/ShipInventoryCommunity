@@ -1,45 +1,48 @@
 {
     "CHUTE_SECTION": "Chute",
-    "NAME_BLACKLIST": "Blacklist",
-    "DESCRIPTION_BLACKLIST": "List of items that are not allowed in the chute.\n\nThe items' name should be separated by a comma (,).\nYou can edit the config directly in the file for a better experience.",
-
-    "NAME_SPAWN_DELAY": "Retrieve Rate",
-    "DESCRIPTION_SPAWN_DELAY": "Time in seconds between each item spawn.",
+    "NAME_CHUTE_PERMISSION": "Store Permission",
+    "DESCRIPTION_CHUTE_PERMISSION": "Allows certain employees to store items in the chute.",
 
     "NAME_REQUIRES_IN_ORBIT": "Only In Orbit",
     "DESCRIPTION_REQUIRE_IN_ORBIT": "Prevents players from putting items inside the chute when the ship is on a planet.",
 
+    "NAME_TIME_TO_STORE": "Time to store",
+    "DESCRIPTION_TIME_TO_STORE": "Time in seconds to hold to store an item.",
+
+    "NAME_TIME_TO_RETRIEVE": "Time to retrieve",
+    "DESCRIPTION_TIME_TO_RETRIEVE": "Time in seconds between each item spawn.",
+
     "NAME_STOP_AFTER": "Max Chute Capacity",
     "DESCRIPTION_STOP_AFTER": "Limits the amount of items that can be spawned inside the chute.\n\nThis is to prevent further lag when retrieve too many items.",
 
-    "NAME_CHUTE_PERMISSION": "Store Permission",
-    "DESCRIPTION_CHUTE_PERMISSION": "Allows certain employees to store items in the chute.",
+    "NAME_BLACKLIST": "Blacklist",
+    "DESCRIPTION_BLACKLIST": "List of items that are not allowed in the chute.\n\nThe items' name should be separated by a comma (,).\nYou can edit the config directly in the file for a better experience.",
     
     "INVENTORY_SECTION": "Inventory",
+    "NAME_INVENTORY_PERMISSION": "Retrieve Permission",
+    "DESCRIPTION_INVENTORY_PERMISSION": "Allows certain employees to retrieve items from the inventory.",
+    
     "NAME_AS_SAFE": "Safe once stored",
     "DESCRIPTION_AS_SAFE": "Prevents the ship's inventory from clearing when all players die.",
-
-    "NAME_MAX_ITEM_COUNT": "Maximum Item Count",
-    "DESCRIPTION_MAX_ITEM_COUNT": "Limits the amount of items that can be inside the ship's inventory.\n\nIf the ship's inventory already has too many items, it won't empty the excess.",
 
     "NAME_PERSIST_THROUGH_FIRE": "Persist through fire",
     "DESCRIPTION_PERSIST_THROUGH_FIRE": "Prevents the ship's inventory from clearing when the crew gets fired.",
 
-    "NAME_INVENTORY_PERMISSION": "Retrieve Permission",
-    "DESCRIPTION_INVENTORY_PERMISSION": "Allows certain employees to retrieve items from the inventory.",
+    "NAME_MAX_ITEM_COUNT": "Maximum Item Count",
+    "DESCRIPTION_MAX_ITEM_COUNT": "Limits the amount of items that can be inside the ship's inventory.\n\nIf the ship's inventory already has too many items, it won't empty the excess.",
 
     "TERMINAL_SECTION": "Terminal",
-    "NAME_SHOW_CONFIRMATION": "Terminal Confirmation",
-    "DESCRIPTION_SHOW_CONFIRMATION": "Removes the confirmation when retrieving items.",
+    "NAME_INVENTORY_COMMAND": "Inventory Command",
+    "DESCRIPTION_INVENTORY_COMMAND": "Determines the command to type to access the ship's inventory.",
 
     "NAME_YES_PLEASE": "Yes Please!",
     "DESCRIPTION_YES_PLEASE": "Automatically places the cursor on the 'YES' option when retrieving items.",
+    
+    "NAME_SHOW_CONFIRMATION": "Terminal Confirmation",
+    "DESCRIPTION_SHOW_CONFIRMATION": "Shows the confirmation when retrieving items.",
 
     "NAME_SHOW_TRADEMARK": "Show Trademark",
     "DESCRIPTION_SHOW_TRADEMARK": "Determines if the mod shows the company's trademark in the terminal.",
-
-    "NAME_NO_STEAM_ID": "Show Steam ID",
-    "DESCRIPTION_NO_STEAM_ID": "Replaces the ID shown on the ship's inventory menu by a random ID.",
 
     "SINGLE_RETRIEVE": "Retrieve single",
     "TEXT_SINGLE_RETRIEVE": "You are about to retrieve '{0}'.",

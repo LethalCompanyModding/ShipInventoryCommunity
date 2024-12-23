@@ -32,19 +32,16 @@ public class GameNetworkManager_Patches
         {
             try
             {
-                string json = JsonConvert.SerializeObject(items);
-                ES3.Save(Constants.STORED_ITEMS, json, currentSaveFileName);
-                Logger.Debug("Chute items saved!");
+                ES3.Save(Constants.STORED_ITEMS, JsonConvert.SerializeObject(items), currentSaveFileName);
             }
             catch (System.Exception ex)
             {
-                Logger.Error($"Failed to save chute items. {ex}");
+                Logger.Error($"Failed to save chute items: {ex}");
             }
         }
         else
-        {
             ES3.DeleteKey(Constants.STORED_ITEMS, currentSaveFileName);
-            Logger.Debug("Chute items saved!");
-        }
+        
+        Logger.Debug("Chute items saved!");
     }
 }

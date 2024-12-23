@@ -12,7 +12,7 @@ namespace ShipInventory.Objects;
 public struct ItemData : INetworkSerializable
 {
     #nullable disable
-    public static Item FALLBACK_ITEM;
+    public static Item FALLBACK_ITEM; // Item to use when the original item is missing
     #nullable restore
     
     public string ID;

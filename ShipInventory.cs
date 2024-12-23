@@ -12,9 +12,9 @@ using UnityEngine;
 namespace ShipInventory;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-[BepInDependency("WhiteSpike.InteractiveTerminalAPI")]
+[BepInDependency("WhiteSpike.InteractiveTerminalAPI", "1.2.0")]
 [BepInDependency("com.sigurd.csync", "5.0.1")]
-[BepInDependency("evaisa.lethallib", "0.16.1")]
+[BepInDependency(LethalLib.Plugin.ModGUID, LethalLib.Plugin.ModVersion)]
 [BepInDependency(LethalConfigCompatibility.LETHAL_CONFIG, BepInDependency.DependencyFlags.SoftDependency)]
 public class ShipInventory : BaseUnityPlugin
 {
@@ -36,7 +36,7 @@ public class ShipInventory : BaseUnityPlugin
         PrepareNetwork();
         Patch();
 
-        InteractiveTerminalManager.RegisterApplication<ShipApplication>("ship", true);
+        InteractiveTerminalManager.RegisterApplication<ShipApplication>(Config.InventoryCommand.Value, true);
         
         Helpers.Logger.Info($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
     }
@@ -108,7 +108,7 @@ public class ShipInventory : BaseUnityPlugin
         // TRIGGER
         var interact = chute.GetComponent<InteractTrigger>();
         interact.onInteract.AddListener(chute.StoreHeldItem);
-        interact.timeToHold = 0.5f;
+        interact.timeToHold = Config.TimeToStore.Value;
 
         // TRANSFORM
         vent.transform.localPosition = new Vector3(1.9f, 1f, -4.5f);

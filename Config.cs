@@ -12,19 +12,24 @@ public class Config : SyncedConfig2<Config>
 
     public readonly ConfigEntry<string> LangUsed;
     
-    [SyncedEntryField] public readonly SyncedEntry<string> Blacklist;
-    [SyncedEntryField] public readonly SyncedEntry<float> SpawnDelay;
-    [SyncedEntryField] public readonly SyncedEntry<bool> RequireInOrbit;
-    [SyncedEntryField] public readonly SyncedEntry<int> StopAfter;
+    // Chute
     [SyncedEntryField] public readonly SyncedEntry<PermissionLevel> ChutePermission;
+    [SyncedEntryField] public readonly SyncedEntry<bool> RequireInOrbit;
+    [SyncedEntryField] public readonly SyncedEntry<float> TimeToStore;
+    [SyncedEntryField] public readonly SyncedEntry<float> TimeToRetrieve;
+    [SyncedEntryField] public readonly SyncedEntry<int> StopAfter;
+    [SyncedEntryField] public readonly SyncedEntry<string> Blacklist;
     
-    [SyncedEntryField] public readonly SyncedEntry<bool> ActAsSafe;
-    [SyncedEntryField] public readonly SyncedEntry<int> MaxItemCount;
-    [SyncedEntryField] public readonly SyncedEntry<bool> PersistThroughFire;
+    // Inventory
     [SyncedEntryField] public readonly SyncedEntry<PermissionLevel> InventoryPermission;
+    [SyncedEntryField] public readonly SyncedEntry<bool> ActAsSafe;
+    [SyncedEntryField] public readonly SyncedEntry<bool> PersistThroughFire;
+    [SyncedEntryField] public readonly SyncedEntry<int> MaxItemCount;
     
-    [SyncedEntryField] public readonly SyncedEntry<bool> ShowConfirmation;
+    // Terminal
+    [SyncedEntryField] public readonly SyncedEntry<string> InventoryCommand;
     [SyncedEntryField] public readonly SyncedEntry<bool> YesPlease;
+    [SyncedEntryField] public readonly SyncedEntry<bool> ShowConfirmation;
     [SyncedEntryField] public readonly SyncedEntry<bool> ShowTrademark;
 
     public enum PermissionLevel { HOST_ONLY, CLIENTS_ONLY, EVERYONE, NO_ONE  }
@@ -40,6 +45,36 @@ public class Config : SyncedConfig2<Config>
 
         string CHUTE = Lang.Get("CHUTE_SECTION");
         
+        ChutePermission = cfg.BindSyncedEntry(
+            new ConfigDefinition(CHUTE, "ChutePermission"),
+            PermissionLevel.EVERYONE,
+            new ConfigDescription(Lang.Get("DESCRIPTION_CHUTE_PERMISSION"))
+        );
+        
+        RequireInOrbit = cfg.BindSyncedEntry(
+            new ConfigDefinition(CHUTE, "ChuteInOrbit"),
+            false,
+            new ConfigDescription(Lang.Get("DESCRIPTION_REQUIRE_IN_ORBIT"))
+        );
+        
+        TimeToStore = cfg.BindSyncedEntry(
+            new ConfigDefinition(CHUTE, "TimeToStore"),
+            0.5f,
+            new ConfigDescription(Lang.Get("DESCRIPTION_TIME_TO_STORE"))
+        );
+        
+        TimeToRetrieve = cfg.BindSyncedEntry(
+            new ConfigDefinition(CHUTE, "ChuteDelay"),
+            0.5f,
+            new ConfigDescription(Lang.Get("DESCRIPTION_TIME_TO_RETRIEVE"))
+        );
+        
+        StopAfter = cfg.BindSyncedEntry(
+            new ConfigDefinition(CHUTE, "ChuteMaxCapacity"),
+            30,
+            new ConfigDescription(Lang.Get("DESCRIPTION_STOP_AFTER"))
+        );
+        
         Blacklist = cfg.BindSyncedEntry(
             new ConfigDefinition(CHUTE, "ChuteBlacklist"),
             "",
@@ -48,58 +83,34 @@ public class Config : SyncedConfig2<Config>
         Blacklist.Changed += (_, e) => ItemManager.UpdateBlacklist(e.NewValue);
         ItemManager.UpdateBlacklist(Blacklist.Value);
 
-        SpawnDelay = cfg.BindSyncedEntry(
-            new ConfigDefinition(CHUTE, "ChuteDelay"),
-            0.5f,
-            new ConfigDescription(Lang.Get("DESCRIPTION_SPAWN_DELAY"))
-        );
-        
-        RequireInOrbit = cfg.BindSyncedEntry(
-            new ConfigDefinition(CHUTE, "ChuteInOrbit"),
-            false,
-            new ConfigDescription(Lang.Get("DESCRIPTION_REQUIRE_IN_ORBIT"))
-        );
-
-        StopAfter = cfg.BindSyncedEntry(
-            new ConfigDefinition(CHUTE, "ChuteMaxCapacity"),
-            30,
-            new ConfigDescription(Lang.Get("DESCRIPTION_STOP_AFTER"))
-        );
-
-        ChutePermission = cfg.BindSyncedEntry(
-            new ConfigDefinition(CHUTE, "ChutePermission"),
-            PermissionLevel.EVERYONE,
-            new ConfigDescription(Lang.Get("DESCRIPTION_CHUTE_PERMISSION"))
-        );
-
         #endregion
 
         #region Inventory
 
         string INVENTORY = Lang.Get("INVENTORY_SECTION");
 
+        InventoryPermission = cfg.BindSyncedEntry(
+            new ConfigDefinition(INVENTORY, "InventoryPermission"),
+            PermissionLevel.EVERYONE,
+            new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_PERMISSION"))
+        );
+        
         ActAsSafe = cfg.BindSyncedEntry(
             new ConfigDefinition(INVENTORY, "ChuteSafe"),
             false,
             new ConfigDescription(Lang.Get("DESCRIPTION_AS_SAFE"))
         );
         
-        MaxItemCount = cfg.BindSyncedEntry(
-            new ConfigDefinition(INVENTORY, "MaxItemCount"),
-            1_969_420,
-            new ConfigDescription(Lang.Get("DESCRIPTION_MAX_ITEM_COUNT"))
-        );
-
         PersistThroughFire = cfg.BindSyncedEntry(
             new ConfigDefinition(INVENTORY, "PersistThroughFire"),
             false,
             new ConfigDescription(Lang.Get("DESCRIPTION_PERSIST_THROUGH_FIRE"))
         );
         
-        InventoryPermission = cfg.BindSyncedEntry(
-            new ConfigDefinition(INVENTORY, "InventoryPermission"),
-            PermissionLevel.EVERYONE,
-            new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_PERMISSION"))
+        MaxItemCount = cfg.BindSyncedEntry(
+            new ConfigDefinition(INVENTORY, "MaxItemCount"),
+            5_000,
+            new ConfigDescription(Lang.Get("DESCRIPTION_MAX_ITEM_COUNT"))
         );
         
         #endregion
@@ -108,16 +119,22 @@ public class Config : SyncedConfig2<Config>
 
         string TERMINAL = Lang.Get("TERMINAL_SECTION");
 
-        ShowConfirmation = cfg.BindSyncedEntry(
-            new ConfigDefinition(TERMINAL, "ShowConfirmation"),
-            true,
-            new ConfigDescription(Lang.Get("DESCRIPTION_SHOW_CONFIRMATION"))
+        InventoryCommand = cfg.BindSyncedEntry(
+            new ConfigDefinition(TERMINAL, "InventoryCommand"),
+            "ship",
+            new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_COMMAND"))
         );
         
         YesPlease = cfg.BindSyncedEntry(
             new ConfigDefinition(TERMINAL, "YesPlease"),
             false,
             new ConfigDescription(Lang.Get("DESCRIPTION_YES_PLEASE"))
+        );
+        
+        ShowConfirmation = cfg.BindSyncedEntry(
+            new ConfigDefinition(TERMINAL, "ShowConfirmation"),
+            true,
+            new ConfigDescription(Lang.Get("DESCRIPTION_SHOW_CONFIRMATION"))
         );
         
         ShowTrademark = cfg.BindSyncedEntry(

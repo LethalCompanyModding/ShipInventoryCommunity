@@ -168,7 +168,7 @@ public class ChuteInteract : NetworkBehaviour
         
             SpawnItemClientRpc(networkObj, data);
             
-            yield return new WaitForSeconds(ShipInventory.Config.SpawnDelay.Value);
+            yield return new WaitForSeconds(ShipInventory.Config.TimeToRetrieve.Value);
         }
 
         // Mark as completed

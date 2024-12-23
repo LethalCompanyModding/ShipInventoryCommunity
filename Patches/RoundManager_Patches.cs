@@ -14,7 +14,6 @@ public class RoundManager_Patches
     [HarmonyPatch(nameof(RoundManager.DespawnPropsAtEndOfRound))]
     private static void ClearInventory(RoundManager __instance)
     {
-        
         if (!__instance.IsServer)
             return;
         

@@ -6,6 +6,8 @@
         <Product>ShipInventory</Product>
         <!-- Change to whatever version you're currently on. -->
         <Version>1.1.8</Version>
+        <Authors>WarperSan</Authors>
+        <Description>Adds an inventory to the ship, allowing it to store items and retrieve them.</Description>
     </PropertyGroup>
 
     <!-- Project Properties -->

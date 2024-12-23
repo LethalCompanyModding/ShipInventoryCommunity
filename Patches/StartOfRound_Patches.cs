@@ -19,40 +19,18 @@ internal class StartOfRound_Patches
     {
         string currentSaveFileName = GameNetworkManager.Instance.currentSaveFileName;
 
-        // If key missing, skip
-        if (!ES3.KeyExists(Constants.STORED_ITEMS, currentSaveFileName))
-        {
-            ItemManager.SetItems([]);
-            return;
-        }
-
         Logger.Debug("Loading stored items...");
 
         try
         {
-            string json = ES3.Load<string>(Constants.STORED_ITEMS, currentSaveFileName);
-            var items = JsonConvert.DeserializeObject<IEnumerable<ItemData>>(json);
-
-            if (items == null)
-            {
-                items = [];
-                Logger.Error("Could not load items from the save file.");
-            }
-            
-            ItemManager.SetItems(items);
-            Logger.Debug("Loaded stored items!");
+            ItemManager.SetItems(LoadItems(currentSaveFileName));
         }
         catch (System.Exception ex)
         {
             Logger.Error($"Failed to load stored items. {ex}");
         }
         
-        // If key missing, skip
-        if (!ES3.KeyExists(Constants.STORED_ITEMS, GameNetworkManager.Instance.currentSaveFileName))
-        {
-            ItemManager.SetItems([]);
-            return;
-        }
+        Logger.Debug("Loaded stored items!");
     }
 
     /// <summary>
@@ -90,5 +68,22 @@ internal class StartOfRound_Patches
 
             __result += data.SCRAP_VALUE;
         }
+    }
+
+    private static IEnumerable<ItemData> LoadItems(string saveFileName)
+    {
+        if (!ES3.KeyExists(Constants.STORED_ITEMS, saveFileName))
+            return [];
+        
+        string json = ES3.Load<string>(Constants.STORED_ITEMS, saveFileName);
+        var items = JsonConvert.DeserializeObject<IEnumerable<ItemData>>(json);
+
+        if (items == null)
+        {
+            items = [];
+            Logger.Error("Could not load items from the save file.");
+        }
+
+        return items;
     }
 }

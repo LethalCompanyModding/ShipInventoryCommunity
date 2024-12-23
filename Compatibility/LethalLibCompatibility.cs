@@ -1,92 +1,106 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using ShipInventory.Helpers;
 using ShipInventory.Objects;
 
 namespace ShipInventory.Compatibility;
 
-public class LethalLibCompatibility
+public static class LethalLibCompatibility
 {
-    private static List<ModdedItemData>? _cachedModdedItems;
+    #region ID
 
-    public static Item? GetItem(string ID)
+    private const string ID_FORMAT = "{0}/{1}";
+
+    private static string ID(this Item item, string mod = VANILLA_ITEM_MOD) => string.Format(ID_FORMAT, mod, item.itemName);
+
+    private static (string mod, string name) Extract(string id)
     {
-        var parts = ID.Split('/');
-        string modName = parts[0];
-        string itemName = parts[1];
+        var parts = id.Split('/', StringSplitOptions.RemoveEmptyEntries);
 
-        if (modName == nameof(ShipInventory) && itemName == "BadItem")
-            return ItemData.FALLBACK_ITEM;
-        
-        if (modName == "Vanilla" || string.IsNullOrEmpty(modName))
-            return GetVanillaItem(itemName);
+        if (parts == null || parts.Length < 2)
+            throw new ArgumentException();
 
-        var moddedItems = GetModdedItems();
-
-        foreach (var moddedItem in moddedItems)
-        {
-            if (moddedItem.ItemName == itemName && moddedItem.ModName == modName)
-                return moddedItem.Item;
-        }
-
-        return null;
+        return (parts[0], parts[^1]);
     }
-
+    
     public static string GetID(Item item)
     {
         if (item == ItemData.FALLBACK_ITEM)
-            return $"{nameof(ShipInventory)}/BadItem";
-        
-        var moddedItems = GetModdedItems();
-        ModdedItemData? moddedItem = moddedItems.FirstOrDefault(i => i.Item == item);
+            return BAD_ITEM;
 
-        var modName = moddedItem?.ModName ?? "Vanilla";
-        
-        return $"{modName}/{item.itemName}";
+        return GetModdedID(item) ?? item.ID();
     }
 
-    private static Item? GetVanillaItem(string itemName)
+    #endregion
+    
+    #region Item
+
+    private const string BAD_ITEM = $"{nameof(ShipInventory)}/BadItem";
+    private const string VANILLA_ITEM_MOD = "Vanilla";
+
+    public static Item? GetItem(string ID)
     {
-        foreach (var item in StartOfRound.Instance.allItemsList.itemsList)
+        // If bad item, return fallback item
+        if (ID == BAD_ITEM)
+            return ItemData.FALLBACK_ITEM;
+        
+        var (mod, name) = Extract(ID);
+        return mod == VANILLA_ITEM_MOD ? GetVanillaItem(name) : GetModdedItem(ID);
+    }
+    
+    #endregion
+
+    #region Vanilla Items
+
+    private static Item? GetVanillaItem(string name) => StartOfRound.Instance.allItemsList.itemsList.FirstOrDefault(item => item.itemName == name);
+
+    #endregion
+    
+    #region Modded Items
+
+    private static Dictionary<string, Item>? _cachedModdedItems;
+
+    private static void LoadModdedItems()
+    {
+        // If already loaded, skip
+        if (_cachedModdedItems != null)
+            return;
+        
+        _cachedModdedItems = [];
+
+        foreach (var item in LethalLib.Modules.Items.scrapItems)
+            _cachedModdedItems.Add($"{item.modName}/{item.item.itemName}", item.item);
+
+        foreach (var item in LethalLib.Modules.Items.shopItems)
+            _cachedModdedItems.Add($"{item.modName}/{item.item.itemName}", item.item);
+
+        foreach (var item in LethalLib.Modules.Items.plainItems)
+            _cachedModdedItems.Add($"{item.modName}/{item.item.itemName}", item.item);
+    }
+
+    private static Item? GetModdedItem(string id)
+    {
+        LoadModdedItems();
+        return _cachedModdedItems.GetValueOrDefault(id);
+    }
+
+    private static string? GetModdedID(Item item)
+    {
+        LoadModdedItems();
+
+        if (_cachedModdedItems == null)
+            return null;
+        
+        foreach (var (key, value) in _cachedModdedItems)
         {
-            if (item.itemName == itemName)
-                return item;
+            if (value != item)
+                continue;
+
+            return item.ID(key);
         }
 
         return null;
     }
 
-    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-    private static List<ModdedItemData> GetModdedItems()
-    {
-        if (_cachedModdedItems != null)
-            return _cachedModdedItems;
-
-        _cachedModdedItems = [];
-
-        foreach (var item in LethalLib.Modules.Items.scrapItems)
-            _cachedModdedItems.Add(new ModdedItemData(item.item, item.modName));
-
-        foreach (var item in LethalLib.Modules.Items.shopItems)
-            _cachedModdedItems.Add(new ModdedItemData(item.item, item.modName));
-
-        foreach (var item in LethalLib.Modules.Items.plainItems)
-            _cachedModdedItems.Add(new ModdedItemData(item.item, item.modName));
-
-        return _cachedModdedItems;
-    }
-}
-
-public struct ModdedItemData
-{
-    public Item Item { get; }
-    public string ModName { get; }
-    public string? ItemName => Item?.itemName;
-
-    public ModdedItemData(Item item, string modName)
-    {
-        Item = item;
-        ModName = modName;
-    }
+    #endregion
 }
