@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using HarmonyLib;
-using Newtonsoft.Json;
-using ShipInventory.Helpers;
+﻿using HarmonyLib;
+using ShipInventory.Objects;
 
 namespace ShipInventory.Patches;
 
@@ -23,25 +21,7 @@ public class GameNetworkManager_Patches
         ES3.DeleteKey("shipScrapValues", currentSaveFileName);
         ES3.DeleteKey("shipItemSaveData", currentSaveFileName);
 
-        Logger.Debug("Saving chute items...");
-
-        var items = ItemManager.GetItems();
-
-        // Save items if necessary
-        if (items.Any())
-        {
-            try
-            {
-                ES3.Save(Constants.STORED_ITEMS, JsonConvert.SerializeObject(items), currentSaveFileName);
-            }
-            catch (System.Exception ex)
-            {
-                Logger.Error($"Failed to save chute items: {ex}");
-            }
-        }
-        else
-            ES3.DeleteKey(Constants.STORED_ITEMS, currentSaveFileName);
-        
-        Logger.Debug("Chute items saved!");
+        ItemData.SaveStoredItems(currentSaveFileName);
+        BadItem.SaveKeys(currentSaveFileName);
     }
 }

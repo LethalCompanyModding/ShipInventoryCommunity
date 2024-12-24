@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ShipInventory.Compatibility;
 using ShipInventory.Helpers;
 using Unity.Netcode;
@@ -24,7 +25,6 @@ public struct ItemData : INetworkSerializable
     public ItemData(GrabbableObject item)
     {
         ID = LethalLibCompatibility.GetID(item.itemProperties);
-        Logger.Info(ID);
         
         if (item.itemProperties.isScrap)
             SCRAP_VALUE = item.scrapValue;
@@ -45,4 +45,58 @@ public struct ItemData : INetworkSerializable
         serializer.SerializeValue(ref SAVE_DATA);
         serializer.SerializeValue(ref PERSISTED_THROUGH_ROUNDS);
     }
+
+    #region IO
+
+    /// <summary>
+    /// Saves the stored items to the given save file
+    /// </summary>
+    public static void SaveStoredItems(string saveFileName)
+    {
+        if (ItemManager.GetCount() == 0)
+        {
+            ES3.DeleteKey(Constants.STORED_ITEMS, saveFileName);
+            Logger.Debug("Stored items cleared!");
+            return;
+        }
+        
+        var items = ItemManager.GetItems();
+        
+        Logger.Debug("Saving stored items...");
+
+        ES3.Save(Constants.STORED_ITEMS, Newtonsoft.Json.JsonConvert.SerializeObject(items), saveFileName);
+
+        Logger.Debug($"Successfully saved {ItemManager.GetCount()} keys!");
+    }
+
+    /// <summary>
+    /// Loads the stored items from the given save file
+    /// </summary>
+    public static void LoadStoredItems(string saveFileName)
+    {
+        ItemManager.SetItems([]);
+        
+        if (!ES3.KeyExists(Constants.STORED_ITEMS, saveFileName))
+        {
+            Logger.Debug("No items found.");
+            return;
+        }
+        
+        Logger.Debug("Loading stored items...");
+        
+        string json = ES3.Load<string>(Constants.STORED_ITEMS, saveFileName);
+        var items = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<ItemData>>(json);
+
+        if (items == null)
+        {
+            Logger.Error("Could not load items from the save file.");
+            return;
+        }
+        
+        ItemManager.SetItems(items);
+        
+        Logger.Debug("Loaded stored items!");
+    }
+
+    #endregion
 }

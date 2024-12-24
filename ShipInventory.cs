@@ -34,6 +34,7 @@ public class ShipInventory : BaseUnityPlugin
         Config = new Config(base.Config);
         
         PrepareNetwork();
+        PrepareItems();
         Patch();
 
         InteractiveTerminalManager.RegisterApplication<ShipApplication>(Config.InventoryCommand.Value, true);
@@ -124,8 +125,24 @@ public class ShipInventory : BaseUnityPlugin
     public static void PrepareItems()
     {
         Helpers.Logger.Debug("Preparing items...");
-        var allItems = Resources.FindObjectsOfTypeAll<Item>();
-        ItemData.FALLBACK_ITEM = allItems.FirstOrDefault(i => i.itemName == "Gold bar") ?? allItems[0];
+        Item? errorItem = Bundle.LoadAsset<Item>(Constants.ERROR_ITEM_ASSET);
+
+        if (errorItem != null)
+        {
+            var badItem = errorItem.spawnPrefab.AddComponent<BadItem>();
+            badItem.itemProperties = errorItem;
+            
+            LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(errorItem.spawnPrefab);
+            LethalLib.Modules.Items.RegisterItem(errorItem);
+
+            ItemData.FALLBACK_ITEM = errorItem;
+        }
+        else
+        {
+            var allItems = Resources.FindObjectsOfTypeAll<Item>();
+            ItemData.FALLBACK_ITEM = allItems.FirstOrDefault(i => i.itemName == "Gold bar") ?? allItems[0];
+        }
+        
         Helpers.Logger.Debug("Items prepared!");
     }
 

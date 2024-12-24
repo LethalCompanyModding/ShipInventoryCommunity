@@ -116,6 +116,9 @@ public class ChuteInteract : NetworkBehaviour
         var grabObj = obj.GetComponent<GrabbableObject>();
         
         // Set up object
+        if (grabObj is BadItem badItem)
+            badItem.ID = data.ID;
+        
         if (item.isScrap)
             grabObj.SetScrapValue(data.SCRAP_VALUE);
 

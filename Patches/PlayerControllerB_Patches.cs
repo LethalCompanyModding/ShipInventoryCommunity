@@ -14,8 +14,6 @@ public class PlayerControllerB_Patches
     [HarmonyPatch(nameof(PlayerControllerB.ConnectClientToPlayerObject))]
     private static void RequestOnConnect(PlayerControllerB __instance)
     {
-        ShipInventory.PrepareItems();
-        
         // If host, skip
         if (__instance.IsHost)
             return;

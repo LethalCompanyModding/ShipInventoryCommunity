@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShipInventory.Helpers;
 using ShipInventory.Objects;
 
 namespace ShipInventory.Compatibility;
@@ -20,7 +21,7 @@ public static class LethalLibCompatibility
         if (parts == null || parts.Length < 2)
             throw new ArgumentException();
 
-        return (parts[0], parts[^1]);
+        return (parts[0], parts[1]);
     }
     
     public static string GetID(Item item)
@@ -69,13 +70,13 @@ public static class LethalLibCompatibility
         _cachedModdedItems = [];
 
         foreach (var item in LethalLib.Modules.Items.scrapItems)
-            _cachedModdedItems.Add($"{item.modName}/{item.item.itemName}", item.item);
+            _cachedModdedItems.Add(item.item.ID(item.modName), item.item);
 
         foreach (var item in LethalLib.Modules.Items.shopItems)
-            _cachedModdedItems.Add($"{item.modName}/{item.item.itemName}", item.item);
+            _cachedModdedItems.Add(item.item.ID(item.modName), item.item);
 
         foreach (var item in LethalLib.Modules.Items.plainItems)
-            _cachedModdedItems.Add($"{item.modName}/{item.item.itemName}", item.item);
+            _cachedModdedItems.Add(item.item.ID(item.modName), item.item);
     }
 
     private static Item? GetModdedItem(string id)
@@ -96,7 +97,7 @@ public static class LethalLibCompatibility
             if (value != item)
                 continue;
 
-            return item.ID(key);
+            return key;
         }
 
         return null;
