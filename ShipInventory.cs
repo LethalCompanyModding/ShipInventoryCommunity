@@ -91,28 +91,11 @@ public class ShipInventory : BaseUnityPlugin
         Helpers.Logger.Debug("RPCs prepared!");
         
         Helpers.Logger.Debug("Registering all prefabs...");
-        NetworkPrefabUtils.Register(Constants.VENT_PREFAB, LoadVent, SetUpVent);
+        NetworkPrefabUtils.Register(Constants.VENT_PREFAB, LoadVent);
         Helpers.Logger.Debug("All prefabs registered!");
     }
 
     private static void LoadVent(GameObject vent) => vent.AddComponent<ChuteInteract>();
-    private static void SetUpVent(GameObject vent)
-    {
-        var chute = vent.GetComponent<ChuteInteract>();
-        
-        // TRIGGER
-        var interact = chute.GetComponent<InteractTrigger>();
-        interact.onInteract.AddListener(chute.StoreHeldItem);
-        interact.timeToHold = Config.TimeToStore.Value;
-
-        // TRANSFORM
-        chute.SetTransform();
-        
-        // Update scrap value of the chute
-        chute.UpdateValue();
-        
-        ChuteInteract.Instance = chute;
-    }
     
     #endregion
     

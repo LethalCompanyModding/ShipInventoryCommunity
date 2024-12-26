@@ -14,13 +14,12 @@ internal static class NetworkPrefabUtils
     private class PrefabData
     {
         public Action<GameObject>? onLoad;
-        public Action<GameObject>? onSetup;
         public GameObject? gameObject;
     }
 
     private static readonly Dictionary<string, PrefabData> prefabs = [];
 
-    public static void Register(string name, Action<GameObject>? onLoad = null, Action<GameObject>? onSetup = null)
+    public static void Register(string name, Action<GameObject>? onLoad = null)
     {
         if (prefabs.ContainsKey(name))
         {
@@ -30,8 +29,7 @@ internal static class NetworkPrefabUtils
         
         prefabs.Add(name, new PrefabData
         {
-            onLoad = onLoad,
-            onSetup = onSetup
+            onLoad = onLoad
         });
     }
         
@@ -49,25 +47,20 @@ internal static class NetworkPrefabUtils
         return prefab;
     }
     
-    private static void Setup(Transform parent, string name, PrefabData data, bool isHost)
+    private static void Setup(Transform parent, string name, bool isHost)
     {
-        GameObject? newObj = isHost ? Spawn(parent, name) : Find(parent, name);
-        
-        // If error occured, skip
-        if (newObj == null)
-            return;
-
-        data.onSetup?.Invoke(newObj);
+        if (isHost)
+            Spawn(parent, name);
     }
 
-    private static GameObject? Spawn(Transform parent, string name)
+    private static void Spawn(Transform parent, string name)
     {
         var prefab = Get(name);
 
         if (prefab == null)
         {
             Logger.Error($"The prefab '{name}' was not found in the bundle!");
-            return null;
+            return;
         }
 
         var obj = UnityEngine.Object.Instantiate(prefab);
@@ -75,26 +68,12 @@ internal static class NetworkPrefabUtils
         if (obj == null)
         {
             Logger.Error($"Could not create a new instance of '{name}'!");
-            return null;
+            return;
         }
 
         var networkObj = obj.GetComponent<NetworkBehaviour>().NetworkObject;
         networkObj.Spawn();
         networkObj.TrySetParent(parent);
-
-        return obj;
-    }
-    private static GameObject? Find(Transform parent, string name)
-    {
-        var obj = parent.Find(name + "(Clone)")?.gameObject;
-        
-        if (obj == null)
-        {
-            Logger.Error($"Could not find the prefab '{name}' in the scene!");
-            return null;
-        }
-
-        return obj;
     }
     
     #region Patches
@@ -121,8 +100,8 @@ internal static class NetworkPrefabUtils
             Transform parent = GameObject.Find(Constants.SHIP_PATH).transform;
             bool isHost = __instance.IsServer || __instance.IsHost;
 
-            foreach (var (name, data) in prefabs)
-                Setup(parent.transform, name, data, isHost);
+            foreach (var (name, _) in prefabs)
+                Setup(parent.transform, name, isHost);
         }
     }
 

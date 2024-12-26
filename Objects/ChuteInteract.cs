@@ -13,31 +13,7 @@ namespace ShipInventory.Objects;
 
 public class ChuteInteract : NetworkBehaviour
 {
-    public static ChuteInteract? Instance = null;
-
-    public override void OnNetworkSpawn()
-    {
-        _trigger = GetComponent<InteractTrigger>();
-        itemRestorePoint = transform.Find("DropNode");
-        spawnParticles = GetComponentInChildren<ParticleSystem>();
-        
-        base.OnNetworkSpawn();
-    }
-    
-    /// <summary>
-    /// Updates the value of the chute
-    /// </summary>
-    public void UpdateValue()
-    {
-        var grabbable = GetComponent<GrabbableObject>();
-        
-        // Skip if item invalid
-        if (grabbable == null)
-            return;
-        
-        grabbable.scrapValue = ItemManager.GetTotalValue();
-        grabbable.OnHitGround(); // Update 
-    }
+    public static ChuteInteract? Instance;
 
     #region Store Items
     
@@ -239,6 +215,7 @@ public class ChuteInteract : NetworkBehaviour
     }
 
     #endregion
+    
     #region Trigger
 
     private Collider[] itemsInChute = [];
@@ -287,13 +264,10 @@ public class ChuteInteract : NetworkBehaviour
     
     public void SetTransform()
     {
-        SetPosition(1.9f, 1f, -4.5f);
-        SetRotation(35, 0, 0);
+        transform.localPosition = new Vector3(1.9f, 1f, -4.5f);
+        transform.localRotation = Quaternion.Euler(35, 0, 0);
     }
     
-    private void SetPosition(float x, float y, float z) => transform.localPosition = new Vector3(x, y, z);
-    private void SetRotation(float x, float y, float z) => transform.localRotation = Quaternion.Euler(x, y, z);
-
     #endregion
     
     #region MonoBehaviour
@@ -307,6 +281,17 @@ public class ChuteInteract : NetworkBehaviour
         LAYER_IGNORE = LayerMask.NameToLayer(Constants.LAYER_IGNORE);
         LAYER_INTERACTABLE = LayerMask.NameToLayer(Constants.LAYER_INTERACTABLE);
         LAYER_PROPS = LayerMask.NameToLayer(Constants.LAYER_PROPS);
+        
+        _trigger = GetComponent<InteractTrigger>();
+        _trigger.onInteract.AddListener(StoreHeldItem);
+        _trigger.timeToHold = ShipInventory.Config.TimeToStore.Value;
+
+        itemRestorePoint = transform.Find(Constants.DROP_NODE_PATH);
+        spawnParticles = GetComponentInChildren<ParticleSystem>();
+
+        SetTransform();
+        
+        Instance = this;
     }
 
     private void Update() => UpdateTrigger();

@@ -43,8 +43,6 @@ public static class ItemManager
         Logger.Debug($"Setting items from {storedItems.Count()} to {newItems.Count()}...");
         storedItems = newItems;
         
-        ChuteInteract.Instance?.UpdateValue();
-        
         if (updateAll)
             ChuteInteract.Instance?.RequestItemsAll();
     }
