@@ -282,6 +282,20 @@ public class ChuteInteract : NetworkBehaviour
     }
 
     #endregion
+
+    #region Transform
+    
+    public void SetTransform()
+    {
+        SetPosition(1.9f, 1f, -4.5f);
+        SetRotation(35, 0, 0);
+    }
+    
+    private void SetPosition(float x, float y, float z) => transform.localPosition = new Vector3(x, y, z);
+    private void SetRotation(float x, float y, float z) => transform.localRotation = Quaternion.Euler(x, y, z);
+
+    #endregion
+    
     #region MonoBehaviour
 
     private int LAYER_IGNORE = -1; 

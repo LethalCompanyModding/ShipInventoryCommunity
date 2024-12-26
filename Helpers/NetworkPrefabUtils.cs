@@ -1,29 +1,102 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace ShipInventory.Helpers;
 
-public static class NetworkPrefabUtils
+/// <summary>
+/// Helper that handles to register and loads prefabs
+/// </summary>
+internal static class NetworkPrefabUtils
 {
-    public class PrefabData
+    private class PrefabData
     {
-        public string name = "";
         public Action<GameObject>? onLoad;
         public Action<GameObject>? onSetup;
         public GameObject? gameObject;
     }
 
-    private static readonly List<PrefabData> prefabs = [];
+    private static readonly Dictionary<string, PrefabData> prefabs = [];
 
-    public static void LoadPrefab(PrefabData data) => prefabs.Add(data);
+    public static void Register(string name, Action<GameObject>? onLoad = null, Action<GameObject>? onSetup = null)
+    {
+        if (prefabs.ContainsKey(name))
+        {
+            Logger.Error($"Tried to register multiple prefabs with the name '{name}'.");
+            return;
+        }
+        
+        prefabs.Add(name, new PrefabData
+        {
+            onLoad = onLoad,
+            onSetup = onSetup
+        });
+    }
+        
+    private static GameObject? Get(string name) => prefabs.TryGetValue(name, out var data) ? data.gameObject : null;
 
-    public static GameObject? GetPrefab(string name) 
-        => prefabs.FirstOrDefault(p => p.name == name)?.gameObject;
+    private static GameObject? AddToNetwork(string name, PrefabData data)
+    {
+        var prefab = Bundle.LoadAsset<GameObject>(name);
 
+        if (prefab is null)
+            return null;
+
+        data.onLoad?.Invoke(prefab);
+        NetworkManager.Singleton.AddNetworkPrefab(prefab);
+        return prefab;
+    }
+    
+    private static void Setup(Transform parent, string name, PrefabData data, bool isHost)
+    {
+        GameObject? newObj = isHost ? Spawn(parent, name) : Find(parent, name);
+        
+        // If error occured, skip
+        if (newObj == null)
+            return;
+
+        data.onSetup?.Invoke(newObj);
+    }
+
+    private static GameObject? Spawn(Transform parent, string name)
+    {
+        var prefab = Get(name);
+
+        if (prefab == null)
+        {
+            Logger.Error($"The prefab '{name}' was not found in the bundle!");
+            return null;
+        }
+
+        var obj = UnityEngine.Object.Instantiate(prefab);
+
+        if (obj == null)
+        {
+            Logger.Error($"Could not create a new instance of '{name}'!");
+            return null;
+        }
+
+        var networkObj = obj.GetComponent<NetworkBehaviour>().NetworkObject;
+        networkObj.Spawn();
+        networkObj.TrySetParent(parent);
+
+        return obj;
+    }
+    private static GameObject? Find(Transform parent, string name)
+    {
+        var obj = parent.Find(name + "(Clone)")?.gameObject;
+        
+        if (obj == null)
+        {
+            Logger.Error($"Could not find the prefab '{name}' in the scene!");
+            return null;
+        }
+
+        return obj;
+    }
+    
     #region Patches
 
     [HarmonyPatch(typeof(GameNetworkManager))]
@@ -33,17 +106,8 @@ public static class NetworkPrefabUtils
         [HarmonyPatch(nameof(GameNetworkManager.Start))]
         private static void AddPrefabsToNetwork(GameNetworkManager __instance)
         {
-            foreach (var data in prefabs)
-            {
-                var prefab = Bundle.LoadAsset<GameObject>(data.name);
-                
-                if (prefab is null)
-                    continue;
-                
-                data.onLoad?.Invoke(prefab);
-                NetworkManager.Singleton.AddNetworkPrefab(prefab);
-                data.gameObject = prefab;
-            }
+            foreach (var (name, data) in prefabs)
+                data.gameObject = AddToNetwork(name, data);
         }
     }
 
@@ -54,47 +118,11 @@ public static class NetworkPrefabUtils
         [HarmonyPatch(nameof(StartOfRound.Start))]
         private static void SetUpPrefabs(StartOfRound __instance)
         {
-            GameObject shipParent = GameObject.Find(Constants.SHIP_PATH);
-            
-            foreach (var data in prefabs)
-            {
-                GameObject? newObj = null;
-        
-                // Spawn prefab if server
-                if (__instance.IsServer || __instance.IsHost)
-                {
-                    var prefab = GetPrefab(data.name);
+            Transform parent = GameObject.Find(Constants.SHIP_PATH).transform;
+            bool isHost = __instance.IsServer || __instance.IsHost;
 
-                    if (prefab is null)
-                    {
-                        Logger.Error($"The prefab '{data.name}' was not found in the bundle!");
-                        continue;
-                    }
-        
-                    newObj = UnityEngine.Object.Instantiate(prefab);
-                    
-                    var networkObj = newObj.GetComponent<NetworkBehaviour>().NetworkObject;
-                    networkObj.Spawn();
-                    networkObj.TrySetParent(shipParent);
-                }
-
-                foreach (Transform child in shipParent.transform)
-                {
-                    if (child.gameObject.name != data.name + "(Clone)")
-                        continue;
-
-                    newObj = child.gameObject;
-                    break;
-                }
-                
-                if (newObj is null)
-                {
-                    Logger.Error($"The prefab '{data.name}' was not found in the scene!");
-                    continue;
-                }
-                
-                data.onSetup?.Invoke(newObj);
-            }
+            foreach (var (name, data) in prefabs)
+                Setup(parent.transform, name, data, isHost);
         }
     }
 

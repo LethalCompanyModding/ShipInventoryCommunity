@@ -36,7 +36,7 @@ public class ShipInventory : BaseUnityPlugin
         
         PrepareNetwork();
         PrepareItems();
-        Patch();
+        ApplyPatches();
 
         InteractiveTerminalManager.RegisterApplication<ShipApplication>(Config.InventoryCommand.Value, true);
         
@@ -45,20 +45,30 @@ public class ShipInventory : BaseUnityPlugin
 
     #region Patches
 
-    private static Harmony? Harmony { get; set; }
+    private Harmony? _harmony;
 
-    private static void Patch()
+    private void ApplyPatches()
     {
-        Helpers.Logger.Debug("Patching...");
+        Helpers.Logger.Debug("Applying patches...");
 
-        Harmony ??= new Harmony(MyPluginInfo.PLUGIN_GUID);
+        _harmony ??= new Harmony(MyPluginInfo.PLUGIN_GUID);
 
-        Harmony.PatchAll();
+        _harmony.PatchAll();
 
-        Helpers.Logger.Debug("Finished patching!");
+        Helpers.Logger.Debug("Finished applying patches!");
+    }
+
+    private void RemovePatches()
+    {
+        Helpers.Logger.Debug("Removing patches...");
+
+        _harmony?.UnpatchSelf();
+        
+        Helpers.Logger.Debug("Finished removing patches!");
     }
 
     #endregion
+    
     #region Network
 
     private static void PrepareNetwork()
@@ -80,32 +90,15 @@ public class ShipInventory : BaseUnityPlugin
         }
         Helpers.Logger.Debug("RPCs prepared!");
         
-        Helpers.Logger.Debug("Loading all prefabs...");
-        NetworkPrefabUtils.LoadPrefab(new NetworkPrefabUtils.PrefabData
-        {
-            name = Constants.VENT_PREFAB,
-            onLoad = LoadVent,
-            onSetup = SetUpVent
-        });
-        Helpers.Logger.Debug("All prefabs loaded!");
+        Helpers.Logger.Debug("Registering all prefabs...");
+        NetworkPrefabUtils.Register(Constants.VENT_PREFAB, LoadVent, SetUpVent);
+        Helpers.Logger.Debug("All prefabs registered!");
     }
 
-    private static void LoadVent(GameObject obj)
-    {
-        obj.AddComponent<ChuteInteract>();
-            
-        // Vent Prop Item
-        var item = ScriptableObject.CreateInstance<Item>();
-        item.isScrap = true;
-        item.lockedInDemo = true;
-        item.itemName = "VENT_CHUTE";
-        item.spawnPrefab = NetworkPrefabUtils.GetPrefab(Constants.VENT_PREFAB);
-        item.saveItemVariable = true;
-    }
+    private static void LoadVent(GameObject vent) => vent.AddComponent<ChuteInteract>();
     private static void SetUpVent(GameObject vent)
     {
         var chute = vent.GetComponent<ChuteInteract>();
-        ChuteInteract.Instance = chute;
         
         // TRIGGER
         var interact = chute.GetComponent<InteractTrigger>();
@@ -113,14 +106,16 @@ public class ShipInventory : BaseUnityPlugin
         interact.timeToHold = Config.TimeToStore.Value;
 
         // TRANSFORM
-        vent.transform.localPosition = new Vector3(1.9f, 1f, -4.5f);
-        vent.transform.localRotation = Quaternion.Euler(35, 0, 0);
+        chute.SetTransform();
         
         // Update scrap value of the chute
         chute.UpdateValue();
+        
+        ChuteInteract.Instance = chute;
     }
-
+    
     #endregion
+    
     #region Items
 
     public static void PrepareItems()
