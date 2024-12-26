@@ -15,22 +15,24 @@ public class ShipApplication : PageApplication
     #region General Texts
 
     private readonly string INVENTORY_TITLE = Lang.Get("INVENTORY_TITLE");
+    private readonly string TRADEMARK = Lang.Get("TRADEMARK");
 
-    private readonly string UNKNOWN = Lang.Get("UNKNOWN");
+    #endregion
+
+    #region Application
+
+    /// <inheritdoc/>
+    public override void Initialization() => MainScreen(0);
+
+    /// <inheritdoc/>
+    protected override int GetEntriesPerPage<T>(T[] entries) => Constants.ITEMS_PER_PAGE;
 
     #endregion
     
-    public override void Initialization() => MainScreen(0);
-
     #region Main Screen
     
     private readonly string HOME_MESSAGE = Lang.Get("HOME_MESSAGE");
     private readonly string WELCOME_MESSAGE = Lang.Get("WELCOME_MESSAGE");
-
-    private readonly string TRADEMARK = Lang.Get("TRADEMARK");
-
-    protected override int GetEntriesPerPage<T>(T[] entries) => GetEntriesPerPage();
-    private static int GetEntriesPerPage() => Constants.ITEMS_PER_PAGE;
 
     private void MainScreen(int selectedIndex)
     {
@@ -40,9 +42,9 @@ public class ShipApplication : PageApplication
         {
             RetrieveSingleElement(),
             RetrieveTypeElement(),
-            RetrieveRandomElement(),
-            RetrieveAllElement(),
-            InfoCursorElement(),
+            RetrieveRandomElement(2),
+            RetrieveAllElement(3),
+            InfoCursorElement(4),
         };
 
         var optionMenu = new CursorMenu {
@@ -265,19 +267,20 @@ public class ShipApplication : PageApplication
     private readonly string SHIP_INFO_KEEP_ON_FIRE = Lang.Get("SHIP_INFO_KEEP_ON_FIRE");
     private readonly string SHIP_INFO_IN_ORBIT = Lang.Get("SHIP_INFO_IN_ORBIT");
     
-    private CursorElement InfoCursorElement() => new()
+    private CursorElement InfoCursorElement(int index) => new()
     {
         Name = SHIP_INFO,
-        Action = GetInfo
+        Action = () => GetInfo(index)
     };
     
-    private void GetInfo()
+    private void GetInfo(int index)
     {
         var options = new CursorMenu
         {
             cursorIndex = 0,
             elements = []
         };
+        
         var screen = CreateScreen(STATUS_TITLE,
             [
                 TextElement.Create(string.Format(SHIP_INFO_TOTAL, ItemManager.GetTotalValue())),
@@ -298,10 +301,8 @@ public class ShipApplication : PageApplication
         currentPage = PageCursorElement.Create(0, [screen], [options]);
         SwitchScreen(screen, options, true);
 
-        RegisterExitAction(OnInfoExit);
+        RegisterExitAction(_ => MainScreen(index));
     }
-
-    private void OnInfoExit(CallbackContext context) => MainScreen(4);
 
     #endregion
     
@@ -320,7 +321,7 @@ public class ShipApplication : PageApplication
         Action = () => RetrieveSingle()
     };
 
-    private CursorElement RenderSingle(ItemData itemData, bool onlyGroup, int index)
+    private CursorElement RenderSingle(ItemData itemData, bool onlyGroup, int itemIndex)
     {
         string name = string.Format(
             SINGLE_ITEM_FORMAT,
@@ -342,8 +343,8 @@ public class ShipApplication : PageApplication
                     if (onlyGroup)
                         MainScreen(0);
                     else
-                        RetrieveSingle(index);
-                }, () => RetrieveSingle(index));
+                        RetrieveSingle(itemIndex);
+                }, () => RetrieveSingle(itemIndex));
             }
         };
         
@@ -352,7 +353,7 @@ public class ShipApplication : PageApplication
     
     private void RetrieveSingle(int selectedIndex = 0)
     {
-        var ENTRIES_PER_PAGE = GetEntriesPerPage();
+        var ENTRIES_PER_PAGE = GetEntriesPerPage<int>([]);
 
         var items = ItemManager.GetItems();
         int cursorCount = items.Count();
@@ -385,10 +386,7 @@ public class ShipApplication : PageApplication
             );
         }
 
-        if (selectedIndex >= cursorCount)
-        {
-            selectedIndex = cursorCount - 1;
-        }
+        selectedIndex = System.Math.Clamp(selectedIndex, 0, cursorCount - 1);
 
         int currentPageIndex = selectedIndex / ENTRIES_PER_PAGE;
         int currentCursorIndex = selectedIndex % ENTRIES_PER_PAGE;
@@ -400,10 +398,8 @@ public class ShipApplication : PageApplication
         currentCursorMenu = currentPage.GetCurrentCursorMenu();
         currentScreen = currentPage.GetCurrentScreen();
 
-        RegisterExitAction(OnRetrieveSingleExit);
+        RegisterExitAction(_ => MainScreen(0));
     }
-
-    private void OnRetrieveSingleExit(CallbackContext context) => MainScreen(0);
 
     #endregion
 
@@ -447,7 +443,7 @@ public class ShipApplication : PageApplication
                         group.First(),
                         amount
                     );
-                    
+
                     if (onlyGroup)
                         MainScreen(1);
                     else
@@ -461,7 +457,7 @@ public class ShipApplication : PageApplication
 
     private void RetrieveType(int selectedIndex = 0)
     {
-        var ENTRIES_PER_PAGE = GetEntriesPerPage();
+        var ENTRIES_PER_PAGE = GetEntriesPerPage<int>([]);
         
         var types = ItemManager.GetItems().GroupBy(i => i.ID);
         int cursorCount = types.Count();
@@ -523,15 +519,15 @@ public class ShipApplication : PageApplication
     private readonly string RANDOM_RETRIEVE = Lang.Get("RANDOM_RETRIEVE");
     private readonly string TEXT_RANDOM_RETRIEVE = Lang.Get("TEXT_RANDOM_RETRIEVE");
     
-    private CursorElement RetrieveRandomElement() => new()
+    private CursorElement RetrieveRandomElement(int index) => new()
     {
         Name = RANDOM_RETRIEVE,
         Active = _ => ItemManager.GetItems().Any(),
         SelectInactive = false,
-        Action = RetrieveRandom
+        Action = () => RetrieveRandom(index)
     };
     
-    private void RetrieveRandom()
+    private void RetrieveRandom(int index)
     {
         // Random object
         var items = ItemManager.GetItems();
@@ -546,8 +542,8 @@ public class ShipApplication : PageApplication
             // Spawn random
             ChuteInteract.Instance?.SpawnItemServerRpc(data);
 
-            MainScreen(2);
-        }, () => MainScreen(2));
+            MainScreen(index);
+        }, () => MainScreen(index));
     }
 
     #endregion
@@ -557,19 +553,19 @@ public class ShipApplication : PageApplication
     private readonly string ALL_RETRIEVE = Lang.Get("ALL_RETRIEVE");
     private readonly string TEXT_ALL_RETRIEVE = Lang.Get("TEXT_ALL_RETRIEVE");
     
-    private CursorElement RetrieveAllElement() => new()
+    private CursorElement RetrieveAllElement(int index) => new()
     {
         Name = ALL_RETRIEVE,
         Active = _ => ItemManager.GetItems().Any(),
         SelectInactive = false,
-        Action = RetrieveAll
+        Action = () => RetrieveAll(index)
     };
     
-    private void RetrieveAll()
+    private void RetrieveAll(int index)
     {
         string text = string.Format(
             TEXT_ALL_RETRIEVE,
-            ItemManager.GetItems().Sum(i => i.SCRAP_VALUE)
+            ItemManager.GetTotalValue()
         );
         
         ConfirmElement(text, () =>
@@ -582,8 +578,8 @@ public class ShipApplication : PageApplication
                 );
             }
             
-            MainScreen(3);
-        }, () => MainScreen(3));
+            MainScreen(index);
+        }, () => MainScreen(index));
     }
 
     #endregion
