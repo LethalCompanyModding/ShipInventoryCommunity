@@ -7,79 +7,136 @@ namespace ShipInventory.Helpers;
 
 public static class ItemManager
 {
-    /// <summary>
-    /// List of the items stored in the ship's inventory
-    /// </summary>
-    private static IEnumerable<ItemData> storedItems = [];
-
     #region Getters
-
-    /// <summary>
-    /// Copies the items stored in the ship's inventory
-    /// </summary>
-    public static IEnumerable<ItemData> GetItems() => new List<ItemData>(
-        storedItems.OrderBy(i => i.GetItemName()).ThenBy(i => i.SCRAP_VALUE)
-    );
 
     public static IEnumerable<ItemData> GetInstances(ItemData data, int count)
     {
         // Take only one
         if (count == 1)
-            return storedItems.Where(d => d.Equals(data)).Take(1);
+            return cachedItems.Where(d => d.Equals(data)).Take(1);
         
         // Take all with id
-        return storedItems.Where(d => d.ID == data.ID).Take(count);
+        return cachedItems.Where(d => d.ID == data.ID).Take(count);
     }
-
-    public static int GetTotalValue() => storedItems.Sum(i => i.SCRAP_VALUE);
-
-    public static int GetCount() => storedItems.Count();
 
     #endregion
-    #region Setters
 
-    public static void SetItems(IEnumerable<ItemData> newItems, bool updateAll = false)
+    #region Cache
+    
+    /// <summary>
+    /// Host: List of the items stored
+    /// Client: Cached list of the items stored
+    /// </summary>
+    private static List<ItemData> cachedItems = [];
+
+    /// <returns>Copy of the items</returns>
+    public static ItemData[] GetItems() => [..cachedItems];
+
+    /// <summary>
+    /// Updates the cache with the given values
+    /// </summary>
+    internal static void UpdateCache(string? key, List<ItemData> items)
     {
-        Logger.Debug($"Setting items from {storedItems.Count()} to {newItems.Count()}...");
-        storedItems = newItems;
-        
-        if (updateAll)
-            ChuteInteract.Instance?.RequestItemsAll();
+        cacheKey = key;
+        cachedItems = items;
     }
+
+    /// <summary>
+    /// Clears the cache
+    /// </summary>
+    internal static void ClearCache() => UpdateCache(null, []);
+
+    /// <summary>
+    /// Removes all the items that are not present in the cache
+    /// </summary>
+    /// <returns>Filtered items</returns>
+    internal static ItemData[] FilterExtras(params ItemData[] items) => items.Where(item => cachedItems.Contains(item)).ToArray();
 
     /// <summary>
     /// Adds the given item to the cached inventory
     /// </summary>
-    internal static void Add(ItemData data) => SetItems(storedItems.Append(data));
-
+    internal static void AddItems(params ItemData[] items)
+    {
+        cachedItems.AddRange(items);
+        NewKey();
+    }
+    
     /// <summary>
     /// Removes the given item from the cached inventory
     /// </summary>
-    internal static void Remove(ItemData data)
+    internal static void RemoveItems(params ItemData[] items)
     {
-        var copy = storedItems.ToList();
-        copy.Remove(data);
-        SetItems(copy);
+        foreach (var i in items)
+            cachedItems.Remove(i);
+        NewKey();
+    }
+
+    /// <summary>
+    /// Sets all the items as persisted through rounds
+    /// </summary>
+    internal static void SetAllPersisted()
+    {
+        for (int i = 0; i < cachedItems.Count; i++)
+        {
+            var data = cachedItems[i];
+            data.PERSISTED_THROUGH_ROUNDS = true;
+            cachedItems[i] = data;
+        }
+        
+        NewKey();
+    }
+
+    /// <returns>Number of items</returns>
+    public static int GetCount() => cachedItems.Count;
+
+    /// <returns>Total value of all the items</returns>
+    public static int GetTotalValue(bool onlyScraps = false)
+    {
+        var total = 0;
+        
+        // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+        foreach (var data in cachedItems)
+        {
+            // Don't count scrap from earlier rounds
+            if (data.PERSISTED_THROUGH_ROUNDS)
+                continue;
+            
+            var item = data.GetItem();
+            
+            if (item == null)
+                continue;
+            
+            // Dont count non-scrap
+            if (onlyScraps && !item.isScrap)
+                continue;
+
+            total += data.SCRAP_VALUE;
+        }
+
+        return total;
     }
 
     #endregion
-    #region Store Item
 
-    public static void StoreItem(GrabbableObject item)
-    {
-        if (ChuteInteract.Instance == null)
-            return;
+    #region Cache Key
 
-        ItemData data = new ItemData(item);
-        
-        item.OnBroughtToShip();
-        
-        // Send store request to server
-        Logger.Debug("Sending new item to server...");
-        ChuteInteract.Instance.StoreItemServerRpc(data);
-    }
+    /// <summary>
+    /// Key representing the current inventory
+    /// </summary>
+    private static string? cacheKey;
+    
+    /// <summary>
+    /// Obtains the current key of the cache
+    /// </summary>
+    public static string? GetKey() => cacheKey;
+    
+    /// <summary>
+    /// Assigns a new key to the cache
+    /// </summary>
+    private static void NewKey() => cacheKey = cacheKey = Guid.NewGuid().ToString();
 
     #endregion
+    
     #region Blacklist
 
     private static readonly HashSet<string> BLACKLIST = [];

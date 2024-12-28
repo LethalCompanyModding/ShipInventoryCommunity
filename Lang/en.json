@@ -44,6 +44,19 @@
     "NAME_SHOW_TRADEMARK": "Show Trademark",
     "DESCRIPTION_SHOW_TRADEMARK": "Determines if the mod shows the company's trademark in the terminal.",
 
+    "NETWORK_SECTION": "Network",
+    "NAME_INVENTORY_REFRESH_RATE": "Refresh Rate",
+    "DESCRIPTION_INVENTORY_REFRESH_RATE": "Time in seconds between each refresh call.\n\nThe lower the refresh rate is, the more accurate the inventory is. However, it will be more WIFI-hungry.\n\n<b>*You will need to close the lobby*</b>",
+
+    "NAME_INVENTORY_UPDATE_CHECK_SILENCER": "Update Silencer",
+    "DESCRIPTION_INVENTORY_UPDATE_CHECK_SILENCER": "Removes the log message when the inventory is up to date.\n\nIt's recommended to keep this setting as it is, since it can remove crucial information that would allow the authors to debug a problem.",
+    
+    "NAME_FORCE_UPDATE_UPON_ADDING": "Force when storing",
+    "DESCRIPTION_FORCE_UPDATE_UPON_ADDING": "Forces the update of the cache when you are storing an item.",
+
+    "NAME_FORCE_UPDATE_UPON_REMOVING": "Force when retrieving",
+    "DESCRIPTION_FORCE_UPDATE_UPON_REMOVING": "Forces the update of the cache when you are retrieving an item.",
+    
     "SINGLE_RETRIEVE": "Retrieve single",
     "TEXT_SINGLE_RETRIEVE": "You are about to retrieve '{0}'.",
     "SINGLE_RETRIEVE_MESSAGE": "Select the desired item to retrieve it.",

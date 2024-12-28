@@ -48,7 +48,7 @@ public class ShipApplication : PageApplication
         };
 
         var optionMenu = new CursorMenu {
-            cursorIndex = ItemManager.GetItems().Any() ? selectedIndex : elements.Length - 1,
+            cursorIndex = ItemManager.GetCount() > 0 ? selectedIndex : elements.Length - 1,
             elements = elements
         };
 
@@ -316,7 +316,7 @@ public class ShipApplication : PageApplication
     private CursorElement RetrieveSingleElement() => new()
     {
         Name = SINGLE_RETRIEVE,
-        Active = _ => ItemManager.GetItems().Any(),
+        Active = _ => ItemManager.GetCount() > 0,
         SelectInactive = false,
         Action = () => RetrieveSingle()
     };
@@ -339,7 +339,7 @@ public class ShipApplication : PageApplication
                 message = string.Format(message, name);
                 ConfirmElement(message, () =>
                 {
-                    ChuteInteract.Instance?.SpawnItemServerRpc(itemData);
+                    ChuteInteract.Instance?.RetrieveItems(itemData);
                     if (onlyGroup)
                         MainScreen(0);
                     else
@@ -413,7 +413,7 @@ public class ShipApplication : PageApplication
     private CursorElement RetrieveTypeElement() => new()
     {
         Name = TYPE_RETRIEVE,
-        Active = _ => ItemManager.GetItems().Any(),
+        Active = _ => ItemManager.GetCount() > 0,
         SelectInactive = false,
         Action = () => RetrieveType()
     };
@@ -439,10 +439,8 @@ public class ShipApplication : PageApplication
                 message = string.Format(message, amount, name);
                 ConfirmElement(message, () =>
                 {
-                    ChuteInteract.Instance?.SpawnItemServerRpc(
-                        group.First(),
-                        amount
-                    );
+                    var items = ItemManager.GetInstances(group.First(), amount);
+                    ChuteInteract.Instance?.RetrieveItems(items.ToArray());
 
                     if (onlyGroup)
                         MainScreen(1);
@@ -522,7 +520,7 @@ public class ShipApplication : PageApplication
     private CursorElement RetrieveRandomElement(int index) => new()
     {
         Name = RANDOM_RETRIEVE,
-        Active = _ => ItemManager.GetItems().Any(),
+        Active = _ => ItemManager.GetCount() > 0,
         SelectInactive = false,
         Action = () => RetrieveRandom(index)
     };
@@ -540,7 +538,7 @@ public class ShipApplication : PageApplication
         ConfirmElement(message, () =>
         {
             // Spawn random
-            ChuteInteract.Instance?.SpawnItemServerRpc(data);
+            ChuteInteract.Instance?.RetrieveItems(data);
 
             MainScreen(index);
         }, () => MainScreen(index));
@@ -556,7 +554,7 @@ public class ShipApplication : PageApplication
     private CursorElement RetrieveAllElement(int index) => new()
     {
         Name = ALL_RETRIEVE,
-        Active = _ => ItemManager.GetItems().Any(),
+        Active = _ => ItemManager.GetCount() > 0,
         SelectInactive = false,
         Action = () => RetrieveAll(index)
     };
@@ -570,14 +568,7 @@ public class ShipApplication : PageApplication
         
         ConfirmElement(text, () =>
         {
-            foreach (var group in ItemManager.GetItems().GroupBy(i => i.ID))
-            {
-                ChuteInteract.Instance?.SpawnItemServerRpc(
-                    group.First(),
-                    group.Count()
-                );
-            }
-            
+            ChuteInteract.Instance?.RetrieveItems(ItemManager.GetItems());
             MainScreen(index);
         }, () => MainScreen(index));
     }

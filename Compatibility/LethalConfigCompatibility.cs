@@ -35,12 +35,14 @@ public static class LethalConfigCompatibility
             config.ChutePermission.Entry, new EnumDropDownOptions
             {
                 Name = Lang.Get("NAME_CHUTE_PERMISSION"),
+                RequiresRestart = false
             }));
 
         LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.RequireInOrbit.Entry,
             new BoolCheckBoxOptions
             {
                 Name = Lang.Get("NAME_REQUIRES_IN_ORBIT"),
+                RequiresRestart = false
             }));
 
         LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(config.TimeToStore.Entry,
@@ -58,6 +60,7 @@ public static class LethalConfigCompatibility
                 Name = Lang.Get("NAME_TIME_TO_RETRIEVE"),
                 Min = 0,
                 Max = float.MaxValue,
+                RequiresRestart = false
             }));
 
         LethalConfigManager.AddConfigItem(new IntSliderConfigItem(config.StopAfter.Entry, new IntSliderOptions
@@ -65,6 +68,7 @@ public static class LethalConfigCompatibility
             Name = Lang.Get("NAME_STOP_AFTER"),
             Min = 1,
             Max = 1_000,
+            RequiresRestart = false
         }));
 
         LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(config.Blacklist.Entry, new TextInputFieldOptions
@@ -72,6 +76,7 @@ public static class LethalConfigCompatibility
             Name = Lang.Get("NAME_BLACKLIST"),
             TrimText = true,
             NumberOfLines = 10,
+            RequiresRestart = false
         }));
 
         #endregion
@@ -82,17 +87,20 @@ public static class LethalConfigCompatibility
             config.InventoryPermission.Entry, new EnumDropDownOptions
             {
                 Name = Lang.Get("NAME_INVENTORY_PERMISSION"),
+                RequiresRestart = false
             }));
 
         LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.ActAsSafe.Entry, new BoolCheckBoxOptions
         {
             Name = Lang.Get("NAME_AS_SAFE"),
+            RequiresRestart = false
         }));
 
         LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.PersistThroughFire.Entry,
             new BoolCheckBoxOptions
             {
                 Name = Lang.Get("NAME_PERSIST_THROUGH_FIRE"),
+                RequiresRestart = false
             }));
 
         LethalConfigManager.AddConfigItem(new IntSliderConfigItem(config.MaxItemCount.Entry, new IntSliderOptions
@@ -100,6 +108,7 @@ public static class LethalConfigCompatibility
             Name = Lang.Get("NAME_MAX_ITEM_COUNT"),
             Min = 1,
             Max = 10_000,
+            RequiresRestart = false
         }));
 
         #endregion
@@ -118,17 +127,51 @@ public static class LethalConfigCompatibility
         LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.YesPlease.Entry, new BoolCheckBoxOptions
         {
             Name = Lang.Get("NAME_YES_PLEASE"),
+            RequiresRestart = false
         }));
 
         LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.ShowConfirmation.Entry,
             new BoolCheckBoxOptions
             {
                 Name = Lang.Get("NAME_SHOW_CONFIRMATION"),
+                RequiresRestart = false
             }));
 
         LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.ShowTrademark.Entry, new BoolCheckBoxOptions
         {
             Name = Lang.Get("NAME_SHOW_TRADEMARK"),
+            RequiresRestart = false
+        }));
+
+        #endregion
+
+        #region Network
+
+        LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(config.InventoryRefreshRate.Entry, new FloatStepSliderOptions
+        {
+            Name = Lang.Get("NAME_INVENTORY_REFRESH_RATE"),
+            Step = 0.2f,
+            Min = 0.2f,
+            Max = 60,
+            RequiresRestart = false
+        }));
+        
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.InventoryUpdateCheckSilencer.Entry, new BoolCheckBoxOptions
+        {
+            Name = Lang.Get("NAME_INVENTORY_UPDATE_CHECK_SILENCER"),
+            RequiresRestart = false
+        }));
+        
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.ForceUpdateUponAdding.Entry, new BoolCheckBoxOptions
+        {
+            Name = Lang.Get("NAME_FORCE_UPDATE_UPON_ADDING"),
+            RequiresRestart = false
+        }));
+        
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.ForceUpdateUponRemoving.Entry, new BoolCheckBoxOptions
+        {
+            Name = Lang.Get("NAME_FORCE_UPDATE_UPON_REMOVING"),
+            RequiresRestart = false
         }));
 
         #endregion

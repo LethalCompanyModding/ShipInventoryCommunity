@@ -31,7 +31,13 @@ public class Config : SyncedConfig2<Config>
     [SyncedEntryField] public readonly SyncedEntry<bool> YesPlease;
     [SyncedEntryField] public readonly SyncedEntry<bool> ShowConfirmation;
     [SyncedEntryField] public readonly SyncedEntry<bool> ShowTrademark;
-
+    
+    // Network
+    [SyncedEntryField] public readonly SyncedEntry<float> InventoryRefreshRate;
+    [SyncedEntryField] public readonly SyncedEntry<bool> InventoryUpdateCheckSilencer;
+    [SyncedEntryField] public readonly SyncedEntry<bool> ForceUpdateUponAdding;
+    [SyncedEntryField] public readonly SyncedEntry<bool> ForceUpdateUponRemoving;
+    
     public enum PermissionLevel { HOST_ONLY, CLIENTS_ONLY, EVERYONE, NO_ONE  }
 
     #endregion
@@ -143,6 +149,41 @@ public class Config : SyncedConfig2<Config>
             new ConfigDescription(Lang.Get("DESCRIPTION_SHOW_TRADEMARK"))
         );
         
+        #endregion
+
+        #region Network
+
+        string NETWORK = Lang.Get("NETWORK_SECTION");
+        
+        InventoryRefreshRate = cfg.BindSyncedEntry(
+            new ConfigDefinition(NETWORK, "InventoryRefreshRate"),
+            15f,
+            new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_REFRESH_RATE"))
+        );
+        
+        InventoryUpdateCheckSilencer = cfg.BindSyncedEntry(
+            new ConfigDefinition(NETWORK, "InventoryUpdateCheckSilencer"),
+            false,
+            new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_UPDATE_CHECK_SILENCER"))
+        );
+        InventoryUpdateCheckSilencer.Changed += (_, e) =>
+        {
+            if (!e.OldValue && e.NewValue)
+                Logger.Debug("Inventory Update Check has been silenced.");
+        };
+        
+        ForceUpdateUponAdding = cfg.BindSyncedEntry(
+            new ConfigDefinition(NETWORK, "ForceUpdateUponAdding"),
+            true,
+            new ConfigDescription(Lang.Get("DESCRIPTION_FORCE_UPDATE_UPON_ADDING"))
+        );
+        
+        ForceUpdateUponRemoving = cfg.BindSyncedEntry(
+            new ConfigDefinition(NETWORK, "ForceUpdateUponRemoving"),
+            true,
+            new ConfigDescription(Lang.Get("DESCRIPTION_FORCE_UPDATE_UPON_REMOVING"))
+        );
+
         #endregion
 
         if (LethalConfigCompatibility.enabled)

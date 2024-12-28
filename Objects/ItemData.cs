@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ShipInventory.Compatibility;
 using ShipInventory.Helpers;
 using Unity.Netcode;
@@ -74,7 +75,7 @@ public struct ItemData : INetworkSerializable
     /// </summary>
     public static void LoadStoredItems(string saveFileName)
     {
-        ItemManager.SetItems([]);
+        ItemManager.ClearCache();
         
         if (!ES3.KeyExists(Constants.STORED_ITEMS, saveFileName))
         {
@@ -93,8 +94,7 @@ public struct ItemData : INetworkSerializable
             return;
         }
         
-        ItemManager.SetItems(items);
-        
+        ItemManager.AddItems(items.ToArray());
         Logger.Debug("Loaded stored items!");
     }
 
