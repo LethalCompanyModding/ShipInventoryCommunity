@@ -25,6 +25,7 @@ public class Config : SyncedConfig2<Config>
     [SyncedEntryField] public readonly SyncedEntry<bool> ActAsSafe;
     [SyncedEntryField] public readonly SyncedEntry<bool> PersistThroughFire;
     [SyncedEntryField] public readonly SyncedEntry<int> MaxItemCount;
+    [SyncedEntryField] public readonly SyncedEntry<float> KeepRate;
     
     // Terminal
     [SyncedEntryField] public readonly SyncedEntry<string> InventoryCommand;
@@ -117,6 +118,12 @@ public class Config : SyncedConfig2<Config>
             new ConfigDefinition(INVENTORY, "MaxItemCount"),
             5_000,
             new ConfigDescription(Lang.Get("DESCRIPTION_MAX_ITEM_COUNT"))
+        );
+        
+        KeepRate = cfg.BindSyncedEntry(
+            new ConfigDefinition(INVENTORY, "KeepRate"),
+            0f,
+            new ConfigDescription(Lang.Get("DESCRIPTION_KEEP_RATE"))
         );
         
         #endregion

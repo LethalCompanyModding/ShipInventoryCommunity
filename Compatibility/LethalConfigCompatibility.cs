@@ -110,6 +110,14 @@ public static class LethalConfigCompatibility
             Max = 10_000,
             RequiresRestart = false
         }));
+        
+        LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(config.KeepRate.Entry, new FloatSliderOptions
+        {
+            Name = Lang.Get("NAME_KEEP_RATE"),
+            Min = 0,
+            Max = 100,
+            RequiresRestart = false
+        }));
 
         #endregion
 

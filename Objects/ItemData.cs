@@ -54,7 +54,7 @@ public struct ItemData : INetworkSerializable
     /// </summary>
     public static void SaveStoredItems(string saveFileName)
     {
-        if (ItemManager.GetCount() == 0)
+        if (!ItemManager.HasItems())
         {
             ES3.DeleteKey(Constants.STORED_ITEMS, saveFileName);
             Logger.Debug("Stored items cleared!");
@@ -67,7 +67,7 @@ public struct ItemData : INetworkSerializable
 
         ES3.Save(Constants.STORED_ITEMS, Newtonsoft.Json.JsonConvert.SerializeObject(items), saveFileName);
 
-        Logger.Debug($"Successfully saved {ItemManager.GetCount()} keys!");
+        Logger.Debug($"Successfully saved {ItemManager.GetCount()} items!");
     }
 
     /// <summary>

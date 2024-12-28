@@ -31,6 +31,9 @@
     "NAME_MAX_ITEM_COUNT": "Maximum Item Count",
     "DESCRIPTION_MAX_ITEM_COUNT": "Limits the amount of items that can be inside the ship's inventory.\n\nIf the ship's inventory already has too many items, it won't empty the excess.",
 
+    "NAME_KEEP_RATE": "Keep Rate",
+    "DESCRIPTION_KEEP_RATE": "Defines how likely each item is to be kept when wiping.",
+    
     "TERMINAL_SECTION": "Terminal",
     "NAME_INVENTORY_COMMAND": "Inventory Command",
     "DESCRIPTION_INVENTORY_COMMAND": "Determines the command to type to access the ship's inventory.",

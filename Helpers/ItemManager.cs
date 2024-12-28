@@ -89,6 +89,9 @@ public static class ItemManager
     /// <returns>Number of items</returns>
     public static int GetCount() => cachedItems.Count;
 
+    /// <returns>If there is at least one item</returns>
+    public static bool HasItems() => cachedItems.Count > 0;
+
     /// <returns>Total value of all the items</returns>
     public static int GetTotalValue(bool onlyScraps = false)
     {
