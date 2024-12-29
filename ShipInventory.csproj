@@ -79,7 +79,7 @@
     </Target>
     
     <Target Name="CopyLangs" AfterTargets="Build" Condition="Exists('$(ProjectDir)/Lang')">
-        <Exec Command="xcopy &quot;$(ProjectDir)Lang\*.*&quot; &quot;$(ProjectDir)ThunderStore\$(FolderName)\langs&quot; /Y /I /E" />
+        <Exec Command="xcopy &quot;$(ProjectDir)Lang\*.*&quot; &quot;$(ProjectDir)ThunderStore\$(FolderName)&quot; /Y /I /E" />
     </Target>
 
     <Import Project="../LC.targets" />

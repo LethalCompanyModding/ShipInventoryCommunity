@@ -23,7 +23,7 @@ internal static class Lang
         if (dllPath == null)
             return false;
 
-        string file = Path.Combine(dllPath, "langs", $"{lang}.json");
+        string file = Path.Combine(dllPath, $"lang-{lang}.json");
 
         if (!File.Exists(file))
         {
