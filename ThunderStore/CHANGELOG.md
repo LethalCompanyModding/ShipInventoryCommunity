@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.2.0](https://github.com/WarperSan/ShipInventory/releases/tag/1.2.0) (2024-12-29)
+
+## Fixes:
+* <strong>Changed how the item system works</strong>
+
+## Additions:
+* Added a way for other mods to define if an item is allowed or not (Helpers/InteractionHelper)
+* Added a proper support for the missing items. Now, missing items transform into 'Bad Item'
+* Added the config 'TimeToStore', which defines how quick you can store an item
+* Added the config 'InventoryCommand', which defines what is the keyword to access the ship's inventory
+* Added the config 'InventoryRefreshRate', which defines how frequent the inventory refreshes
+* Added the config 'InventoryUpdateCheckSilencer', which prevents the logging when the inventory is up-to-date
+* Added the config 'ForceUpdateUponAdding', which forces the local inventory to get updated when storing an  item
+* Added the config 'ForceUpdateUponRemoving', which forces the local inventory to get updated when retrieving an item
+* Added the config 'KeepRate', which allows to define how likely each item is to be kept when wiping
+* Added the config 'IsUnlock', which defines if the chute is an upgrade to buy or if it is already unlocked by default
+* Added the config 'UnlockCost', which defines how expensive the upgrade is
+
+## Changes:
+* Simplified the language package (lang-en.json => langs/en.json)
+* Organized configs
+* Renamed SpawnDelay to TimeToRetrieve
+* Made the chute an unlockable upgrade
+* Made the chute movable
+
 ## [1.1.8](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.8) (2024-12-09)
 
 ## Fixes:
