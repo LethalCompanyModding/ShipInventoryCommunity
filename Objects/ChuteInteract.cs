@@ -30,7 +30,7 @@ public class ChuteInteract : NetworkBehaviour
 
         // Update scrap collected
         item.isInShipRoom = false;
-        //item.scrapPersistedThroughRounds = true; // stfu collect pop up
+        item.scrapPersistedThroughRounds = true;
         player.SetItemInElevator(true, true, item);
 
         // Despawn the held item
@@ -73,6 +73,9 @@ public class ChuteInteract : NetworkBehaviour
     // ReSharper disable Unity.PerformanceAnalysis
     private IEnumerator SpawnCoroutine()
     {
+        if (_placeableShipObject != null)
+            _placeableShipObject.inUse = true;
+        
         while (spawnQueue.Count > 0)
         {
             // If chute is full, skip
@@ -93,6 +96,9 @@ public class ChuteInteract : NetworkBehaviour
         
         // Mark as completed
         spawnCoroutine = null;
+        
+        if (_placeableShipObject != null)
+            _placeableShipObject.inUse = false;
     }
 
     private NetworkObject? SpawnItemServer(ItemData data)
@@ -179,7 +185,7 @@ public class ChuteInteract : NetworkBehaviour
     #region Server RPC
 
     [ServerRpc(RequireOwnership = false)]
-    private void CheckInventoryServerRpc(string? key, params ulong[] ids)
+    private void CheckInventoryServerRpc(string? _updateKey, string? key, params ulong[] ids)
     {
         var target = new ClientRpcParams
         {
@@ -194,11 +200,11 @@ public class ChuteInteract : NetworkBehaviour
         // Check if cache is deprecated
         if (localKey != key)
         {
-            UpdateInventoryClientRpc(localKey, ItemManager.GetItems(), target);
+            UpdateInventoryClientRpc(_updateKey, localKey, ItemManager.GetItems(), target);
             return;
         }
         
-        InventoryUpToDateClientRpc(target);
+        InventoryUpToDateClientRpc(_updateKey, target);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -257,19 +263,34 @@ public class ChuteInteract : NetworkBehaviour
 
     #region Client RPC
 
+    private string? updateKey;
+
     private static ulong GetClientID() => GameNetworkManager.Instance.localPlayerController.playerClientId;
 
     [ClientRpc]
-    private void UpdateInventoryClientRpc(string? key, ItemData[] data, ClientRpcParams routing = default)
+    private void UpdateInventoryClientRpc(string? _updateKey, string? key, ItemData[] data, ClientRpcParams routing = default)
     {
+        if (updateKey != _updateKey)
+        {
+            Logger.Debug("Received an update that was not the one expected.");
+            return;
+        }
+        
         Logger.Debug($"Updating the cache with: '{key ?? "null"}'");
         ItemManager.UpdateCache(key, data.ToList());
         Logger.Debug("Cached updated!");
+
+        updateKey = null;
     }
 
     [ClientRpc]
-    private void InventoryUpToDateClientRpc(ClientRpcParams routing = default)
+    private void InventoryUpToDateClientRpc(string? _updateKey, ClientRpcParams routing = default)
     {
+        if (updateKey != _updateKey)
+            return;
+
+        updateKey = null;
+        
         if (ShipInventory.Config.InventoryUpdateCheckSilencer.Value)
             return;
         
@@ -326,6 +347,20 @@ public class ChuteInteract : NetworkBehaviour
 
     #endregion
 
+    #region Unlockable
+
+    public static bool IsUpgrade;
+
+    private PlaceableShipObject? _placeableShipObject;
+
+    public static void SetOffsets(AutoParentToShip autoParent)
+    {
+        autoParent.positionOffset = new Vector3(1.9f, 1f, -4.5f);
+        autoParent.rotationOffset = new Vector3(35, 0, 0);
+    }
+
+    #endregion
+
     #region MonoBehaviour
 
     private int LAYER_IGNORE = -1; 
@@ -337,8 +372,9 @@ public class ChuteInteract : NetworkBehaviour
     {
         if (GameNetworkManager.Instance?.localPlayerController == null)
             return;
-        
-        CheckInventoryServerRpc(ItemManager.GetKey(), GetClientID());
+
+        updateKey = System.Guid.NewGuid().ToString();
+        CheckInventoryServerRpc(updateKey, ItemManager.GetKey(), GetClientID());
     }
 
     private void Start()
@@ -354,8 +390,7 @@ public class ChuteInteract : NetworkBehaviour
         itemRestorePoint = transform.Find(Constants.DROP_NODE_PATH);
         spawnParticles = GetComponentInChildren<ParticleSystem>();
 
-        transform.localPosition = new Vector3(1.9f, 1f, -4.5f);
-        transform.localRotation = Quaternion.Euler(35, 0, 0);
+        _placeableShipObject = GetComponentInChildren<PlaceableShipObject>();
         
         Instance = this;
     }

@@ -184,6 +184,25 @@ public static class LethalConfigCompatibility
 
         #endregion
 
+        #region Unlock
+
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.ChuteIsUnlock.Entry,
+            new BoolCheckBoxOptions
+            {
+                Name = Lang.Get("NAME_CHUTE_IS_UNLOCK"),
+                RequiresRestart = true
+            }));
+        
+        LethalConfigManager.AddConfigItem(new IntSliderConfigItem(config.ChuteUnlockCost.Entry, new IntSliderOptions
+        {
+            Name = Lang.Get("NAME_UNLOCK_COST"),
+            Min = 1,
+            Max = 5_000,
+            RequiresRestart = false
+        }));
+
+        #endregion
+
         LethalConfigManager.SkipAutoGenFor(config.LangUsed);
 
         ConfigManager.Register(config);

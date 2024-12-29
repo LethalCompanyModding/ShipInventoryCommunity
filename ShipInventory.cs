@@ -3,6 +3,7 @@ using System.Reflection;
 using BepInEx;
 using HarmonyLib;
 using InteractiveTerminalAPI.UI;
+using LethalLib.Modules;
 using ShipInventory.Applications;
 using ShipInventory.Compatibility;
 using ShipInventory.Helpers;
@@ -91,11 +92,57 @@ public class ShipInventory : BaseUnityPlugin
         Helpers.Logger.Debug("RPCs prepared!");
         
         Helpers.Logger.Debug("Registering all prefabs...");
-        NetworkPrefabUtils.Register(Constants.VENT_PREFAB, LoadVent);
+        NetworkPrefabUtils.Register(Constants.VENT_PREFAB, LoadVent, ChuteInteract.IsUpgrade);
         Helpers.Logger.Debug("All prefabs registered!");
     }
 
-    private static void LoadVent(GameObject vent) => vent.AddComponent<ChuteInteract>();
+    private static void LoadVent(GameObject vent)
+    {
+        vent.AddComponent<ChuteInteract>();
+        
+        var autoParent = vent.GetComponent<AutoParentToShip>();
+        ChuteInteract.SetOffsets(autoParent);
+        autoParent.overrideOffset = true;
+        
+        if (!ChuteInteract.IsUpgrade)
+            return;
+
+        var terminalNode = Bundle.LoadAsset<TerminalNode>("InventoryBuy");
+
+        if (terminalNode == null)
+        {
+            Helpers.Logger.Error("Could not find the terminal node for the inventory. The chute is now always unlocked.");
+            ChuteInteract.IsUpgrade = false;
+            return;
+        }
+        
+        var unlock = new UnlockableItem
+        {
+            unlockableName = "Ship Inventory",
+            prefabObject = vent,
+            unlockableType = 1,
+            shopSelectionNode = null,
+            alwaysInStock = true,
+            IsPlaceable = true,
+            canBeStored = true,
+            maxNumber = 1,
+            spawnPrefab = true
+        };
+        
+        Unlockables.RegisterUnlockable(
+            unlock, 
+            StoreType.ShipUpgrade, 
+            null!, 
+            null!, 
+            terminalNode, 
+            Config.ChuteUnlockCost.Value
+        );
+
+        Config.ChuteUnlockCost.Changed += (_, e) =>
+        {
+            Unlockables.UpdateUnlockablePrice(unlock, e.NewValue);
+        };
+    }
     
     #endregion
     
@@ -111,8 +158,8 @@ public class ShipInventory : BaseUnityPlugin
             var badItem = errorItem.spawnPrefab.AddComponent<BadItem>();
             badItem.itemProperties = errorItem;
             
-            LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(errorItem.spawnPrefab);
-            LethalLib.Modules.Items.RegisterItem(errorItem);
+            NetworkPrefabs.RegisterNetworkPrefab(errorItem.spawnPrefab);
+            Items.RegisterItem(errorItem);
 
             ItemData.FALLBACK_ITEM = errorItem;
         }

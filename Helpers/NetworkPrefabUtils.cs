@@ -15,11 +15,12 @@ internal static class NetworkPrefabUtils
     {
         public Action<GameObject>? onLoad;
         public GameObject? gameObject;
+        public bool isUnlockable;
     }
 
     private static readonly Dictionary<string, PrefabData> prefabs = [];
 
-    public static void Register(string name, Action<GameObject>? onLoad = null)
+    public static void Register(string name, Action<GameObject>? onLoad = null, bool isUnlockable = false)
     {
         if (prefabs.ContainsKey(name))
         {
@@ -29,7 +30,8 @@ internal static class NetworkPrefabUtils
         
         prefabs.Add(name, new PrefabData
         {
-            onLoad = onLoad
+            onLoad = onLoad,
+            isUnlockable = isUnlockable
         });
     }
         
@@ -100,8 +102,11 @@ internal static class NetworkPrefabUtils
             Transform parent = GameObject.Find(Constants.SHIP_PATH).transform;
             bool isHost = __instance.IsServer || __instance.IsHost;
 
-            foreach (var (name, _) in prefabs)
-                Setup(parent.transform, name, isHost);
+            foreach (var (name, data) in prefabs)
+            {
+                if (!data.isUnlockable)
+                    Setup(parent.transform, name, isHost);
+            }
         }
     }
 

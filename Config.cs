@@ -3,6 +3,7 @@ using CSync.Extensions;
 using CSync.Lib;
 using ShipInventory.Compatibility;
 using ShipInventory.Helpers;
+using ShipInventory.Objects;
 
 namespace ShipInventory;
 
@@ -38,6 +39,10 @@ public class Config : SyncedConfig2<Config>
     [SyncedEntryField] public readonly SyncedEntry<bool> InventoryUpdateCheckSilencer;
     [SyncedEntryField] public readonly SyncedEntry<bool> ForceUpdateUponAdding;
     [SyncedEntryField] public readonly SyncedEntry<bool> ForceUpdateUponRemoving;
+    
+    // Unlock
+    [SyncedEntryField] public readonly SyncedEntry<bool> ChuteIsUnlock;
+    [SyncedEntryField] public readonly SyncedEntry<int> ChuteUnlockCost;
     
     public enum PermissionLevel { HOST_ONLY, CLIENTS_ONLY, EVERYONE, NO_ONE  }
 
@@ -189,6 +194,25 @@ public class Config : SyncedConfig2<Config>
             new ConfigDefinition(NETWORK, "ForceUpdateUponRemoving"),
             true,
             new ConfigDescription(Lang.Get("DESCRIPTION_FORCE_UPDATE_UPON_REMOVING"))
+        );
+
+        #endregion
+
+        #region Unlock
+
+        string UNLOCK = Lang.Get("UNLOCK_SECTION");
+        
+        ChuteIsUnlock = cfg.BindSyncedEntry(
+            new ConfigDefinition(UNLOCK, "ChuteIsUnlock"),
+            true,
+            new ConfigDescription(Lang.Get("DESCRIPTION_CHUTE_IS_UNLOCK"))
+        );
+        ChuteInteract.IsUpgrade = ChuteIsUnlock.Value;
+        
+        ChuteUnlockCost = cfg.BindSyncedEntry(
+            new ConfigDefinition(UNLOCK, "ChuteUnlockCost"),
+            60,
+            new ConfigDescription(Lang.Get("DESCRIPTION_UNLOCK_COST"))
         );
 
         #endregion

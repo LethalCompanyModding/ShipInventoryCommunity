@@ -59,6 +59,13 @@
 
     "NAME_FORCE_UPDATE_UPON_REMOVING": "Force when retrieving",
     "DESCRIPTION_FORCE_UPDATE_UPON_REMOVING": "Forces the update of the cache when you are retrieving an item.",
+
+    "UNLOCK_SECTION": "Unlock",
+    "NAME_CHUTE_IS_UNLOCK": "Is Unlockable",
+    "DESCRIPTION_CHUTE_IS_UNLOCK": "Determines if the chute is an unlockable item or if it is always available.",
+
+    "NAME_UNLOCK_COST": "Unlock Cost",
+    "DESCRIPTION_UNLOCK_COST": "Determines how expensive it is to unlock the chute.",
     
     "SINGLE_RETRIEVE": "Retrieve single",
     "TEXT_SINGLE_RETRIEVE": "You are about to retrieve '{0}'.",
