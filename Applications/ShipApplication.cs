@@ -290,7 +290,7 @@ public class ShipApplication : PageApplication
         
         var screen = CreateScreen(STATUS_TITLE,
             [
-                TextElement.Create(string.Format(SHIP_INFO_TOTAL, ItemManager.GetTotalValue())),
+                TextElement.Create(string.Format(SHIP_INFO_TOTAL, ItemManager.GetTotalValue(false, false))),
                 TextElement.Create(string.Format(
                     SHIP_INFO_COUNT,
                     ItemManager.GetItems().Count(),
@@ -574,7 +574,7 @@ public class ShipApplication : PageApplication
     {
         string text = string.Format(
             TEXT_ALL_RETRIEVE,
-            ItemManager.GetTotalValue()
+            ItemManager.GetTotalValue(false, false)
         );
         
         ConfirmElement(text, () =>

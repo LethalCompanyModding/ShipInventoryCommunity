@@ -38,6 +38,6 @@ internal class StartOfRound_Patches
     [HarmonyPatch(nameof(StartOfRound.GetValueOfAllScrap))]
     private static void GetValueOfAllScrap(ref int __result, bool onlyScrapCollected, bool onlyNewScrap)
     {
-        __result += ItemManager.GetTotalValue(true);
+        __result += ItemManager.GetTotalValue(true, true);
     }
 }

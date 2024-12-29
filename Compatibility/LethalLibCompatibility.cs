@@ -70,13 +70,13 @@ public static class LethalLibCompatibility
         _cachedModdedItems = [];
 
         foreach (var item in LethalLib.Modules.Items.scrapItems)
-            _cachedModdedItems.Add(item.item.ID(item.modName), item.item);
+            _cachedModdedItems.TryAdd(item.item.ID(item.modName), item.item);
 
         foreach (var item in LethalLib.Modules.Items.shopItems)
-            _cachedModdedItems.Add(item.item.ID(item.modName), item.item);
+            _cachedModdedItems.TryAdd(item.item.ID(item.modName), item.item);
 
         foreach (var item in LethalLib.Modules.Items.plainItems)
-            _cachedModdedItems.Add(item.item.ID(item.modName), item.item);
+            _cachedModdedItems.TryAdd(item.item.ID(item.modName), item.item);
     }
 
     private static Item? GetModdedItem(string id)

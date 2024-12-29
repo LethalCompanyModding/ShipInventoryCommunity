@@ -93,7 +93,7 @@ public static class ItemManager
     public static bool HasItems() => cachedItems.Count > 0;
 
     /// <returns>Total value of all the items</returns>
-    public static int GetTotalValue(bool onlyScraps = false)
+    public static int GetTotalValue(bool onlyScraps, bool onlyFromRound)
     {
         var total = 0;
         
@@ -101,7 +101,7 @@ public static class ItemManager
         foreach (var data in cachedItems)
         {
             // Don't count scrap from earlier rounds
-            if (data.PERSISTED_THROUGH_ROUNDS)
+            if (onlyFromRound && data.PERSISTED_THROUGH_ROUNDS)
                 continue;
             
             var item = data.GetItem();
