@@ -16,7 +16,6 @@ namespace ShipInventory;
 [BepInDependency("WhiteSpike.InteractiveTerminalAPI", "1.2.0")]
 [BepInDependency("com.sigurd.csync", "5.0.1")]
 [BepInDependency(LethalLib.Plugin.ModGUID, LethalLib.Plugin.ModVersion)]
-[BepInDependency("SylviBlossom.SmartItemSaving", "1.2.4")]
 [BepInDependency(LethalConfigCompatibility.LETHAL_CONFIG, BepInDependency.DependencyFlags.SoftDependency)]
 public class ShipInventory : BaseUnityPlugin
 {
