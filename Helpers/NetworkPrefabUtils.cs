@@ -14,13 +14,13 @@ internal static class NetworkPrefabUtils
     private class PrefabData
     {
         public Action<GameObject>? onLoad;
+        public Func<bool>? shouldSpawnOnStart;
         public GameObject? gameObject;
-        public bool isUnlockable;
     }
 
     private static readonly Dictionary<string, PrefabData> prefabs = [];
 
-    public static void Register(string name, Action<GameObject>? onLoad = null, bool isUnlockable = false)
+    public static void Register(string name, Action<GameObject>? onLoad = null, Func<bool>? shouldSpawnOnStart = null)
     {
         if (prefabs.ContainsKey(name))
         {
@@ -31,7 +31,7 @@ internal static class NetworkPrefabUtils
         prefabs.Add(name, new PrefabData
         {
             onLoad = onLoad,
-            isUnlockable = isUnlockable
+            shouldSpawnOnStart = shouldSpawnOnStart
         });
     }
         
@@ -95,16 +95,16 @@ internal static class NetworkPrefabUtils
     [HarmonyPatch(typeof(StartOfRound))]
     internal class StartOfRound_Patches
     {
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch(nameof(StartOfRound.Start))]
         private static void SetUpPrefabs(StartOfRound __instance)
         {
             Transform parent = GameObject.Find(Constants.SHIP_PATH).transform;
             bool isHost = __instance.IsServer || __instance.IsHost;
-
+            
             foreach (var (name, data) in prefabs)
             {
-                if (!data.isUnlockable)
+                if (data.shouldSpawnOnStart?.Invoke() ?? true)
                     Setup(parent.transform, name, isHost);
             }
         }

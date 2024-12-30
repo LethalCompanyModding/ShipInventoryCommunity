@@ -1,6 +1,7 @@
 ﻿using BepInEx.Configuration;
 using CSync.Extensions;
 using CSync.Lib;
+using LethalLib.Modules;
 using ShipInventory.Compatibility;
 using ShipInventory.Helpers;
 using ShipInventory.Objects;
@@ -214,6 +215,11 @@ public class Config : SyncedConfig2<Config>
             60,
             new ConfigDescription(Lang.Get("DESCRIPTION_UNLOCK_COST"))
         );
+        ChuteUnlockCost.Changed += (_, e) =>
+        {
+            if (ChuteInteract.UnlockableItem != null)
+                Unlockables.UpdateUnlockablePrice(ChuteInteract.UnlockableItem, e.NewValue);
+        };
 
         #endregion
 

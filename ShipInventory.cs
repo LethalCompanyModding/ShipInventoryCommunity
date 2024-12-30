@@ -92,7 +92,7 @@ public class ShipInventory : BaseUnityPlugin
         Helpers.Logger.Debug("RPCs prepared!");
         
         Helpers.Logger.Debug("Registering all prefabs...");
-        NetworkPrefabUtils.Register(Constants.VENT_PREFAB, LoadVent, ChuteInteract.IsUpgrade);
+        NetworkPrefabUtils.Register(Constants.VENT_PREFAB, LoadVent, () => !ChuteInteract.IsUpgrade && ChuteInteract.Instance == null);
         Helpers.Logger.Debug("All prefabs registered!");
     }
 
@@ -104,9 +104,6 @@ public class ShipInventory : BaseUnityPlugin
         ChuteInteract.SetOffsets(autoParent);
         autoParent.overrideOffset = true;
         
-        if (!ChuteInteract.IsUpgrade)
-            return;
-
         var terminalNode = Bundle.LoadAsset<TerminalNode>("InventoryBuy");
 
         if (terminalNode == null)
@@ -122,11 +119,11 @@ public class ShipInventory : BaseUnityPlugin
             prefabObject = vent,
             unlockableType = 1,
             shopSelectionNode = null,
-            alwaysInStock = true,
+            alwaysInStock = ChuteInteract.IsUpgrade,
             IsPlaceable = true,
             canBeStored = true,
             maxNumber = 1,
-            spawnPrefab = true
+            spawnPrefab = true,
         };
         
         Unlockables.RegisterUnlockable(
@@ -137,11 +134,7 @@ public class ShipInventory : BaseUnityPlugin
             terminalNode, 
             Config.ChuteUnlockCost.Value
         );
-
-        Config.ChuteUnlockCost.Changed += (_, e) =>
-        {
-            Unlockables.UpdateUnlockablePrice(unlock, e.NewValue);
-        };
+        ChuteInteract.UnlockableItem = unlock;
     }
     
     #endregion

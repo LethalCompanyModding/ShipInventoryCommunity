@@ -351,6 +351,7 @@ public class ChuteInteract : NetworkBehaviour
 
     public static bool IsUpgrade;
 
+    public static UnlockableItem? UnlockableItem;
     private PlaceableShipObject? _placeableShipObject;
 
     public static void SetOffsets(AutoParentToShip autoParent)
@@ -379,6 +380,12 @@ public class ChuteInteract : NetworkBehaviour
 
     private void Start()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        
         LAYER_IGNORE = LayerMask.NameToLayer(Constants.LAYER_IGNORE);
         LAYER_INTERACTABLE = LayerMask.NameToLayer(Constants.LAYER_INTERACTABLE);
         LAYER_PROPS = LayerMask.NameToLayer(Constants.LAYER_PROPS);

@@ -63,6 +63,9 @@
       <Reference Include="$(BepinEx)\AinaVT-LethalConfig\LethalConfig\LethalConfig.dll" />
       <Reference Include="$(BepinEx)\Evaisa-LethalLib\LethalLib\LethalLib.dll" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="ThunderStore\WarperSan-ShipInventory\" />
+    </ItemGroup>
 
     <!-- Targets -->
     <PropertyGroup>
