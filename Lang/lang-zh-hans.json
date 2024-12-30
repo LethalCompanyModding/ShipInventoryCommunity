@@ -1,121 +1,121 @@
 {
-    "CHUTE_SECTION": "Chute",
-    "NAME_CHUTE_PERMISSION": "Store Permission",
-    "DESCRIPTION_CHUTE_PERMISSION": "Allows certain employees to store items in the chute.",
+    "CHUTE_SECTION": "储物槽",
+    "NAME_CHUTE_PERMISSION": "存入权限",
+    "DESCRIPTION_CHUTE_PERMISSION": "允许特定员工在储物槽中存放物品。",
 
-    "NAME_REQUIRES_IN_ORBIT": "Only In Orbit",
-    "DESCRIPTION_REQUIRE_IN_ORBIT": "Prevents players from putting items inside the chute when the ship is on a planet.",
+    "NAME_REQUIRES_IN_ORBIT": "仅限轨道中",
+    "DESCRIPTION_REQUIRE_IN_ORBIT": "防止玩家在飞船位于星球上时将物品存入储物槽内。",
 
-    "NAME_TIME_TO_STORE": "Time to store",
-    "DESCRIPTION_TIME_TO_STORE": "Time in seconds to hold to store an item.",
+    "NAME_TIME_TO_STORE": "存入时间",
+    "DESCRIPTION_TIME_TO_STORE": "以秒为单位存入物品所需要的时间。",
 
-    "NAME_TIME_TO_RETRIEVE": "Time to retrieve",
-    "DESCRIPTION_TIME_TO_RETRIEVE": "Time in seconds between each item spawn.",
+    "NAME_TIME_TO_RETRIEVE": "取出时间",
+    "DESCRIPTION_TIME_TO_RETRIEVE": "以秒为单位取出物品所需要的时间",
 
-    "NAME_STOP_AFTER": "Max Chute Capacity",
-    "DESCRIPTION_STOP_AFTER": "Limits the amount of items that can be spawned inside the chute.\n\nThis is to prevent further lag when retrieve too many items.",
+    "NAME_STOP_AFTER": "最大储物槽容量",
+    "DESCRIPTION_STOP_AFTER": "限制储物槽内可以生成的物品数量。\n\n这是为了防止在取出太多物品时导致进一步卡顿。",
 
-    "NAME_BLACKLIST": "Blacklist",
-    "DESCRIPTION_BLACKLIST": "List of items that are not allowed in the chute.\n\nThe items' name should be separated by a comma (,).\nYou can edit the config directly in the file for a better experience.",
-    
-    "INVENTORY_SECTION": "Inventory",
-    "NAME_INVENTORY_PERMISSION": "Retrieve Permission",
-    "DESCRIPTION_INVENTORY_PERMISSION": "Allows certain employees to retrieve items from the inventory.",
-    
-    "NAME_AS_SAFE": "Safe once stored",
-    "DESCRIPTION_AS_SAFE": "Prevents the ship's inventory from clearing when all players die.",
+    "NAME_BLACKLIST": "黑名单",
+    "DESCRIPTION_BLACKLIST": "不被允许使用储物槽的物品列表。\n\n多个物品名称需以英文逗号分隔 (,)。\n您可以直接在文件中编辑配置以获得更好的体验。",
 
-    "NAME_PERSIST_THROUGH_FIRE": "Persist through fire",
-    "DESCRIPTION_PERSIST_THROUGH_FIRE": "Prevents the ship's inventory from clearing when the crew gets fired.",
+    "INVENTORY_SECTION": "储物箱",
+    "NAME_INVENTORY_PERMISSION": "取出权限",
+    "DESCRIPTION_INVENTORY_PERMISSION": "允许某些员工从储物箱中取出物品。",
 
-    "NAME_MAX_ITEM_COUNT": "Maximum Item Count",
-    "DESCRIPTION_MAX_ITEM_COUNT": "Limits the amount of items that can be inside the ship's inventory.\n\nIf the ship's inventory already has too many items, it won't empty the excess.",
+    "NAME_AS_SAFE": "一存即保",
+    "DESCRIPTION_AS_SAFE": "在团灭时，防止飞船储物箱被清除。",
 
-    "NAME_KEEP_RATE": "Keep Rate",
-    "DESCRIPTION_KEEP_RATE": "Defines how likely each item is to be kept when wiping.",
-    
-    "TERMINAL_SECTION": "Terminal",
-    "NAME_INVENTORY_COMMAND": "Inventory Command",
-    "DESCRIPTION_INVENTORY_COMMAND": "Determines the command to type to access the ship's inventory.",
+    "NAME_PERSIST_THROUGH_FIRE": "开除后保障",
+    "DESCRIPTION_PERSIST_THROUGH_FIRE": "被开除后，防止飞船储物箱被清除。",
 
-    "NAME_YES_PLEASE": "Yes Please!",
-    "DESCRIPTION_YES_PLEASE": "Automatically places the cursor on the 'YES' option when retrieving items.",
-    
-    "NAME_SHOW_CONFIRMATION": "Terminal Confirmation",
-    "DESCRIPTION_SHOW_CONFIRMATION": "Shows the confirmation when retrieving items.",
+    "NAME_MAX_ITEM_COUNT": "最大物品数量",
+    "DESCRIPTION_MAX_ITEM_COUNT": "限制飞船储物箱中可以包含的物品数量。\n\n如果飞船储物箱已经有太多物品，它不会清空多余的物品。",
 
-    "NAME_SHOW_TRADEMARK": "Show Trademark",
-    "DESCRIPTION_SHOW_TRADEMARK": "Determines if the mod shows the company's trademark in the terminal.",
+    "NAME_KEEP_RATE": "保险率",
+    "DESCRIPTION_KEEP_RATE": "定义执行清除时保留每个物品的可能性。",
 
-    "NETWORK_SECTION": "Network",
-    "NAME_INVENTORY_REFRESH_RATE": "Refresh Rate",
-    "DESCRIPTION_INVENTORY_REFRESH_RATE": "Time in seconds between each refresh call.\n\nThe lower the refresh rate is, the more accurate the inventory is. However, it will be more WIFI-hungry.\n\n<b>*You will need to close the lobby*</b>",
+    "TERMINAL_SECTION": "终端",
+    "NAME_INVENTORY_COMMAND": "储物箱命令",
+    "DESCRIPTION_INVENTORY_COMMAND": "定义要输入以访问飞船储物箱的命令。",
 
-    "NAME_INVENTORY_UPDATE_CHECK_SILENCER": "Update Silencer",
-    "DESCRIPTION_INVENTORY_UPDATE_CHECK_SILENCER": "Removes the log message when the inventory is up to date.\n\nIt's recommended to keep this setting as it is, since it can remove crucial information that would allow the authors to debug a problem.",
-    
-    "NAME_FORCE_UPDATE_UPON_ADDING": "Force when storing",
-    "DESCRIPTION_FORCE_UPDATE_UPON_ADDING": "Forces the update of the cache when you are storing an item.",
+    "NAME_YES_PLEASE": "是的麻烦！",
+    "DESCRIPTION_YES_PLEASE": "取出物品时自动将光标放在 'YES' 选项上。",
 
-    "NAME_FORCE_UPDATE_UPON_REMOVING": "Force when retrieving",
-    "DESCRIPTION_FORCE_UPDATE_UPON_REMOVING": "Forces the update of the cache when you are retrieving an item.",
+    "NAME_SHOW_CONFIRMATION": "终端确认",
+    "DESCRIPTION_SHOW_CONFIRMATION": "在取出物品时显示确认。",
 
-    "UNLOCK_SECTION": "Unlock",
-    "NAME_CHUTE_IS_UNLOCK": "Is Unlockable",
-    "DESCRIPTION_CHUTE_IS_UNLOCK": "Determines if the chute is an unlockable item or if it is always available.",
+    "NAME_SHOW_TRADEMARK": "显示商标",
+    "DESCRIPTION_SHOW_TRADEMARK": "决定 mod 是否在终端中显示公司的商标。",
 
-    "NAME_UNLOCK_COST": "Unlock Cost",
-    "DESCRIPTION_UNLOCK_COST": "Determines how expensive it is to unlock the chute.",
-    
-    "SINGLE_RETRIEVE": "Retrieve single",
-    "TEXT_SINGLE_RETRIEVE": "You are about to retrieve '{0}'.",
-    "SINGLE_RETRIEVE_MESSAGE": "Select the desired item to retrieve it.",
+    "NETWORK_SECTION": "网络",
+    "NAME_INVENTORY_REFRESH_RATE": "刷新率",
+    "DESCRIPTION_INVENTORY_REFRESH_RATE": "以秒为单位每次刷新调用之间的时间。\n\n刷新率越低，清单越准确。但是，它会更渴望 WIFI。\n\n<b>*您需要关闭大厅*</b>",
+
+    "NAME_INVENTORY_UPDATE_CHECK_SILENCER": "更新沉默者",
+    "DESCRIPTION_INVENTORY_UPDATE_CHECK_SILENCER": "当清单为最新时删除日志消息。\n\n建议保持此设置不变，因为它可以删除允许作者调试问题的关键信息。",
+
+    "NAME_FORCE_UPDATE_UPON_ADDING": "存入时强制进行",
+    "DESCRIPTION_FORCE_UPDATE_UPON_ADDING": "在存入物品时强制更新缓存。",
+
+    "NAME_FORCE_UPDATE_UPON_REMOVING": "取出时强制进行",
+    "DESCRIPTION_FORCE_UPDATE_UPON_REMOVING": "在取出物品时强制更新缓存。",
+
+    "UNLOCK_SECTION": "解锁",
+    "NAME_CHUTE_IS_UNLOCK": "是个解锁项",
+    "DESCRIPTION_CHUTE_IS_UNLOCK": "决定储物槽是可解锁项还是始终可用。",
+
+    "NAME_UNLOCK_COST": "解锁价格",
+    "DESCRIPTION_UNLOCK_COST": "定义解锁储物槽的成本。",
+
+    "SINGLE_RETRIEVE": "以单项取出",
+    "TEXT_SINGLE_RETRIEVE": "您将要取出 '{0}'。",
+    "SINGLE_RETRIEVE_MESSAGE": "选择所需的物品以取出它。",
     "SINGLE_ITEM_FORMAT": "{0} (${1})",
 
-    "TYPE_RETRIEVE": "Retrieve type",
-    "TEXT_TYPE_RETRIEVE": "You are about to retrieve {0} instances of '{1}'.",
-    "TYPE_RETRIEVE_MESSAGE": "Select the desired type to retrieve all the items of this type.",
+    "TYPE_RETRIEVE": "以类型取出",
+    "TEXT_TYPE_RETRIEVE": "您将要取出 {0} 个 '{1}'。",
+    "TYPE_RETRIEVE_MESSAGE": "选择所需的类型以取出此类型的所有物品。",
     "TYPE_ITEM_FORMAT": "{0} x{1} (${2})",
 
-    "RANDOM_RETRIEVE": "Retrieve random",
-    "TEXT_RANDOM_RETRIEVE": "You are about to retrieve '{0}'.",
+    "RANDOM_RETRIEVE": "随机取出",
+    "TEXT_RANDOM_RETRIEVE": "您将要取出 '{0}'。",
 
-    "ALL_RETRIEVE": "Retrieve all",
-    "TEXT_ALL_RETRIEVE": "You are about to retrieve everything (${0}).",
+    "ALL_RETRIEVE": "全部取出",
+    "TEXT_ALL_RETRIEVE": "您将要取出全部 (${0})。",
 
-    "SHIP_INFO": "Print status",
-    "SHIP_INFO_TOTAL":        "Total value: ${0}",
-    "SHIP_INFO_COUNT":        "Number of items: {0} / {1}",
-    "SHIP_INFO_IN_ORBIT":     "Opened on moons: {0}",
-    "SHIP_INFO_KEEP_HEADER":  "Keep inventory",
-    "SHIP_INFO_KEEP_ON_WIPE": "├─ On Crew Wipe: {0}",
-    "SHIP_INFO_KEEP_ON_FIRE": "└─ When Fired  : {0}",
+    "SHIP_INFO": "打印状态",
+    "SHIP_INFO_TOTAL":        "总价值: ${0}",
+    "SHIP_INFO_COUNT":        "物品数量: {0} / {1}",
+    "SHIP_INFO_IN_ORBIT":     "着陆时打开: {0}",
+    "SHIP_INFO_KEEP_HEADER":  "储物箱保险",
+    "SHIP_INFO_KEEP_ON_WIPE": "├─ 团灭时: {0}",
+    "SHIP_INFO_KEEP_ON_FIRE": "└─ 开除时: {0}",
 
-    "CONFIRMATION_TITLE": "Confirmation",
-    "CONFIRMATION_MESSAGE": "Do you really want to proceed?",
-    
-    "PERMISSION_MISSING_TITLE": "Not Authorized",
-    "PERMISSION_MISSING_MESSAGE": "You do not have the necessary permissions to complete this task.",
+    "CONFIRMATION_TITLE": "请确认",
+    "CONFIRMATION_MESSAGE": "您真的要继续吗？",
 
-    "POSITIVE_ANSWER": "Yes",
-    "NEGATIVE_ANSWER": "No",
-    "BLOCKED_ANSWER": "Understood",
+    "PERMISSION_MISSING_TITLE": "未授权",
+    "PERMISSION_MISSING_MESSAGE": "您没有完成此功能所需的权限。",
 
-    "PREVIOUS": "[ PREVIOUS ]",
-    "NEXT": "[ NEXT ]",
-    "EXIT": "[ EXIT ]",
+    "POSITIVE_ANSWER": "是",
+    "NEGATIVE_ANSWER": "否",
+    "BLOCKED_ANSWER": "了解",
+
+    "PREVIOUS": "[ 上一页 ]",
+    "NEXT": "[ 下一页 ]",
+    "EXIT": "[ 退出 ]",
     "UNKNOWN": "???",
 
-    "WELCOME_MESSAGE": "Welcome aboard, {0} {1}",
-    "HOME_MESSAGE": "Select the desired action to execute from the provided list:",
-    "INVENTORY_TITLE": "Inventory",
-    "STATUS_TITLE": "Status",
+    "WELCOME_MESSAGE": "欢迎到来，{0} {1}",
+    "HOME_MESSAGE": "从提供的列表中选择要执行的所需操作：",
+    "INVENTORY_TITLE": "储物箱",
+    "STATUS_TITLE": "状态",
     "TRADEMARK": "<color=#666666>       [ PROPERTY OF Halden Eletronics © ]</color>",
 
-    "NOT_HOLDING_ITEM": "[Nothing to store]",
-    "ITEM_BLACKLISTED": "[Item blacklisted]",
-    "CHUTE_PERMISSION_MISSING": "[Employee cannot operate]",
-    "ITEM_NOT_ALLOWED": "[Item not allowed]",
-    "NOT_IN_ORBIT": "[Ship must be in orbit]",
-    "INVENTORY_FULL": "[Inventory full]"
+    "NOT_HOLDING_ITEM": "[没什么可储存的]",
+    "ITEM_BLACKLISTED": "[物品在黑名单]",
+    "CHUTE_PERMISSION_MISSING": "[员工无法操作]",
+    "ITEM_NOT_ALLOWED": "[物品不被允许]",
+    "NOT_IN_ORBIT": "[飞船必须在轨道]",
+    "INVENTORY_FULL": "[储物箱已满]"
 }
