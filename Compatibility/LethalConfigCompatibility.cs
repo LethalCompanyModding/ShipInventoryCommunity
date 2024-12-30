@@ -190,7 +190,7 @@ public static class LethalConfigCompatibility
             new BoolCheckBoxOptions
             {
                 Name = Lang.Get("NAME_CHUTE_IS_UNLOCK"),
-                RequiresRestart = true
+                RequiresRestart = false
             }));
         
         LethalConfigManager.AddConfigItem(new IntSliderConfigItem(config.ChuteUnlockCost.Entry, new IntSliderOptions
@@ -201,6 +201,14 @@ public static class LethalConfigCompatibility
             RequiresRestart = false
         }));
 
+        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(config.ChuteUnlockName.Entry, new TextInputFieldOptions
+        {
+            Name = Lang.Get("NAME_UNLOCK_NAME"),
+            TrimText = true,
+            NumberOfLines = 1,
+            RequiresRestart = true
+        }));
+        
         #endregion
 
         LethalConfigManager.SkipAutoGenFor(config.LangUsed);

@@ -14,13 +14,11 @@ internal static class NetworkPrefabUtils
     private class PrefabData
     {
         public Action<GameObject>? onLoad;
-        public Func<bool>? shouldSpawnOnStart;
-        public GameObject? gameObject;
     }
 
     private static readonly Dictionary<string, PrefabData> prefabs = [];
 
-    public static void Register(string name, Action<GameObject>? onLoad = null, Func<bool>? shouldSpawnOnStart = null)
+    public static void Register(string name, Action<GameObject>? onLoad = null)
     {
         if (prefabs.ContainsKey(name))
         {
@@ -30,52 +28,19 @@ internal static class NetworkPrefabUtils
         
         prefabs.Add(name, new PrefabData
         {
-            onLoad = onLoad,
-            shouldSpawnOnStart = shouldSpawnOnStart
+            onLoad = onLoad
         });
     }
         
-    private static GameObject? Get(string name) => prefabs.TryGetValue(name, out var data) ? data.gameObject : null;
-
-    private static GameObject? AddToNetwork(string name, PrefabData data)
+    private static void AddToNetwork(string name, PrefabData data)
     {
         var prefab = Bundle.LoadAsset<GameObject>(name);
 
         if (prefab is null)
-            return null;
+            return;
 
         data.onLoad?.Invoke(prefab);
         NetworkManager.Singleton.AddNetworkPrefab(prefab);
-        return prefab;
-    }
-    
-    private static void Setup(Transform parent, string name, bool isHost)
-    {
-        if (isHost)
-            Spawn(parent, name);
-    }
-
-    private static void Spawn(Transform parent, string name)
-    {
-        var prefab = Get(name);
-
-        if (prefab == null)
-        {
-            Logger.Error($"The prefab '{name}' was not found in the bundle!");
-            return;
-        }
-
-        var obj = UnityEngine.Object.Instantiate(prefab);
-
-        if (obj == null)
-        {
-            Logger.Error($"Could not create a new instance of '{name}'!");
-            return;
-        }
-
-        var networkObj = obj.GetComponent<NetworkBehaviour>().NetworkObject;
-        networkObj.Spawn();
-        networkObj.TrySetParent(parent);
     }
     
     #region Patches
@@ -88,25 +53,7 @@ internal static class NetworkPrefabUtils
         private static void AddPrefabsToNetwork(GameNetworkManager __instance)
         {
             foreach (var (name, data) in prefabs)
-                data.gameObject = AddToNetwork(name, data);
-        }
-    }
-
-    [HarmonyPatch(typeof(StartOfRound))]
-    internal class StartOfRound_Patches
-    {
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(StartOfRound.Start))]
-        private static void SetUpPrefabs(StartOfRound __instance)
-        {
-            Transform parent = GameObject.Find(Constants.SHIP_PATH).transform;
-            bool isHost = __instance.IsServer || __instance.IsHost;
-            
-            foreach (var (name, data) in prefabs)
-            {
-                if (data.shouldSpawnOnStart?.Invoke() ?? true)
-                    Setup(parent.transform, name, isHost);
-            }
+                AddToNetwork(name, data);
         }
     }
 

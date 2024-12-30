@@ -15,6 +15,7 @@ public static class Constants
     public const string MOD_ICON = "icon"; // Name of the mod's icon
     public const string BUNDLE = "ShipInventory.Resources.si-bundle"; // Name of the bundle
     public const string ERROR_ITEM_ASSET = "ErrorItem"; // Name of the item
+    public const string INVENTORY_BUY_TERMINAL_NODE = "InventoryBuy"; // Name of the terminal node to buy
     
     // --- LAYERS ---
     public const string LAYER_PROPS = "Props"; // Name of the layer Props

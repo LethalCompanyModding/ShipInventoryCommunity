@@ -62,10 +62,13 @@
 
     "UNLOCK_SECTION": "Unlock",
     "NAME_CHUTE_IS_UNLOCK": "Is Unlockable",
-    "DESCRIPTION_CHUTE_IS_UNLOCK": "Determines if the chute is an unlockable item or if it is always available.",
+    "DESCRIPTION_CHUTE_IS_UNLOCK": "Determines if the chute is an unlockable item or if it is always available.\n\n<b>*You will need to close the lobby*</b>",
 
     "NAME_UNLOCK_COST": "Unlock Cost",
     "DESCRIPTION_UNLOCK_COST": "Determines how expensive it is to unlock the chute.",
+
+    "NAME_UNLOCK_NAME": "Unlock Cost",
+    "DESCRIPTION_UNLOCK_NAME": "Determines the text to type in order to unlock the chute.\n\nNote that some texts like 'inventory' can already been taken by other unlockables.",
     
     "SINGLE_RETRIEVE": "Retrieve single",
     "TEXT_SINGLE_RETRIEVE": "You are about to retrieve '{0}'.",
@@ -108,6 +111,8 @@
 
     "WELCOME_MESSAGE": "Welcome aboard, {0} {1}",
     "HOME_MESSAGE": "Select the desired action to execute from the provided list:",
+    "LOCKED_MESSAGE": "You do not possess the required equipment on board to utilize this function.",
+    "LOCKED_SUB_MESSAGE": "Please consider buying or restoring the inventory by typing '{0}'.",
     "INVENTORY_TITLE": "Inventory",
     "STATUS_TITLE": "Status",
     "TRADEMARK": "<color=#666666>       [ PROPERTY OF Halden Eletronics © ]</color>",

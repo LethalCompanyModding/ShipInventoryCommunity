@@ -40,4 +40,31 @@ internal class StartOfRound_Patches
     {
         __result += ItemManager.GetTotalValue(true, true);
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(StartOfRound.LoadUnlockables))]
+    private static void UnlockChute(StartOfRound __instance)
+    {
+        if (ShipInventory.Config.ChuteIsUnlock)
+            return;
+        
+        int index = -1;
+
+        for (int i = 0; i < __instance.unlockablesList.unlockables.Count; i++)
+        {
+            if (__instance.unlockablesList.unlockables[i] == ChuteInteract.UnlockableItem)
+            {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1)
+        {
+            Logger.Error("Could not find the chute as an unlockable.");
+            return;
+        }
+
+        __instance.UnlockShipObject(index);
+    }
 }

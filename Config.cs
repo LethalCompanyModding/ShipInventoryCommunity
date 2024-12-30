@@ -44,6 +44,7 @@ public class Config : SyncedConfig2<Config>
     // Unlock
     [SyncedEntryField] public readonly SyncedEntry<bool> ChuteIsUnlock;
     [SyncedEntryField] public readonly SyncedEntry<int> ChuteUnlockCost;
+    [SyncedEntryField] public readonly SyncedEntry<string> ChuteUnlockName;
     
     public enum PermissionLevel { HOST_ONLY, CLIENTS_ONLY, EVERYONE, NO_ONE  }
 
@@ -208,7 +209,6 @@ public class Config : SyncedConfig2<Config>
             true,
             new ConfigDescription(Lang.Get("DESCRIPTION_CHUTE_IS_UNLOCK"))
         );
-        ChuteInteract.IsUpgrade = ChuteIsUnlock.Value;
         
         ChuteUnlockCost = cfg.BindSyncedEntry(
             new ConfigDefinition(UNLOCK, "ChuteUnlockCost"),
@@ -220,6 +220,12 @@ public class Config : SyncedConfig2<Config>
             if (ChuteInteract.UnlockableItem != null)
                 Unlockables.UpdateUnlockablePrice(ChuteInteract.UnlockableItem, e.NewValue);
         };
+
+        ChuteUnlockName = cfg.BindSyncedEntry(
+            new ConfigDefinition(UNLOCK, "ChuteUnlockName"),
+            "ship inventory",
+            new ConfigDescription(Lang.Get("DESCRIPTION_UNLOCK_NAME"))
+        );
 
         #endregion
 

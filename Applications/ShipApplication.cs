@@ -22,7 +22,16 @@ public class ShipApplication : PageApplication
     #region Application
 
     /// <inheritdoc/>
-    public override void Initialization() => MainScreen(0);
+    public override void Initialization()
+    {
+        if (ChuteInteract.Instance == null)
+        {
+            LockedScreen();
+            return;
+        }
+        
+        MainScreen(0);
+    }
 
     /// <inheritdoc/>
     protected override int GetEntriesPerPage<T>(T[] entries) => Constants.ITEMS_PER_PAGE;
@@ -309,6 +318,42 @@ public class ShipApplication : PageApplication
         SwitchScreen(screen, options, true);
 
         RegisterExitAction(_ => MainScreen(getInfoIndex));
+    }
+
+    #endregion
+
+    #region Locked Screen
+
+    private readonly string LOCKED_MESSAGE = Lang.Get("LOCKED_MESSAGE");
+    private readonly string LOCKED_SUB_MESSAGE = Lang.Get("LOCKED_SUB_MESSAGE");
+    
+    private void LockedScreen()
+    {
+        var optionMenu = new CursorMenu {
+            cursorIndex = 0,
+            elements = [
+                new CursorElement
+                {
+                    Name = BLOCKED_ANSWER,
+                    Action = () => { /* DO NOTHING */ }
+                }
+            ]
+        };
+        
+        var screen = CreateScreen(INVENTORY_TITLE,
+            [
+                TextElement.Create(LOCKED_MESSAGE),
+                TextElement.Create(" "),
+                TextElement.Create(string.Format(
+                    LOCKED_SUB_MESSAGE,
+                    ShipInventory.Config.ChuteUnlockName.Value
+                )),
+                TextElement.Create(" "),
+                optionMenu
+            ]
+        );
+        currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
+        SwitchScreen(screen, optionMenu, true);
     }
 
     #endregion

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using BepInEx;
@@ -91,7 +92,7 @@ public class ShipInventory : BaseUnityPlugin
         Helpers.Logger.Debug("RPCs prepared!");
         
         Helpers.Logger.Debug("Registering all prefabs...");
-        NetworkPrefabUtils.Register(Constants.VENT_PREFAB, LoadVent, () => !ChuteInteract.IsUpgrade && ChuteInteract.Instance == null);
+        NetworkPrefabUtils.Register(Constants.VENT_PREFAB, LoadVent);
         Helpers.Logger.Debug("All prefabs registered!");
     }
 
@@ -103,22 +104,18 @@ public class ShipInventory : BaseUnityPlugin
         ChuteInteract.SetOffsets(autoParent);
         autoParent.overrideOffset = true;
         
-        var terminalNode = Bundle.LoadAsset<TerminalNode>("InventoryBuy");
+        var terminalNode = Bundle.LoadAsset<TerminalNode>(Constants.INVENTORY_BUY_TERMINAL_NODE);
 
         if (terminalNode == null)
-        {
-            Helpers.Logger.Error("Could not find the terminal node for the inventory. The chute is now always unlocked.");
-            ChuteInteract.IsUpgrade = false;
-            return;
-        }
-        
+            throw new NullReferenceException("Could not find the terminal node for the inventory.");
+
         var unlock = new UnlockableItem
         {
-            unlockableName = "Ship Inventory",
+            unlockableName = Config.ChuteUnlockName.Value,
             prefabObject = vent,
             unlockableType = 1,
             shopSelectionNode = null,
-            alwaysInStock = ChuteInteract.IsUpgrade,
+            alwaysInStock = true,
             IsPlaceable = true,
             canBeStored = true,
             maxNumber = 1,
