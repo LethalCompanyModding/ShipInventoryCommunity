@@ -112,7 +112,7 @@
     "WELCOME_MESSAGE": "欢迎到来，{0} {1}",
     "HOME_MESSAGE": "从提供的列表中选择要执行的所需操作：",
     "LOCKED_MESSAGE": "您没有在飞船中使用此功能所需的设备。",
-    "LOCKED_SUB_MESSAGE": "请考虑通过输入 '{0}' 来购买或恢复储藏箱。",
+    "LOCKED_SUB_MESSAGE": "请考虑通过输入 '{0}' 来购买或恢复储物箱。",
     "INVENTORY_TITLE": "储物箱",
     "STATUS_TITLE": "状态",
     "TRADEMARK": "<color=#666666>       [ PROPERTY OF Halden Eletronics © ]</color>",
