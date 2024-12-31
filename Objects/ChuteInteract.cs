@@ -73,9 +73,6 @@ public class ChuteInteract : NetworkBehaviour
     // ReSharper disable Unity.PerformanceAnalysis
     private IEnumerator SpawnCoroutine()
     {
-        if (_placeableShipObject != null)
-            _placeableShipObject.inUse = true;
-        
         while (spawnQueue.Count > 0)
         {
             // If chute is full, skip
@@ -96,9 +93,6 @@ public class ChuteInteract : NetworkBehaviour
         
         // Mark as completed
         spawnCoroutine = null;
-        
-        if (_placeableShipObject != null)
-            _placeableShipObject.inUse = false;
     }
 
     private NetworkObject? SpawnItemServer(ItemData data)
@@ -349,10 +343,7 @@ public class ChuteInteract : NetworkBehaviour
 
     #region Unlockable
 
-    public static bool IsUpgrade;
-
     public static UnlockableItem? UnlockableItem;
-    private PlaceableShipObject? _placeableShipObject;
 
     public static void SetOffsets(AutoParentToShip autoParent)
     {
@@ -380,12 +371,6 @@ public class ChuteInteract : NetworkBehaviour
 
     private void Start()
     {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        
         LAYER_IGNORE = LayerMask.NameToLayer(Constants.LAYER_IGNORE);
         LAYER_INTERACTABLE = LayerMask.NameToLayer(Constants.LAYER_INTERACTABLE);
         LAYER_PROPS = LayerMask.NameToLayer(Constants.LAYER_PROPS);
@@ -396,8 +381,6 @@ public class ChuteInteract : NetworkBehaviour
 
         itemRestorePoint = transform.Find(Constants.DROP_NODE_PATH);
         spawnParticles = GetComponentInChildren<ParticleSystem>();
-
-        _placeableShipObject = GetComponentInChildren<PlaceableShipObject>();
         
         Instance = this;
     }
@@ -408,6 +391,12 @@ public class ChuteInteract : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         InvokeRepeating(nameof(UpdateInventory), 0, ShipInventory.Config.InventoryRefreshRate.Value);
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        Instance = null;
     }
 
     #endregion

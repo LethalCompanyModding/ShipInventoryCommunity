@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.2.2]() (2024-12-30)
+
+## Fixes
+* Fixed the problems related to the unlock feature
+
+## Additions
+* Added the config 'UnlockName', which defines the command to type to buy/retrieve the chute
+* Added a locked screen when the chute is not present
+
+## Changes
+* Changed 'ChuteIsUnlock' to  only requires a lobby reload
+
+## [1.2.1]() (2024-12-29)
+
+## Fixes:
+* Fixed the languages being wrongly extracted
+* Fixed the chute movement when the chute is not an upgrade
+* Removed the dependency of SmartItemSaving
+
 ## [1.2.0](https://github.com/WarperSan/ShipInventory/releases/tag/1.2.0) (2024-12-29)
 
 ## Fixes:

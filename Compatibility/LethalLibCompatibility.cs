@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ShipInventory.Objects;
+using Logger = ShipInventory.Helpers.Logger;
 
 namespace ShipInventory.Compatibility;
 
@@ -18,7 +19,10 @@ public static class LethalLibCompatibility
         var parts = id.Split('/', StringSplitOptions.RemoveEmptyEntries);
 
         if (parts == null || parts.Length < 2)
-            throw new ArgumentException();
+        {
+            Logger.Error($"The item with the ID '{id}' is invalid.");
+            return (VANILLA_ITEM_MOD, id);
+        }
 
         return (parts[0], parts[1]);
     }
