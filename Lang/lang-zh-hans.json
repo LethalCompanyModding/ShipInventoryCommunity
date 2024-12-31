@@ -62,10 +62,13 @@
 
     "UNLOCK_SECTION": "解锁",
     "NAME_CHUTE_IS_UNLOCK": "是个解锁项",
-    "DESCRIPTION_CHUTE_IS_UNLOCK": "决定储物槽是可解锁项还是始终可用。",
+    "DESCRIPTION_CHUTE_IS_UNLOCK": "决定储物槽是可解锁项还是始终可用。\n\n<b>*您需要关闭大厅*</b>",
 
     "NAME_UNLOCK_COST": "解锁价格",
     "DESCRIPTION_UNLOCK_COST": "定义解锁储物槽的成本。",
+
+    "NAME_UNLOCK_NAME": "解锁价格",
+    "DESCRIPTION_UNLOCK_NAME": "定义解锁储物槽所需输入的文本。\n\n请注意，一些文本例如 'inventory' 已经被其他解锁项占用。",
 
     "SINGLE_RETRIEVE": "以单项取出",
     "TEXT_SINGLE_RETRIEVE": "您将要取出 '{0}'。",
@@ -108,6 +111,8 @@
 
     "WELCOME_MESSAGE": "欢迎到来，{0} {1}",
     "HOME_MESSAGE": "从提供的列表中选择要执行的所需操作：",
+    "LOCKED_MESSAGE": "您没有在飞船中使用此功能所需的设备。",
+    "LOCKED_SUB_MESSAGE": "请考虑通过输入 '{0}' 来购买或恢复储藏箱。",
     "INVENTORY_TITLE": "储物箱",
     "STATUS_TITLE": "状态",
     "TRADEMARK": "<color=#666666>       [ PROPERTY OF Halden Eletronics © ]</color>",
