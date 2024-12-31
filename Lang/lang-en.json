@@ -67,7 +67,7 @@
     "NAME_UNLOCK_COST": "Unlock Cost",
     "DESCRIPTION_UNLOCK_COST": "Determines how expensive it is to unlock the chute.",
 
-    "NAME_UNLOCK_NAME": "Unlock Cost",
+    "NAME_UNLOCK_NAME": "Unlock Name",
     "DESCRIPTION_UNLOCK_NAME": "Determines the text to type in order to unlock the chute.\n\nNote that some texts like 'inventory' can already been taken by other unlockables.",
     
     "SINGLE_RETRIEVE": "Retrieve single",
