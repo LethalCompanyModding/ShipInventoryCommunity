@@ -18,6 +18,7 @@ namespace ShipInventory;
 [BepInDependency("com.sigurd.csync", "5.0.1")]
 [BepInDependency(LethalLib.Plugin.ModGUID, LethalLib.Plugin.ModVersion)]
 [BepInDependency(LethalConfigCompatibility.LETHAL_CONFIG, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(CustomItemBehaviourLibraryCompatibility.CUSTOM_ITEM_BEHAVIOUR_LIBRARY, BepInDependency.DependencyFlags.SoftDependency)]
 public class ShipInventory : BaseUnityPlugin
 {
     public new static Config Config = null!;

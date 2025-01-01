@@ -62,6 +62,7 @@
       <Reference Include="$(BepinEx)\WhiteSpike-Interactive_Terminal_API\InteractiveTerminalAPI\InteractiveTerminalAPI.dll" />
       <Reference Include="$(BepinEx)\AinaVT-LethalConfig\LethalConfig\LethalConfig.dll" />
       <Reference Include="$(BepinEx)\Evaisa-LethalLib\LethalLib\LethalLib.dll" />
+      <Reference Include="$(BepinEx)\WhiteSpike-Custom_Item_Behaviour_Library\CustomItemBehaviourLibrary\CustomItemBehaviourLibrary.dll" />
     </ItemGroup>
     <ItemGroup>
       <Folder Include="ThunderStore\WarperSan-ShipInventory\" />

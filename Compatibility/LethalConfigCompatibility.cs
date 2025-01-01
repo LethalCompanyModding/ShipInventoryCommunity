@@ -13,7 +13,7 @@ public static class LethalConfigCompatibility
     public const string LETHAL_CONFIG = "ainavt.lc.lethalconfig";
     private static bool? _enabled;
 
-    public static bool enabled
+    public static bool Enabled
     {
         get
         {

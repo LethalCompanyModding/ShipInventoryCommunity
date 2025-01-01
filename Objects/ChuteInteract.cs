@@ -40,11 +40,9 @@ public class ChuteInteract : NetworkBehaviour
 
     private void StoreItem(GrabbableObject item)
     {
+        var data = ConvertItemHelper.ConvertItem(item);
+
         // Send store request to server
-        ItemData data = new ItemData(item);
-
-        item.OnBroughtToShip();
-
         StoreItems(data);
     }
 

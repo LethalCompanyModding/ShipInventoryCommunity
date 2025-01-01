@@ -229,7 +229,7 @@ public class Config : SyncedConfig2<Config>
 
         #endregion
 
-        if (LethalConfigCompatibility.enabled)
+        if (LethalConfigCompatibility.Enabled)
             LethalConfigCompatibility.AddConfigs(this);
     }
 }
