@@ -3,7 +3,6 @@
 public static class Constants
 {
     // --- PATHS ---
-    public const string SHIP_PATH = "Environment/HangarShip"; // Path for the ship
     public const string DROP_NODE_PATH = "DropNode"; // Path to the drop node
 
     // --- TAGS ---

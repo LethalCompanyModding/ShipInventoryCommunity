@@ -136,7 +136,7 @@ public static class ItemManager
     /// <summary>
     /// Assigns a new key to the cache
     /// </summary>
-    private static void NewKey() => cacheKey = cacheKey = Guid.NewGuid().ToString();
+    private static void NewKey() => cacheKey = Guid.NewGuid().ToString();
 
     #endregion
     

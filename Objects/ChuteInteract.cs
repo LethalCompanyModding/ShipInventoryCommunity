@@ -181,17 +181,12 @@ public class ChuteInteract : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void CheckInventoryServerRpc(string? _updateKey, string? key, params ulong[] ids)
     {
-        var target = new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams
-            {
-                TargetClientIds = ids
-            }
-        };
+        ClientRpcParams target = default;
+        target.Send.TargetClientIds = ids;
 
         var localKey = ItemManager.GetKey();
         
-        // Check if cache is deprecated
+        // Check if client's cache is deprecated
         if (localKey != key)
         {
             UpdateInventoryClientRpc(_updateKey, localKey, ItemManager.GetItems(), target);
@@ -206,18 +201,18 @@ public class ChuteInteract : NetworkBehaviour
     {
         Logger.Debug($"Adding {items.Length} new items...");
         ItemManager.AddItems(items);
-        Logger.Debug($"The inventory has been updated: '{ItemManager.GetKey() ?? "null"}'.");
+        Logger.Debug($"The inventory has been updated: '{ItemManager.GetKey()}'.");
 
-        if (ShipInventory.Config.ForceUpdateUponAdding.Value)
+        if (!ShipInventory.Config.ForceUpdateUponAdding.Value)
+            return;
+        
+        ForceUpdateClientRpc(new ClientRpcParams
         {
-            ForceUpdateClientRpc(new ClientRpcParams
+            Send = new ClientRpcSendParams
             {
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = ids
-                }
-            });
-        }
+                TargetClientIds = ids
+            }
+        });
     }
     
     [ServerRpc(RequireOwnership = false)]
@@ -241,16 +236,15 @@ public class ChuteInteract : NetworkBehaviour
         spawnCoroutine ??= StartCoroutine(SpawnCoroutine());
         Logger.Debug($"{filteredItems.Length} items enqueued!");
         
-        if (ShipInventory.Config.ForceUpdateUponRemoving.Value)
+        if (!ShipInventory.Config.ForceUpdateUponRemoving.Value)
+            return;
+        ForceUpdateClientRpc(new ClientRpcParams
         {
-            ForceUpdateClientRpc(new ClientRpcParams
+            Send = new ClientRpcSendParams
             {
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = ids
-                }
-            });
-        }
+                TargetClientIds = ids
+            }
+        });
     }
 
     #endregion
@@ -259,7 +253,7 @@ public class ChuteInteract : NetworkBehaviour
 
     private string? updateKey;
 
-    private static ulong GetClientID() => GameNetworkManager.Instance.localPlayerController.playerClientId;
+    private static ulong GetClientID(PlayerControllerB? player = null) => (player ?? GameNetworkManager.Instance.localPlayerController).actualClientId;
 
     [ClientRpc]
     private void UpdateInventoryClientRpc(string? _updateKey, string? key, ItemData[] data, ClientRpcParams routing = default)
@@ -281,18 +275,21 @@ public class ChuteInteract : NetworkBehaviour
     private void InventoryUpToDateClientRpc(string? _updateKey, ClientRpcParams routing = default)
     {
         if (updateKey != _updateKey)
+        {
+            Logger.Debug("Received an inventory check that was not the one expected.");
             return;
+        }
 
         updateKey = null;
         
         if (ShipInventory.Config.InventoryUpdateCheckSilencer.Value)
             return;
         
-        Logger.Debug("The inventory is up to date!");
+        Logger.Debug($"The inventory is up to date! ({ItemManager.GetKey()})");
     }
 
     [ClientRpc]
-    private void ForceUpdateClientRpc(ClientRpcParams routing = default) => UpdateInventory();
+    private void ForceUpdateClientRpc(ClientRpcParams routing = default) => StartNewCheck();
 
     #endregion
     
@@ -353,22 +350,51 @@ public class ChuteInteract : NetworkBehaviour
 
     #endregion
 
+    #region Update
+
+    private Coroutine? updateCoroutine;
+
+    private void StartNewCheck()
+    {
+        if (updateCoroutine != null)
+        {
+            StopCoroutine(updateCoroutine);
+            updateCoroutine = null;
+        }
+        
+        updateCoroutine = StartCoroutine(UpdateInventory());
+    }
+    
+    private IEnumerator UpdateInventory()
+    {
+        PlayerControllerB? player;
+
+        do
+        {
+            player = GameNetworkManager.Instance?.localPlayerController;
+            yield return null;
+        } while (player == null);
+        
+        if (player.IsHost)
+            yield break;
+
+        while (true)
+        {
+            updateKey = System.Guid.NewGuid().ToString();
+            CheckInventoryServerRpc(updateKey, ItemManager.GetKey(), GetClientID(player));
+            
+            yield return new WaitForSeconds(ShipInventory.Config.InventoryRefreshRate.Value);
+        }
+    }
+
+    #endregion
+
     #region MonoBehaviour
 
     private int LAYER_IGNORE = -1; 
     private int LAYER_INTERACTABLE = -1;
     private int LAYER_PROPS = -1;
     
-    // Ask server to check cache
-    private void UpdateInventory()
-    {
-        if (GameNetworkManager.Instance?.localPlayerController == null)
-            return;
-
-        updateKey = System.Guid.NewGuid().ToString();
-        CheckInventoryServerRpc(updateKey, ItemManager.GetKey(), GetClientID());
-    }
-
     private void Start()
     {
         LAYER_IGNORE = LayerMask.NameToLayer(Constants.LAYER_IGNORE);
@@ -383,20 +409,16 @@ public class ChuteInteract : NetworkBehaviour
         spawnParticles = GetComponentInChildren<ParticleSystem>();
         
         Instance = this;
+        StartNewCheck();
     }
 
     private void Update() => UpdateTrigger();
-
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        InvokeRepeating(nameof(UpdateInventory), 0, ShipInventory.Config.InventoryRefreshRate.Value);
-    }
 
     public override void OnDestroy()
     {
         base.OnDestroy();
         Instance = null;
+        ItemManager.ClearCache();
     }
 
     #endregion
