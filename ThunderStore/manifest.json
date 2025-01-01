@@ -1,6 +1,6 @@
 ﻿{
   "name": "ShipInventory",
-  "version_number": "1.2.2",
+  "version_number": "1.2.3",
   "website_url": "https://github.com/WarperSan/ShipInventory",
   "description": "Adds an inventory to the ship, allowing it to store items and retrieve them.",
   "dependencies": [

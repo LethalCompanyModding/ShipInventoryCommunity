@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.2.3]() (2025-01-01)
+
+## Fixes
+* Fixed a type in the english version of the configs
+* Fixed typo in ItemManager.cs
+* Fixed the client desync when a client leaves and rejoin
+
+## Additions
+* Added a simplified chinese version of the configs (by [CoolLKKPS](https://github.com/CoolLKKPS))
+* Added a way for other mods to define how an item should convert into data (Helpers/ConvertItemHelper)
+* Added a compatibility with Shopping Carts and any container item from [Custom Item Behaviour Library](https://thunderstore.io/c/lethal-company/p/WhiteSpike/Custom_Item_Behaviour_Library/)
+
+## Changes
+* Removed the update for the host, due to it being unnecessary
+* Changed the belt bags to store themselves and their items instead of just themselves
+* Softened the error when an item has an invalid ID (Exception => Logged Error)
+
 ## [1.2.2]() (2024-12-30)
 
 ## Fixes
