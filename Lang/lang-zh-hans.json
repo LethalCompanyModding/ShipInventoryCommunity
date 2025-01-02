@@ -67,7 +67,7 @@
     "NAME_UNLOCK_COST": "解锁价格",
     "DESCRIPTION_UNLOCK_COST": "定义解锁储物槽的成本。",
 
-    "NAME_UNLOCK_NAME": "解锁价格",
+    "NAME_UNLOCK_NAME": "解锁项名称",
     "DESCRIPTION_UNLOCK_NAME": "定义解锁储物槽所需输入的文本。\n\n请注意，一些文本例如 'inventory' 已经被其他解锁项占用。",
 
     "SINGLE_RETRIEVE": "以单项取出",
