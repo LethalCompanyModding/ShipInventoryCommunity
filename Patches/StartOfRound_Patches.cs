@@ -67,4 +67,8 @@ internal class StartOfRound_Patches
 
         __instance.UnlockShipObject(index);
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(StartOfRound.ResetShip))]
+    private static void UnlockChuteBack(StartOfRound __instance) => UnlockChute(__instance);
 }

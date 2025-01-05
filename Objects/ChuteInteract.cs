@@ -416,6 +416,10 @@ public class ChuteInteract : NetworkBehaviour
     {
         base.OnDestroy();
         Instance = null;
+        
+        if (StartOfRound.Instance.firingPlayersCutsceneRunning && ShipInventory.Config.PersistThroughFire.Value)
+            return;
+        
         ItemManager.ClearCache();
     }
 
