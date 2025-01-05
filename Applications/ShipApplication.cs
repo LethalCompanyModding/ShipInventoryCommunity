@@ -335,7 +335,7 @@ public class ShipApplication : PageApplication
                 new CursorElement
                 {
                     Name = BLOCKED_ANSWER,
-                    Action = () => { /* DO NOTHING */ }
+                    Action = () => OnScreenExit(new CallbackContext())
                 }
             ]
         };
