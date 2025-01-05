@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using ShipInventory.Objects;
 
 namespace ShipInventory.Helpers;
@@ -147,10 +148,19 @@ public static class ItemManager
     {
         BLACKLIST.Clear();
         foreach (var s in blacklistString.Split(',', StringSplitOptions.RemoveEmptyEntries))
-            BLACKLIST.Add(s);
+        {
+            if (s == null)
+                continue;
+            
+            BLACKLIST.Add("^" + s.Trim() + "$");
+        }
     }
 
-    public static bool IsBlacklisted(Item item) => BLACKLIST.Contains(item.itemName.ToLower());
+    public static bool IsBlacklisted(Item item)
+    {
+        var name = item.itemName.ToLower();
+        return BLACKLIST.Any(s => Regex.IsMatch(name, s));
+    }
 
     #endregion
 }
