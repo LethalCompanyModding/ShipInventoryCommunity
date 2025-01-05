@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using InteractiveTerminalAPI.UI;
 using InteractiveTerminalAPI.UI.Application;
@@ -113,9 +116,9 @@ public class ShipApplication : PageApplication
         }
     }
 
-    private System.Action<CallbackContext>? LastExitPerformedAction;
+    private Action<CallbackContext>? LastExitPerformedAction;
 
-    private void RegisterExitAction(System.Action<CallbackContext> action)
+    private void RegisterExitAction(Action<CallbackContext> action)
     {
         UnregisterExitAction();
         LastExitPerformedAction = action;
@@ -159,9 +162,9 @@ public class ShipApplication : PageApplication
     private readonly string PERMISSION_MISSING_TITLE = Lang.Get("PERMISSION_MISSING_TITLE");
     private readonly string PERMISSION_MISSING_MESSAGE = Lang.Get("PERMISSION_MISSING_MESSAGE");
 
-    private System.Action? ConfirmExitCallback;
+    private Action? ConfirmExitCallback;
     
-    private void ConfirmElement(string message, System.Action? confirmCallback, System.Action? declineCallback = null)
+    private void ConfirmElement(string message, Action? confirmCallback, Action? declineCallback = null)
     {
         // If skip confirmation, skip
         if (!ShipInventory.Config.ShowConfirmation.Value)
@@ -266,6 +269,56 @@ public class ShipApplication : PageApplication
     }
 
     private void OnConfirmExit(CallbackContext context) => ConfirmExitCallback?.Invoke();
+
+    private void CreateItemPages<T>(T[] items, int selectedIndex, string text, Func<T, int, bool, CursorElement> render, int returnIndex)
+    {
+        var ENTRIES_PER_PAGE = GetEntriesPerPage<int>([]);
+
+        int cursorCount = items.Length;
+        (T[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(items);
+
+        for (int i = 0; i < pageGroups.Length; i++)
+        {
+            var elements = new CursorElement[pageGroups[i].Length];
+            for (int j = 0; j < elements.Length; j++)
+            {
+                var data = pageGroups[i][j];
+                
+                // It's normal to have default entries (the array is page-sized, but there may be fewer entries)
+                if (data == null || data.Equals(default(T)))
+                    continue;
+
+                elements[j] = render.Invoke(data, i * ENTRIES_PER_PAGE + j, cursorCount == 1);
+            }
+
+            cursorMenus[i] = new CursorMenu
+            {
+                cursorIndex = 0,
+                elements = elements
+            };
+            screens[i] = CreateScreen(INVENTORY_TITLE,
+                [
+                    TextElement.Create(text),
+                    TextElement.Create(" "),
+                    cursorMenus[i],
+                ]
+            );
+        }
+
+        selectedIndex = Math.Clamp(selectedIndex, 0, cursorCount - 1);
+
+        int currentPageIndex = selectedIndex / ENTRIES_PER_PAGE;
+        int currentCursorIndex = selectedIndex % ENTRIES_PER_PAGE;
+
+        // Set the current page's cursor
+        cursorMenus[currentPageIndex].cursorIndex = currentCursorIndex;
+
+        currentPage = PageCursorElement.Create(currentPageIndex, screens, cursorMenus);
+        currentCursorMenu = currentPage.GetCurrentCursorMenu();
+        currentScreen = currentPage.GetCurrentScreen();
+        
+        RegisterExitAction(_ => MainScreen(returnIndex));
+    }
 
     #endregion
 
@@ -374,7 +427,7 @@ public class ShipApplication : PageApplication
         Action = () => RetrieveSingle()
     };
 
-    private CursorElement RenderSingle(ItemData itemData, bool onlyGroup, int itemIndex)
+    private CursorElement RenderSingle(ItemData itemData, int itemIndex, bool onlyGroup)
     {
         string name = string.Format(
             SINGLE_ITEM_FORMAT,
@@ -406,52 +459,23 @@ public class ShipApplication : PageApplication
     
     private void RetrieveSingle(int selectedIndex = 0)
     {
-        var ENTRIES_PER_PAGE = GetEntriesPerPage<int>([]);
-
-        var items = ItemManager.GetItems();
-        int cursorCount = items.Count();
-        (ItemData[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(items.ToArray());
-
-        for (int i = 0; i < pageGroups.Length; i++)
+        var _items = ItemManager.GetItems();
+        IEnumerable<ItemData> items = ShipInventory.Config.InventorySortOrder.Value switch
         {
-            var elements = new CursorElement[pageGroups[i].Length];
-            for (int j = 0; j < elements.Length; j++)
-            {
-                var itemData = pageGroups[i][j];
-                if (itemData.Equals(default(ItemData)))
-                    // It's normal to have default entries (the array is page-sized, but there may be fewer entries)
-                    continue;
-
-                elements[j] = RenderSingle(itemData, cursorCount == 1, i * ENTRIES_PER_PAGE + j);
-            }
-
-            cursorMenus[i] = new CursorMenu
-            {
-                cursorIndex = 0,
-                elements = elements
-            };
-            screens[i] = CreateScreen(INVENTORY_TITLE,
-                [
-                    TextElement.Create(SINGLE_RETRIEVE_MESSAGE),
-                    TextElement.Create(" "),
-                    cursorMenus[i],
-                ]
-            );
-        }
-
-        selectedIndex = System.Math.Clamp(selectedIndex, 0, cursorCount - 1);
-
-        int currentPageIndex = selectedIndex / ENTRIES_PER_PAGE;
-        int currentCursorIndex = selectedIndex % ENTRIES_PER_PAGE;
-
-        // Set the current page's cursor
-        cursorMenus[currentPageIndex].cursorIndex = currentCursorIndex;
-
-        currentPage = PageCursorElement.Create(currentPageIndex, screens, cursorMenus);
-        currentCursorMenu = currentPage.GetCurrentCursorMenu();
-        currentScreen = currentPage.GetCurrentScreen();
-
-        RegisterExitAction(_ => MainScreen(retrieveSingleIndex));
+            Config.SortOrder.NAME_ASC => _items.OrderBy(i => i.GetItemName()),
+            Config.SortOrder.NAME_DESC => _items.OrderByDescending(i => i.GetItemName()),
+            Config.SortOrder.VALUE_ASC => _items.OrderBy(i => i.SCRAP_VALUE),
+            Config.SortOrder.VALUE_DESC => _items.OrderByDescending(i => i.SCRAP_VALUE),
+            _ => _items
+        };
+        
+        CreateItemPages(
+            items.ToArray(), 
+            selectedIndex, 
+            SINGLE_RETRIEVE_MESSAGE, 
+            RenderSingle,
+            retrieveSingleIndex
+        );
     }
 
     #endregion
@@ -472,7 +496,7 @@ public class ShipApplication : PageApplication
         Action = () => RetrieveType()
     };
 
-    private CursorElement RenderType(IGrouping<string, ItemData> group, bool onlyGroup, int index)
+    private CursorElement RenderType(IGrouping<string, ItemData> group, int index, bool onlyGroup)
     {
         var amount = group.Count();
 
@@ -509,60 +533,24 @@ public class ShipApplication : PageApplication
 
     private void RetrieveType(int selectedIndex = 0)
     {
-        var ENTRIES_PER_PAGE = GetEntriesPerPage<int>([]);
+        var _items = ItemManager.GetItems().GroupBy(i => i.GetItemName());
+        IEnumerable<IGrouping<string, ItemData>> groups = ShipInventory.Config.InventorySortOrder.Value switch
+        {
+            Config.SortOrder.NAME_ASC => _items.OrderBy(i => i.Key),
+            Config.SortOrder.NAME_DESC => _items.OrderByDescending(i => i.Key),
+            Config.SortOrder.VALUE_ASC => _items.OrderBy(i => i.Sum(t => t.SCRAP_VALUE)),
+            Config.SortOrder.VALUE_DESC => _items.OrderByDescending(i => i.Sum(t => t.SCRAP_VALUE)),
+            _ => _items
+        };
         
-        var types = ItemManager.GetItems().GroupBy(i => i.ID);
-        int cursorCount = types.Count();
-        (IGrouping<string, ItemData>[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(types.ToArray());
-
-        for (int i = 0; i < pageGroups.Length; i++)
-        {
-            var elements = new CursorElement[pageGroups[i].Length];
-            for (int j = 0; j < elements.Length; j++)
-            {
-                var group = pageGroups[i][j];
-                
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-                if (group == null)
-                    // It's normal to have null entries (the array is page-sized, but there may be fewer entries)
-                    continue;
-                
-                elements[j] = RenderType(group, cursorCount == 1, i * ENTRIES_PER_PAGE + j);
-            }
-
-            cursorMenus[i] = new CursorMenu
-            {
-                cursorIndex = 0,
-                elements = elements
-            };
-            screens[i] = CreateScreen(INVENTORY_TITLE,
-                [
-                    TextElement.Create(TYPE_RETRIEVE_MESSAGE),
-                    TextElement.Create(" "),
-                    cursorMenus[i]
-                ]
-            );
-        }
-
-        if (selectedIndex >= cursorCount)
-        {
-            selectedIndex = cursorCount - 1;
-        }
-
-        int currentPageIndex = selectedIndex / ENTRIES_PER_PAGE;
-        int currentCursorIndex = selectedIndex % ENTRIES_PER_PAGE;
-
-        // Set the current page's cursor
-        cursorMenus[currentPageIndex].cursorIndex = currentCursorIndex;
-
-        currentPage = PageCursorElement.Create(currentPageIndex, screens, cursorMenus);
-        currentCursorMenu = currentPage.GetCurrentCursorMenu();
-        currentScreen = currentPage.GetCurrentScreen();
-
-        RegisterExitAction(OnRetrieveTypeExit);
+        CreateItemPages(
+            groups.ToArray(), 
+            selectedIndex, 
+            TYPE_RETRIEVE_MESSAGE, 
+            RenderType,
+            retrieveTypeIndex
+        );
     }
-
-    private void OnRetrieveTypeExit(CallbackContext context) => MainScreen(retrieveTypeIndex);
 
     #endregion
 

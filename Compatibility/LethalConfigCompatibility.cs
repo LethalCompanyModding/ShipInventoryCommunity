@@ -118,6 +118,12 @@ public static class LethalConfigCompatibility
             Max = 100,
             RequiresRestart = false
         }));
+        
+        LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<Config.SortOrder>(config.InventorySortOrder.Entry, new EnumDropDownOptions
+        {
+            Name = Lang.Get("NAME_INVENTORY_SORT_ORDER"),
+            RequiresRestart = false
+        }));
 
         #endregion
 

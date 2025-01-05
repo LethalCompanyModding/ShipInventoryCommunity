@@ -46,6 +46,9 @@
 
     "NAME_SHOW_TRADEMARK": "Show Trademark",
     "DESCRIPTION_SHOW_TRADEMARK": "Determines if the mod shows the company's trademark in the terminal.",
+    
+    "NAME_INVENTORY_SORT_ORDER": "Sort Order",
+    "DESCRIPTION_INVENTORY_SORT_ORDER": "Determines in what order the items are displayed in the inventory.",
 
     "NETWORK_SECTION": "Network",
     "NAME_INVENTORY_REFRESH_RATE": "Refresh Rate",

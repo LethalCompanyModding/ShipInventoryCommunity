@@ -28,6 +28,7 @@ public class Config : SyncedConfig2<Config>
     [SyncedEntryField] public readonly SyncedEntry<bool> PersistThroughFire;
     [SyncedEntryField] public readonly SyncedEntry<int> MaxItemCount;
     [SyncedEntryField] public readonly SyncedEntry<float> KeepRate;
+    [SyncedEntryField] public readonly SyncedEntry<SortOrder> InventorySortOrder;
     
     // Terminal
     [SyncedEntryField] public readonly SyncedEntry<string> InventoryCommand;
@@ -47,6 +48,7 @@ public class Config : SyncedConfig2<Config>
     [SyncedEntryField] public readonly SyncedEntry<string> ChuteUnlockName;
     
     public enum PermissionLevel { HOST_ONLY, CLIENTS_ONLY, EVERYONE, NO_ONE  }
+    public enum SortOrder { NONE, NAME_ASC, NAME_DESC, VALUE_ASC, VALUE_DESC }
 
     #endregion
 
@@ -131,6 +133,12 @@ public class Config : SyncedConfig2<Config>
             new ConfigDefinition(INVENTORY, "KeepRate"),
             0f,
             new ConfigDescription(Lang.Get("DESCRIPTION_KEEP_RATE"))
+        );
+        
+        InventorySortOrder = cfg.BindSyncedEntry(
+            new ConfigDefinition(INVENTORY, "InventorySortOrder"),
+            SortOrder.NAME_ASC,
+            new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_SORT_ORDER"))
         );
         
         #endregion
