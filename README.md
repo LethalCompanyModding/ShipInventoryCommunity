@@ -31,9 +31,8 @@ This mod was originally created for 2 reasons:
 ### Special thank to:
 - **minimusubi**: rework of the terminal UI
 
-## Donate
-
-Help support the development and maintenance of the mod ❤️
+## Support
+If you enjoy my work, consider supporting me on Ko-Fi ❤️
 
 [![kofi](https://img.shields.io/badge/kofi-%23F16061.svg?&style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/warpersan)
 
