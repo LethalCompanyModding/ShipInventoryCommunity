@@ -46,6 +46,12 @@
 
     "NAME_SHOW_TRADEMARK": "显示商标",
     "DESCRIPTION_SHOW_TRADEMARK": "决定 mod 是否在终端中显示公司的商标。",
+    
+    "NAME_INVENTORY_SORT_ORDER": "排序顺序",
+    "DESCRIPTION_INVENTORY_SORT_ORDER": "决定项目在清单中的显示顺序。",
+    
+    "NAME_KEEP_REMOVE_ALL": "允许取出全部",
+    "DESCRIPTION_KEEP_REMOVE_ALL": "决定是否为所有玩家启用 '全部取出' 选项。",
 
     "NETWORK_SECTION": "网络",
     "NAME_INVENTORY_REFRESH_RATE": "刷新率",
@@ -94,10 +100,10 @@
     "SHIP_INFO_KEEP_ON_WIPE": "├─ 团灭时: {0}",
     "SHIP_INFO_KEEP_ON_FIRE": "└─ 开除时: {0}",
 
-    "CONFIRMATION_TITLE": "请确认",
+    "CONFIRMATION_TITLE": "QueRen",
     "CONFIRMATION_MESSAGE": "您真的要继续吗？",
 
-    "PERMISSION_MISSING_TITLE": "未授权",
+    "PERMISSION_MISSING_TITLE": "X----X",
     "PERMISSION_MISSING_MESSAGE": "您没有完成此功能所需的权限。",
 
     "POSITIVE_ANSWER": "是",
@@ -113,8 +119,8 @@
     "HOME_MESSAGE": "从提供的列表中选择要执行的所需操作：",
     "LOCKED_MESSAGE": "您没有在飞船中使用此功能所需的设备。",
     "LOCKED_SUB_MESSAGE": "请考虑通过输入 '{0}' 来购买或恢复储物箱。",
-    "INVENTORY_TITLE": "储物箱",
-    "STATUS_TITLE": "状态",
+    "INVENTORY_TITLE": "Inventory",
+    "STATUS_TITLE": "ZhuangTai",
     "TRADEMARK": "<color=#666666>       [ PROPERTY OF Halden Eletronics © ]</color>",
 
     "NOT_HOLDING_ITEM": "[没什么可储存的]",
