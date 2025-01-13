@@ -152,7 +152,7 @@ public static class ItemManager
             if (s == null)
                 continue;
             
-            BLACKLIST.Add("^" + s.Trim() + "$");
+            BLACKLIST.Add("^" + s.Trim().ToLower() + "$");
         }
     }
 
