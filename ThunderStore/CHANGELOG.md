@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.2.4]() (2025-01-12)
+## Fixes
+* Fixed an issue where selecting "Understood" does nothing
+* Fixed the blacklist to ignore whitespaces before and after items
+* Fixed the chute not respawning after fire when it's not an upgrade
+* Fixed the chute clearing itself even when 'PersistentThroughFire' was set to true
+
+## Additions
+* Added the config 'InventorySortOrder', which allows to show the inventory in four different orders 
+* Added the config 'KeepRemovalAll', which allows to enable/disable the 'retrieve all' option for all players
+* Added compatibility with OpenMonitors, now adding the total in the chute to the Loot monitor
+* Added a support link in the README.md
+* Added a license in the README.md
+
+## Changes
+* Changed the blacklist to support REGEX patterns
+
 ## [1.2.3]() (2025-01-01)
 
 ## Fixes
