@@ -49,6 +49,9 @@
     
     "NAME_INVENTORY_SORT_ORDER": "Sort Order",
     "DESCRIPTION_INVENTORY_SORT_ORDER": "Determines in what order the items are displayed in the inventory.",
+    
+    "NAME_KEEP_REMOVE_ALL": "Allow Retrieve All",
+    "DESCRIPTION_KEEP_REMOVE_ALL": "Determines if the option 'retrieve all' is enable for all players.",
 
     "NETWORK_SECTION": "Network",
     "NAME_INVENTORY_REFRESH_RATE": "Refresh Rate",

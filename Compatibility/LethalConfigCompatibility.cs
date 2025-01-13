@@ -96,12 +96,11 @@ public static class LethalConfigCompatibility
             RequiresRestart = false
         }));
 
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.PersistThroughFire.Entry,
-            new BoolCheckBoxOptions
-            {
-                Name = Lang.Get("NAME_PERSIST_THROUGH_FIRE"),
-                RequiresRestart = false
-            }));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.PersistThroughFire.Entry, new BoolCheckBoxOptions
+        {
+            Name = Lang.Get("NAME_PERSIST_THROUGH_FIRE"),
+            RequiresRestart = false
+        }));
 
         LethalConfigManager.AddConfigItem(new IntSliderConfigItem(config.MaxItemCount.Entry, new IntSliderOptions
         {
@@ -124,6 +123,13 @@ public static class LethalConfigCompatibility
             Name = Lang.Get("NAME_INVENTORY_SORT_ORDER"),
             RequiresRestart = false
         }));
+        
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.KeepRemoveAll.Entry, new BoolCheckBoxOptions
+        {
+            Name = Lang.Get("NAME_KEEP_REMOVE_ALL"),
+            RequiresRestart = false
+        }));
+
 
         #endregion
 

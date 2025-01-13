@@ -598,7 +598,7 @@ public class ShipApplication : PageApplication
     private CursorElement RetrieveAllElement() => new()
     {
         Name = ALL_RETRIEVE,
-        Active = _ => ItemManager.HasItems(),
+        Active = _ => ShipInventory.Config.KeepRemoveAll.Value && ItemManager.HasItems(),
         SelectInactive = false,
         Action = RetrieveAll
     };

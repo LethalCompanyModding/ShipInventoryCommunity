@@ -29,6 +29,7 @@ public class Config : SyncedConfig2<Config>
     [SyncedEntryField] public readonly SyncedEntry<int> MaxItemCount;
     [SyncedEntryField] public readonly SyncedEntry<float> KeepRate;
     [SyncedEntryField] public readonly SyncedEntry<SortOrder> InventorySortOrder;
+    [SyncedEntryField] public readonly SyncedEntry<bool> KeepRemoveAll;
     
     // Terminal
     [SyncedEntryField] public readonly SyncedEntry<string> InventoryCommand;
@@ -139,6 +140,12 @@ public class Config : SyncedConfig2<Config>
             new ConfigDefinition(INVENTORY, "InventorySortOrder"),
             SortOrder.NAME_ASC,
             new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_SORT_ORDER"))
+        );
+        
+        KeepRemoveAll = cfg.BindSyncedEntry(
+            new ConfigDefinition(INVENTORY, "KeepRemoveAll"),
+            true,
+            new ConfigDescription(Lang.Get("DESCRIPTION_KEEP_REMOVE_ALL"))
         );
         
         #endregion
