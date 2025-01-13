@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameNetcodeStuff;
+using ShipInventory.Compatibility;
 using ShipInventory.Helpers;
 using Unity.Netcode;
 using UnityEngine;
@@ -50,6 +51,9 @@ public class ChuteInteract : NetworkBehaviour
     {
         Logger.Debug($"Sending {items.Length} new items...");
         StoreItemsServerRpc(items, GetClientID());
+        
+        if (OpenMonitorsCompatibility.Enabled)
+            OpenMonitorsCompatibility.UpdateMonitor();
     }
     
     #endregion

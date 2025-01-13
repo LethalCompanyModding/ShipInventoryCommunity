@@ -63,7 +63,9 @@
       <Reference Include="$(BepinEx)\AinaVT-LethalConfig\LethalConfig\LethalConfig.dll" />
       <Reference Include="$(BepinEx)\Evaisa-LethalLib\LethalLib\LethalLib.dll" />
       <Reference Include="$(BepinEx)\WhiteSpike-Custom_Item_Behaviour_Library\CustomItemBehaviourLibrary\CustomItemBehaviourLibrary.dll" />
+      <Reference Include="$(BepinEx)\JulianMods-OpenMonitors\OpenMonitors.dll" Publicize="true"/>
     </ItemGroup>
+    
     <ItemGroup>
       <Folder Include="ThunderStore\WarperSan-ShipInventory\" />
     </ItemGroup>

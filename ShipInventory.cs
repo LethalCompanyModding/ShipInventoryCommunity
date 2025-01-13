@@ -9,6 +9,7 @@ using ShipInventory.Applications;
 using ShipInventory.Compatibility;
 using ShipInventory.Helpers;
 using ShipInventory.Objects;
+using ShipInventory.Patches;
 using UnityEngine;
 
 namespace ShipInventory;
@@ -19,6 +20,7 @@ namespace ShipInventory;
 [BepInDependency(LethalLib.Plugin.ModGUID, LethalLib.Plugin.ModVersion)]
 [BepInDependency(LethalConfigCompatibility.LETHAL_CONFIG, BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency(CustomItemBehaviourLibraryCompatibility.CUSTOM_ITEM_BEHAVIOUR_LIBRARY, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(OpenMonitorsCompatibility.OPEN_MONITOR, BepInDependency.DependencyFlags.SoftDependency)]
 public class ShipInventory : BaseUnityPlugin
 {
     public new static Config Config = null!;
@@ -55,7 +57,13 @@ public class ShipInventory : BaseUnityPlugin
 
         _harmony ??= new Harmony(MyPluginInfo.PLUGIN_GUID);
 
-        _harmony.PatchAll();
+        _harmony.PatchAll(typeof(GameNetworkManager_Patches));
+        _harmony.PatchAll(typeof(RoundManager_Patches));
+        _harmony.PatchAll(typeof(StartOfRound_Patches));
+        _harmony.PatchAll(typeof(NetworkPrefabUtils.GameNetworkManager_Patches));
+        
+        if (OpenMonitorsCompatibility.Enabled)
+            OpenMonitorsCompatibility.PatchAll(_harmony);
 
         Helpers.Logger.Debug("Finished applying patches!");
     }
@@ -99,17 +107,17 @@ public class ShipInventory : BaseUnityPlugin
 
     private static void LoadVent(GameObject vent)
     {
-        vent.AddComponent<ChuteInteract>();
-        
-        var autoParent = vent.GetComponent<AutoParentToShip>();
-        ChuteInteract.SetOffsets(autoParent);
-        autoParent.overrideOffset = true;
-        
         var terminalNode = Bundle.LoadAsset<TerminalNode>(Constants.INVENTORY_BUY_TERMINAL_NODE);
 
         if (terminalNode == null)
             throw new NullReferenceException("Could not find the terminal node for the inventory.");
+        
+        vent.AddComponent<ChuteInteract>();
 
+        var autoParent = vent.GetComponent<AutoParentToShip>();
+        ChuteInteract.SetOffsets(autoParent);
+        autoParent.overrideOffset = true;
+        
         var unlock = new UnlockableItem
         {
             unlockableName = Config.ChuteUnlockName.Value,
