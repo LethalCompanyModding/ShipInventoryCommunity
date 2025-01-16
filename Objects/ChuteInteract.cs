@@ -420,11 +420,12 @@ public class ChuteInteract : NetworkBehaviour
     {
         base.OnDestroy();
         Instance = null;
-        
-        if (StartOfRound.Instance.firingPlayersCutsceneRunning && ShipInventory.Config.PersistThroughFire.Value)
-            return;
-        
-        ItemManager.ClearCache();
+
+        if (StartOfRound.Instance.firingPlayersCutsceneRunning && !ShipInventory.Config.PersistThroughFire.Value)
+        {
+            Logger.Debug("Clearing cache from fire!");
+            ItemManager.ClearCache();
+        }
     }
 
     #endregion
