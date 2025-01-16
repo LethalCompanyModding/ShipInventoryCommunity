@@ -118,20 +118,10 @@ public class ChuteInteract : NetworkBehaviour
         if (obj == null)
             return null;
         
-        // Set values
-        obj.transform.localPosition = Vector3.zero;
-        obj.transform.localRotation = Quaternion.identity;
+        if (!obj.TryGetComponent(out NetworkBehaviour behaviour))
+            return null;
         
-        if (obj.TryGetComponent(out GrabbableObject grabObj))
-        {
-            if (grabObj.itemProperties.itemSpawnsOnGround)
-                obj.transform.localRotation = Quaternion.Euler(grabObj.itemProperties.restingRotation);
-            else
-                grabObj.OnHitGround();
-        }
-        
-        // Spawn on network
-        var networkObj = grabObj.NetworkObject;
+        var networkObj = behaviour.NetworkObject;
         networkObj.Spawn();
 
         return networkObj;
@@ -143,8 +133,18 @@ public class ChuteInteract : NetworkBehaviour
         if (!networkObject.TryGet(out var obj))
             return;
         
+        // Set values
+        obj.transform.SetParent(itemRestorePoint, false);
+        obj.transform.position = itemRestorePoint.position;
+        obj.transform.rotation = itemRestorePoint.rotation;
+        
         if (!obj.TryGetComponent(out GrabbableObject grabObj))
             return;
+        
+        if (grabObj.itemProperties.itemSpawnsOnGround)
+            obj.transform.localRotation = Quaternion.Euler(grabObj.itemProperties.restingRotation);
+        else
+            grabObj.OnHitGround();
         
         // Set up object
         grabObj.scrapPersistedThroughRounds = data.PERSISTED_THROUGH_ROUNDS;
