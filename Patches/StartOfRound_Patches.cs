@@ -70,5 +70,11 @@ internal class StartOfRound_Patches
 
     [HarmonyPostfix]
     [HarmonyPatch(nameof(StartOfRound.ResetShip))]
-    private static void UnlockChuteBack(StartOfRound __instance) => UnlockChute(__instance);
+    private static void UnlockChuteBack(StartOfRound __instance)
+    {
+        if (!__instance.IsServer)
+            return;
+        
+        UnlockChute(__instance);
+    }
 }
