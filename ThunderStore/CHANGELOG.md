@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.5]() (2025-01-18)
+## Fixes
+* Fixed the blacklist to be case-insensitive
+* Fixed items clearing when storing the chute
+* Fixed items being parented to the chute
+* Fixed a crash when a client tries to respawn the chute after being fired
+
 ## [1.2.4]() (2025-01-12)
 ## Fixes
 * Fixed an issue where selecting "Understood" does nothing
