@@ -411,6 +411,7 @@ public class ChuteInteract : NetworkBehaviour
         itemRestorePoint = transform.Find(Constants.DROP_NODE_PATH);
         spawnParticles = GetComponentInChildren<ParticleSystem>();
         
+        Logger.Error("CHUTE CREATED");
         Instance = this;
         StartNewCheck();
     }
@@ -420,7 +421,9 @@ public class ChuteInteract : NetworkBehaviour
     public override void OnDestroy()
     {
         base.OnDestroy();
-        Instance = null;
+        
+        if (Instance == this)
+            Instance = null;
 
         if (StartOfRound.Instance.firingPlayersCutsceneRunning && !ShipInventory.Configuration.PersistThroughFire.Value)
         {

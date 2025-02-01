@@ -1,5 +1,4 @@
 ﻿using System;
-using ShipInventory.Compatibility;
 using Unity.Netcode;
 
 namespace ShipInventory.Items;
@@ -8,7 +7,7 @@ namespace ShipInventory.Items;
 /// Data transferred between the clients and the host
 /// </summary>
 [Serializable]
-public class ItemData : INetworkSerializable
+public struct ItemData : INetworkSerializable
 {
     public string ID;
     public int SCRAP_VALUE;
@@ -28,7 +27,7 @@ public class ItemData : INetworkSerializable
         PERSISTED_THROUGH_ROUNDS = item.scrapPersistedThroughRounds;
     }
 
-    public virtual void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref ID);
         serializer.SerializeValue(ref SCRAP_VALUE);

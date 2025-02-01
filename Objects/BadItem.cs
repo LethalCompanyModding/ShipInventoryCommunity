@@ -1,5 +1,4 @@
-﻿using ShipInventory.Compatibility;
-using ShipInventory.Items;
+﻿using ShipInventory.Items;
 using UnityEngine;
 using Logger = ShipInventory.Helpers.Logger;
 
@@ -34,7 +33,7 @@ public class BadItem : PhysicsProp
         if (!ItemsIO.GetItemKey(saveData, out _data) || _data == null)
             return;
 
-        ID = _data.ID;
+        ID = _data.Value.ID;
     }
 
     private void CheckForItem()
@@ -43,7 +42,7 @@ public class BadItem : PhysicsProp
         if (_data == null)
             return;
         
-        var item = Compatibility.LethalLib.GetItem(_data.ID);
+        var item = Compatibility.LethalLib.GetItem(_data.Value.ID);
         
         // If item not found, skip
         if (item == null)
@@ -59,10 +58,10 @@ public class BadItem : PhysicsProp
         component.isInShipRoom = true;
         
         if (item.isScrap)
-            component.SetScrapValue(_data.SCRAP_VALUE);
+            component.SetScrapValue(_data.Value.SCRAP_VALUE);
         
         if (item.saveItemVariable)
-            component.LoadItemSaveData(_data.SAVE_DATA);
+            component.LoadItemSaveData(_data.Value.SAVE_DATA);
         
         component.NetworkObject.Spawn();
         

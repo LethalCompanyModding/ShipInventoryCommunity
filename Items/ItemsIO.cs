@@ -9,7 +9,7 @@ namespace ShipInventory.Items;
 /// <summary>
 /// Class that handles the I/O for items
 /// </summary>
-internal class ItemsIO
+internal static class ItemsIO
 {
     private static ItemData[]? loadedKeys;
 

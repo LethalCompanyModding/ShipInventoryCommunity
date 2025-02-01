@@ -14,7 +14,8 @@ public class Configuration : SyncedConfig2<Configuration>
     public Configuration(ConfigFile cfg) : base(MyPluginInfo.PLUGIN_GUID)
     {
         LangUsed = cfg.Bind("Language", "Language", Lang.DEFAULT_LANG);
-        
+        Lang.LoadLang(LangUsed.Value);
+
         LoadChuteConfig(cfg);
         LoadInventoryConfig(cfg);
         LoadTerminalConfig(cfg);
