@@ -102,15 +102,15 @@ public class ShipApplication : PageApplication
     private static bool CanRetrieve()
     {
         var player = StartOfRound.Instance.localPlayerController;
-        var permission = ShipInventory.Config.InventoryPermission.Value;
+        var permission = ShipInventory.Configuration.InventoryPermission.Value;
 
         switch (permission)
         {
-            case Config.PermissionLevel.NO_ONE:
-            case Config.PermissionLevel.HOST_ONLY when !player.IsHost:
-            case Config.PermissionLevel.CLIENTS_ONLY when player.IsHost:
+            case Configuration.PermissionLevel.NO_ONE:
+            case Configuration.PermissionLevel.HOST_ONLY when !player.IsHost:
+            case Configuration.PermissionLevel.CLIENTS_ONLY when player.IsHost:
                 return false;
-            case Config.PermissionLevel.EVERYONE:
+            case Configuration.PermissionLevel.EVERYONE:
             default:
                 return true;
         }
@@ -149,7 +149,7 @@ public class ShipApplication : PageApplication
             elements =
             [
                 .. elements,
-                .. ShipInventory.Config.ShowTrademark.Value 
+                .. ShipInventory.Configuration.ShowTrademark.Value 
                     ? new ITextElement[] { TextElement.Create(" "), TextElement.Create(TRADEMARK) } 
                     : []
             ]
@@ -167,7 +167,7 @@ public class ShipApplication : PageApplication
     private void ConfirmElement(string message, Action? confirmCallback, Action? declineCallback = null)
     {
         // If skip confirmation, skip
-        if (!ShipInventory.Config.ShowConfirmation.Value)
+        if (!ShipInventory.Configuration.ShowConfirmation.Value)
         {
             confirmCallback?.Invoke();
             return;
@@ -206,7 +206,7 @@ public class ShipApplication : PageApplication
                 }
             ];
 
-            if (ShipInventory.Config.YesPlease.Value)
+            if (ShipInventory.Configuration.YesPlease.Value)
                 cursorIndex = 1;
         }
         else
@@ -356,14 +356,14 @@ public class ShipApplication : PageApplication
                 TextElement.Create(string.Format(
                     SHIP_INFO_COUNT,
                     ItemManager.GetItems().Count(),
-                    ShipInventory.Config.MaxItemCount.Value
+                    ShipInventory.Configuration.MaxItemCount.Value
                 )),
                 TextElement.Create(" "),
-                TextElement.Create(string.Format(SHIP_INFO_IN_ORBIT, BoolToString(!ShipInventory.Config.RequireInOrbit.Value))),
+                TextElement.Create(string.Format(SHIP_INFO_IN_ORBIT, BoolToString(!ShipInventory.Configuration.RequireInOrbit.Value))),
                 TextElement.Create(" "),
                 TextElement.Create(SHIP_INFO_KEEP_HEADER),
-                TextElement.Create(string.Format(SHIP_INFO_KEEP_ON_WIPE, BoolToString(ShipInventory.Config.ActAsSafe.Value))),
-                TextElement.Create(string.Format(SHIP_INFO_KEEP_ON_FIRE, BoolToString(ShipInventory.Config.PersistThroughFire.Value))),
+                TextElement.Create(string.Format(SHIP_INFO_KEEP_ON_WIPE, BoolToString(ShipInventory.Configuration.ActAsSafe.Value))),
+                TextElement.Create(string.Format(SHIP_INFO_KEEP_ON_FIRE, BoolToString(ShipInventory.Configuration.PersistThroughFire.Value))),
             ]
         );
         
@@ -399,7 +399,7 @@ public class ShipApplication : PageApplication
                 TextElement.Create(" "),
                 TextElement.Create(string.Format(
                     LOCKED_SUB_MESSAGE,
-                    ShipInventory.Config.ChuteUnlockName.Value
+                    ShipInventory.Configuration.ChuteUnlockName.Value
                 )),
                 TextElement.Create(" "),
                 optionMenu
@@ -460,12 +460,12 @@ public class ShipApplication : PageApplication
     private void RetrieveSingle(int selectedIndex = 0)
     {
         var _items = ItemManager.GetItems();
-        IEnumerable<ItemData> items = ShipInventory.Config.InventorySortOrder.Value switch
+        IEnumerable<ItemData> items = ShipInventory.Configuration.InventorySortOrder.Value switch
         {
-            Config.SortOrder.NAME_ASC => _items.OrderBy(i => i.GetItemName()),
-            Config.SortOrder.NAME_DESC => _items.OrderByDescending(i => i.GetItemName()),
-            Config.SortOrder.VALUE_ASC => _items.OrderBy(i => i.SCRAP_VALUE),
-            Config.SortOrder.VALUE_DESC => _items.OrderByDescending(i => i.SCRAP_VALUE),
+            Configuration.SortOrder.NAME_ASC => _items.OrderBy(i => i.GetItemName()),
+            Configuration.SortOrder.NAME_DESC => _items.OrderByDescending(i => i.GetItemName()),
+            Configuration.SortOrder.VALUE_ASC => _items.OrderBy(i => i.SCRAP_VALUE),
+            Configuration.SortOrder.VALUE_DESC => _items.OrderByDescending(i => i.SCRAP_VALUE),
             _ => _items
         };
         
@@ -534,12 +534,12 @@ public class ShipApplication : PageApplication
     private void RetrieveType(int selectedIndex = 0)
     {
         var _items = ItemManager.GetItems().GroupBy(i => i.GetItemName());
-        IEnumerable<IGrouping<string, ItemData>> groups = ShipInventory.Config.InventorySortOrder.Value switch
+        IEnumerable<IGrouping<string, ItemData>> groups = ShipInventory.Configuration.InventorySortOrder.Value switch
         {
-            Config.SortOrder.NAME_ASC => _items.OrderBy(i => i.Key),
-            Config.SortOrder.NAME_DESC => _items.OrderByDescending(i => i.Key),
-            Config.SortOrder.VALUE_ASC => _items.OrderBy(i => i.Sum(t => t.SCRAP_VALUE)),
-            Config.SortOrder.VALUE_DESC => _items.OrderByDescending(i => i.Sum(t => t.SCRAP_VALUE)),
+            Configuration.SortOrder.NAME_ASC => _items.OrderBy(i => i.Key),
+            Configuration.SortOrder.NAME_DESC => _items.OrderByDescending(i => i.Key),
+            Configuration.SortOrder.VALUE_ASC => _items.OrderBy(i => i.Sum(t => t.SCRAP_VALUE)),
+            Configuration.SortOrder.VALUE_DESC => _items.OrderByDescending(i => i.Sum(t => t.SCRAP_VALUE)),
             _ => _items
         };
         
@@ -598,7 +598,7 @@ public class ShipApplication : PageApplication
     private CursorElement RetrieveAllElement() => new()
     {
         Name = ALL_RETRIEVE,
-        Active = _ => ShipInventory.Config.KeepRemoveAll.Value && ItemManager.HasItems(),
+        Active = _ => ShipInventory.Configuration.KeepRemoveAll.Value && ItemManager.HasItems(),
         SelectInactive = false,
         Action = RetrieveAll
     };

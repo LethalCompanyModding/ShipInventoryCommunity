@@ -14,21 +14,23 @@ using UnityEngine;
 namespace ShipInventory;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+// Hard dependencies
 [BepInDependency("WhiteSpike.InteractiveTerminalAPI", "1.2.0")]
 [BepInDependency("com.sigurd.csync", "5.0.1")]
-[BepInDependency(LethalLib.Plugin.ModGUID, LethalLib.Plugin.ModVersion)]
-[BepInDependency(LethalConfigCompatibility.LETHAL_CONFIG, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(CustomItemBehaviourLibraryCompatibility.CUSTOM_ITEM_BEHAVIOUR_LIBRARY, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(OpenMonitorsCompatibility.OPEN_MONITOR, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("evaisa.lethallib", "0.16.2")]
+// Soft dependencies
+[BepInDependency(Compatibility.LethalConfig.GUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(Compatibility.CustomItemBehaviourLibrary.GUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(Compatibility.OpenMonitors.GUID, BepInDependency.DependencyFlags.SoftDependency)]
 public class ShipInventory : BaseUnityPlugin
 {
-    public new static Config Config = null!;
+    public static Configuration Configuration = null!;
     
     private void Awake()
     {
         Helpers.Logger.SetLogger(Logger);
         
-        Config = new Config(base.Config);
+        Configuration = new Configuration(Config);
         
         if (!Bundle.LoadBundle(Constants.BUNDLE_MAIN))
             return;
@@ -41,7 +43,7 @@ public class ShipInventory : BaseUnityPlugin
         
         ApplyPatches();
 
-        InteractiveTerminalManager.RegisterApplication<ShipApplication>(Config.InventoryCommand.Value, true);
+        InteractiveTerminalManager.RegisterApplication<ShipApplication>(Configuration.InventoryCommand.Value, true);
         
         Helpers.Logger.Info($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
     }
@@ -60,8 +62,8 @@ public class ShipInventory : BaseUnityPlugin
         _harmony.PatchAll(typeof(RoundManager_Patches));
         _harmony.PatchAll(typeof(StartOfRound_Patches));
         
-        if (OpenMonitorsCompatibility.Enabled)
-            OpenMonitorsCompatibility.PatchAll(_harmony);
+        if (Compatibility.OpenMonitors.Enabled)
+            Compatibility.OpenMonitors.PatchAll(_harmony);
 
         Helpers.Logger.Debug("Finished applying patches!");
     }
@@ -147,7 +149,7 @@ public class ShipInventory : BaseUnityPlugin
             return false;
         
         var unlock = new UnlockableItem {
-            unlockableName = Config.ChuteUnlockName.Value,
+            unlockableName = Configuration.ChuteUnlockName.Value,
             prefabObject = prefab,
             unlockableType = 1,
             shopSelectionNode = null,
@@ -164,7 +166,7 @@ public class ShipInventory : BaseUnityPlugin
             null!, 
             null!, 
             inventoryBuyNode, 
-            Config.ChuteUnlockCost.Value
+            Configuration.ChuteUnlockCost.Value
         );
         ChuteInteract.UnlockableItem = unlock;
         return true;

@@ -6,16 +6,16 @@ using ShipInventory.Objects;
 
 namespace ShipInventory.Compatibility;
 
-public static class CustomItemBehaviourLibraryCompatibility
+internal static class CustomItemBehaviourLibrary
 {
-    public const string CUSTOM_ITEM_BEHAVIOUR_LIBRARY = "com.github.WhiteSpike.CustomItemBehaviourLibrary";
+    public const string GUID = "com.github.WhiteSpike.CustomItemBehaviourLibrary";
     private static bool? _enabled;
 
     public static bool Enabled
     {
         get
         {
-            _enabled ??= BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(CUSTOM_ITEM_BEHAVIOUR_LIBRARY);
+            _enabled ??= BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(GUID);
             return _enabled.Value;
         }
     }

@@ -52,8 +52,8 @@ public class ChuteInteract : NetworkBehaviour
         Logger.Debug($"Sending {items.Length} new items...");
         StoreItemsServerRpc(items, GetClientID());
         
-        if (OpenMonitorsCompatibility.Enabled)
-            OpenMonitorsCompatibility.UpdateMonitor();
+        if (Compatibility.OpenMonitors.Enabled)
+            Compatibility.OpenMonitors.UpdateMonitor();
     }
     
     #endregion
@@ -78,7 +78,7 @@ public class ChuteInteract : NetworkBehaviour
         while (spawnQueue.Count > 0)
         {
             // If chute is full, skip
-            if (itemsInChute.Length >= ShipInventory.Config.StopAfter.Value)
+            if (itemsInChute.Length >= ShipInventory.Configuration.StopAfter.Value)
             {
                 yield return new WaitForEndOfFrame();
                 continue;
@@ -90,7 +90,7 @@ public class ChuteInteract : NetworkBehaviour
             if (obj != null)
                 SpawnItemClientRpc(obj, data);
             
-            yield return new WaitForSeconds(ShipInventory.Config.TimeToRetrieve.Value);
+            yield return new WaitForSeconds(ShipInventory.Configuration.TimeToRetrieve.Value);
         }
         
         // Mark as completed
@@ -205,7 +205,7 @@ public class ChuteInteract : NetworkBehaviour
         ItemManager.AddItems(items);
         Logger.Debug($"The inventory has been updated: '{ItemManager.GetKey()}'.");
 
-        if (!ShipInventory.Config.ForceUpdateUponAdding.Value)
+        if (!ShipInventory.Configuration.ForceUpdateUponAdding.Value)
             return;
         
         ForceUpdateClientRpc(new ClientRpcParams
@@ -238,7 +238,7 @@ public class ChuteInteract : NetworkBehaviour
         spawnCoroutine ??= StartCoroutine(SpawnCoroutine());
         Logger.Debug($"{filteredItems.Length} items enqueued!");
         
-        if (!ShipInventory.Config.ForceUpdateUponRemoving.Value)
+        if (!ShipInventory.Configuration.ForceUpdateUponRemoving.Value)
             return;
         ForceUpdateClientRpc(new ClientRpcParams
         {
@@ -284,7 +284,7 @@ public class ChuteInteract : NetworkBehaviour
 
         updateKey = null;
         
-        if (ShipInventory.Config.InventoryUpdateCheckSilencer.Value)
+        if (ShipInventory.Configuration.InventoryUpdateCheckSilencer.Value)
             return;
         
         Logger.Debug($"The inventory is up to date! ({ItemManager.GetKey()})");
@@ -385,7 +385,7 @@ public class ChuteInteract : NetworkBehaviour
             updateKey = System.Guid.NewGuid().ToString();
             CheckInventoryServerRpc(updateKey, ItemManager.GetKey(), GetClientID(player));
             
-            yield return new WaitForSeconds(ShipInventory.Config.InventoryRefreshRate.Value);
+            yield return new WaitForSeconds(ShipInventory.Configuration.InventoryRefreshRate.Value);
         }
     }
 
@@ -405,7 +405,7 @@ public class ChuteInteract : NetworkBehaviour
         
         _trigger = GetComponent<InteractTrigger>();
         _trigger.onInteract.AddListener(StoreHeldItem);
-        _trigger.timeToHold = ShipInventory.Config.TimeToStore.Value;
+        _trigger.timeToHold = ShipInventory.Configuration.TimeToStore.Value;
 
         itemRestorePoint = transform.Find(Constants.DROP_NODE_PATH);
         spawnParticles = GetComponentInChildren<ParticleSystem>();
@@ -421,7 +421,7 @@ public class ChuteInteract : NetworkBehaviour
         base.OnDestroy();
         Instance = null;
 
-        if (StartOfRound.Instance.firingPlayersCutsceneRunning && !ShipInventory.Config.PersistThroughFire.Value)
+        if (StartOfRound.Instance.firingPlayersCutsceneRunning && !ShipInventory.Configuration.PersistThroughFire.Value)
         {
             Logger.Debug("Clearing cache from fire!");
             ItemManager.ClearCache();

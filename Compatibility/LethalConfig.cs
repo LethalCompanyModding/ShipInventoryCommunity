@@ -8,22 +8,22 @@ using UnityEngine;
 
 namespace ShipInventory.Compatibility;
 
-public static class LethalConfigCompatibility
+internal static class LethalConfig
 {
-    public const string LETHAL_CONFIG = "ainavt.lc.lethalconfig";
+    public const string GUID = "ainavt.lc.lethalconfig";
     private static bool? _enabled;
 
     public static bool Enabled
     {
         get
         {
-            _enabled ??= BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(LETHAL_CONFIG);
+            _enabled ??= BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(GUID);
             return _enabled.Value;
         }
     }
 
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-    public static void AddConfigs(Config config)
+    public static void AddConfigs(Configuration config)
     {
         LethalConfigManager.SetModIcon(Bundle.LoadAsset<Sprite>(Constants.MOD_ICON));
         LethalConfigManager.SetModDescription(
@@ -31,7 +31,7 @@ public static class LethalConfigCompatibility
 
         #region Chute
 
-        LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<Config.PermissionLevel>(
+        LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<Configuration.PermissionLevel>(
             config.ChutePermission.Entry, new EnumDropDownOptions
             {
                 Name = Lang.Get("NAME_CHUTE_PERMISSION"),
@@ -83,7 +83,7 @@ public static class LethalConfigCompatibility
 
         #region Inventory
 
-        LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<Config.PermissionLevel>(
+        LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<Configuration.PermissionLevel>(
             config.InventoryPermission.Entry, new EnumDropDownOptions
             {
                 Name = Lang.Get("NAME_INVENTORY_PERMISSION"),
@@ -118,7 +118,7 @@ public static class LethalConfigCompatibility
             RequiresRestart = false
         }));
         
-        LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<Config.SortOrder>(config.InventorySortOrder.Entry, new EnumDropDownOptions
+        LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<Configuration.SortOrder>(config.InventorySortOrder, new EnumDropDownOptions
         {
             Name = Lang.Get("NAME_INVENTORY_SORT_ORDER"),
             RequiresRestart = false
@@ -135,7 +135,7 @@ public static class LethalConfigCompatibility
 
         #region Terminal
 
-        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(config.InventoryCommand.Entry,
+        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(config.InventoryCommand,
             new TextInputFieldOptions
             {
                 Name = Lang.Get("NAME_INVENTORY_COMMAND"),
@@ -144,20 +144,20 @@ public static class LethalConfigCompatibility
                 RequiresRestart = true,
             }));
 
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.YesPlease.Entry, new BoolCheckBoxOptions
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.YesPlease, new BoolCheckBoxOptions
         {
             Name = Lang.Get("NAME_YES_PLEASE"),
             RequiresRestart = false
         }));
 
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.ShowConfirmation.Entry,
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.ShowConfirmation,
             new BoolCheckBoxOptions
             {
                 Name = Lang.Get("NAME_SHOW_CONFIRMATION"),
                 RequiresRestart = false
             }));
 
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.ShowTrademark.Entry, new BoolCheckBoxOptions
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(config.ShowTrademark, new BoolCheckBoxOptions
         {
             Name = Lang.Get("NAME_SHOW_TRADEMARK"),
             RequiresRestart = false

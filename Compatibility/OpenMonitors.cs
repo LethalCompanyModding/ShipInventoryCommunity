@@ -7,16 +7,17 @@ using Logger = ShipInventory.Helpers.Logger;
 
 namespace ShipInventory.Compatibility;
 
-public static class OpenMonitorsCompatibility
+// https://github.com/julian-perge/LC_OpenMonitors/tree/main/OpenMonitors
+internal static class OpenMonitors
 {
-    public const string OPEN_MONITOR = "xxxstoner420bongmasterxxx.open_monitors";
+    public const string GUID = "xxxstoner420bongmasterxxx.open_monitors";
     private static bool? _enabled;
 
     public static bool Enabled
     {
         get
         {
-            _enabled ??= BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(OPEN_MONITOR);
+            _enabled ??= BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(GUID);
             return _enabled.Value;
         }
     }
@@ -30,13 +31,10 @@ public static class OpenMonitorsCompatibility
         }
         catch (Exception ex)
         {
-            Logger.Error($"Failed to apply ShipInventory patches. {ex}");
+            Logger.Error($"Failed to apply OpenMonitors patches. {ex}");
         }
     }
 
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-    public static void UpdateMonitor()
-    {
-        LootMonitor.Instance?.UpdateMonitor();
-    }
+    public static void UpdateMonitor() => LootMonitor.Instance.UpdateMonitor();
 }

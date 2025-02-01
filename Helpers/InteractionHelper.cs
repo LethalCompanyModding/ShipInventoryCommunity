@@ -53,23 +53,23 @@ public static class InteractionHelper
 
     private static bool HasPermission(PlayerControllerB p)
     {
-        var permission = ShipInventory.Config.ChutePermission.Value;
+        var permission = ShipInventory.Configuration.ChutePermission.Value;
 
         switch (permission)
         {
-            case Config.PermissionLevel.NO_ONE:
-            case Config.PermissionLevel.HOST_ONLY when !p.IsHost:
-            case Config.PermissionLevel.CLIENTS_ONLY when p.IsHost:
+            case Configuration.PermissionLevel.NO_ONE:
+            case Configuration.PermissionLevel.HOST_ONLY when !p.IsHost:
+            case Configuration.PermissionLevel.CLIENTS_ONLY when p.IsHost:
                 return false;
-            case Config.PermissionLevel.EVERYONE:
+            case Configuration.PermissionLevel.EVERYONE:
             default:
                 return true;
         }
     }
 
-    private static bool RequireInOrbit(PlayerControllerB p) => !ShipInventory.Config.RequireInOrbit.Value || StartOfRound.Instance.inShipPhase;
+    private static bool RequireInOrbit(PlayerControllerB p) => !ShipInventory.Configuration.RequireInOrbit.Value || StartOfRound.Instance.inShipPhase;
 
-    private static bool HasFreeSpace(PlayerControllerB p) => ItemManager.GetCount() < ShipInventory.Config.MaxItemCount.Value;
+    private static bool HasFreeSpace(PlayerControllerB p) => ItemManager.GetCount() < ShipInventory.Configuration.MaxItemCount.Value;
 
     private static bool IsAllowed(PlayerControllerB p) => !ItemManager.IsBlacklisted(p.currentlyHeldObjectServer.itemProperties);
 

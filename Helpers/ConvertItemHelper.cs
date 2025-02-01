@@ -9,7 +9,7 @@ public static class ConvertItemHelper
 {
     static ConvertItemHelper()
     {
-        AddConversion(CustomItemBehaviourLibraryCompatibility.ConvertContainer);
+        AddConversion(Compatibility.CustomItemBehaviourLibrary.ConvertContainer);
         AddConversion(BeltBagConversion);
         AddConversion(NormalConversion, false);
     }

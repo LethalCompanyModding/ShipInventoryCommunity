@@ -2,64 +2,47 @@
 using CSync.Extensions;
 using CSync.Lib;
 using LethalLib.Modules;
-using ShipInventory.Compatibility;
 using ShipInventory.Helpers;
 using ShipInventory.Objects;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace ShipInventory;
 
-public class Config : SyncedConfig2<Config>
+public class Configuration : SyncedConfig2<Configuration>
 {
-    #region Entries
+    public Configuration(ConfigFile cfg) : base(MyPluginInfo.PLUGIN_GUID)
+    {
+        LangUsed = cfg.Bind("Language", "Language", Lang.DEFAULT_LANG);
+        
+        LoadChuteConfig(cfg);
+        LoadInventoryConfig(cfg);
+        LoadTerminalConfig(cfg);
+        LoadNetworkConfig(cfg);
+        LoadUnlockConfig(cfg);
+        
+        if (Compatibility.LethalConfig.Enabled)
+            Compatibility.LethalConfig.AddConfigs(this);
+    }
+    
+    #region General
 
     public readonly ConfigEntry<string> LangUsed;
-    
-    // Chute
-    [SyncedEntryField] public readonly SyncedEntry<PermissionLevel> ChutePermission;
-    [SyncedEntryField] public readonly SyncedEntry<bool> RequireInOrbit;
-    [SyncedEntryField] public readonly SyncedEntry<float> TimeToStore;
-    [SyncedEntryField] public readonly SyncedEntry<float> TimeToRetrieve;
-    [SyncedEntryField] public readonly SyncedEntry<int> StopAfter;
-    [SyncedEntryField] public readonly SyncedEntry<string> Blacklist;
-    
-    // Inventory
-    [SyncedEntryField] public readonly SyncedEntry<PermissionLevel> InventoryPermission;
-    [SyncedEntryField] public readonly SyncedEntry<bool> ActAsSafe;
-    [SyncedEntryField] public readonly SyncedEntry<bool> PersistThroughFire;
-    [SyncedEntryField] public readonly SyncedEntry<int> MaxItemCount;
-    [SyncedEntryField] public readonly SyncedEntry<float> KeepRate;
-    [SyncedEntryField] public readonly SyncedEntry<SortOrder> InventorySortOrder;
-    [SyncedEntryField] public readonly SyncedEntry<bool> KeepRemoveAll;
-    
-    // Terminal
-    [SyncedEntryField] public readonly SyncedEntry<string> InventoryCommand;
-    [SyncedEntryField] public readonly SyncedEntry<bool> YesPlease;
-    [SyncedEntryField] public readonly SyncedEntry<bool> ShowConfirmation;
-    [SyncedEntryField] public readonly SyncedEntry<bool> ShowTrademark;
-    
-    // Network
-    [SyncedEntryField] public readonly SyncedEntry<float> InventoryRefreshRate;
-    [SyncedEntryField] public readonly SyncedEntry<bool> InventoryUpdateCheckSilencer;
-    [SyncedEntryField] public readonly SyncedEntry<bool> ForceUpdateUponAdding;
-    [SyncedEntryField] public readonly SyncedEntry<bool> ForceUpdateUponRemoving;
-    
-    // Unlock
-    [SyncedEntryField] public readonly SyncedEntry<bool> ChuteIsUnlock;
-    [SyncedEntryField] public readonly SyncedEntry<int> ChuteUnlockCost;
-    [SyncedEntryField] public readonly SyncedEntry<string> ChuteUnlockName;
     
     public enum PermissionLevel { HOST_ONLY, CLIENTS_ONLY, EVERYONE, NO_ONE  }
     public enum SortOrder { NONE, NAME_ASC, NAME_DESC, VALUE_ASC, VALUE_DESC }
 
     #endregion
+    #region Chute
 
-    public Config(ConfigFile cfg) : base(MyPluginInfo.PLUGIN_GUID)
+    [SyncedEntryField] public SyncedEntry<PermissionLevel> ChutePermission;
+    [SyncedEntryField] public SyncedEntry<bool> RequireInOrbit;
+    [SyncedEntryField] public SyncedEntry<float> TimeToStore;
+    [SyncedEntryField] public SyncedEntry<float> TimeToRetrieve;
+    [SyncedEntryField] public SyncedEntry<int> StopAfter;
+    [SyncedEntryField] public SyncedEntry<string> Blacklist;
+    
+    private void LoadChuteConfig(ConfigFile cfg)
     {
-        LangUsed = cfg.Bind("Language", "Language", Lang.DEFAULT_LANG);
-        Lang.LoadLang(LangUsed.Value);
-        
-        #region Chute
-
         string CHUTE = Lang.Get("CHUTE_SECTION");
         
         ChutePermission = cfg.BindSyncedEntry(
@@ -99,11 +82,21 @@ public class Config : SyncedConfig2<Config>
         );
         Blacklist.Changed += (_, e) => ItemManager.UpdateBlacklist(e.NewValue);
         ItemManager.UpdateBlacklist(Blacklist.Value);
+    }
 
-        #endregion
+    #endregion
+    #region Inventory
 
-        #region Inventory
+    [SyncedEntryField] public SyncedEntry<PermissionLevel> InventoryPermission;
+    [SyncedEntryField] public SyncedEntry<bool> ActAsSafe;
+    [SyncedEntryField] public SyncedEntry<bool> PersistThroughFire;
+    [SyncedEntryField] public SyncedEntry<int> MaxItemCount;
+    [SyncedEntryField] public SyncedEntry<float> KeepRate;
+    public ConfigEntry<SortOrder> InventorySortOrder;
+    [SyncedEntryField] public SyncedEntry<bool> KeepRemoveAll;
 
+    private void LoadInventoryConfig(ConfigFile cfg)
+    {
         string INVENTORY = Lang.Get("INVENTORY_SECTION");
 
         InventoryPermission = cfg.BindSyncedEntry(
@@ -136,7 +129,7 @@ public class Config : SyncedConfig2<Config>
             new ConfigDescription(Lang.Get("DESCRIPTION_KEEP_RATE"))
         );
         
-        InventorySortOrder = cfg.BindSyncedEntry(
+        InventorySortOrder = cfg.Bind(
             new ConfigDefinition(INVENTORY, "InventorySortOrder"),
             SortOrder.NAME_ASC,
             new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_SORT_ORDER"))
@@ -147,41 +140,55 @@ public class Config : SyncedConfig2<Config>
             true,
             new ConfigDescription(Lang.Get("DESCRIPTION_KEEP_REMOVE_ALL"))
         );
-        
-        #endregion
-        
-        #region Terminal
+    }
 
+    #endregion
+    #region Terminal
+
+    public ConfigEntry<string> InventoryCommand;
+    public ConfigEntry<bool> YesPlease;
+    public ConfigEntry<bool> ShowConfirmation;
+    public ConfigEntry<bool> ShowTrademark;
+    
+    private void LoadTerminalConfig(ConfigFile cfg)
+    {
         string TERMINAL = Lang.Get("TERMINAL_SECTION");
 
-        InventoryCommand = cfg.BindSyncedEntry(
+        InventoryCommand = cfg.Bind(
             new ConfigDefinition(TERMINAL, "InventoryCommand"),
             "ship",
             new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_COMMAND"))
         );
         
-        YesPlease = cfg.BindSyncedEntry(
+        YesPlease = cfg.Bind(
             new ConfigDefinition(TERMINAL, "YesPlease"),
             false,
             new ConfigDescription(Lang.Get("DESCRIPTION_YES_PLEASE"))
         );
         
-        ShowConfirmation = cfg.BindSyncedEntry(
+        ShowConfirmation = cfg.Bind(
             new ConfigDefinition(TERMINAL, "ShowConfirmation"),
             true,
             new ConfigDescription(Lang.Get("DESCRIPTION_SHOW_CONFIRMATION"))
         );
         
-        ShowTrademark = cfg.BindSyncedEntry(
+        ShowTrademark = cfg.Bind(
             new ConfigDefinition(TERMINAL, "ShowTrademark"),
             true,
             new ConfigDescription(Lang.Get("DESCRIPTION_SHOW_TRADEMARK"))
         );
-        
-        #endregion
+    }
 
-        #region Network
+    #endregion
+    #region Network
 
+    [SyncedEntryField] public SyncedEntry<float> InventoryRefreshRate;
+    [SyncedEntryField] public SyncedEntry<bool> InventoryUpdateCheckSilencer;
+    [SyncedEntryField] public SyncedEntry<bool> ForceUpdateUponAdding;
+    [SyncedEntryField] public SyncedEntry<bool> ForceUpdateUponRemoving;
+    
+    private void LoadNetworkConfig(ConfigFile cfg)
+    {
         string NETWORK = Lang.Get("NETWORK_SECTION");
         
         InventoryRefreshRate = cfg.BindSyncedEntry(
@@ -212,11 +219,17 @@ public class Config : SyncedConfig2<Config>
             true,
             new ConfigDescription(Lang.Get("DESCRIPTION_FORCE_UPDATE_UPON_REMOVING"))
         );
+    }
 
-        #endregion
+    #endregion
+    #region Unlock
 
-        #region Unlock
+    [SyncedEntryField] public SyncedEntry<bool> ChuteIsUnlock;
+    [SyncedEntryField] public SyncedEntry<int> ChuteUnlockCost;
+    [SyncedEntryField] public SyncedEntry<string> ChuteUnlockName;
 
+    private void LoadUnlockConfig(ConfigFile cfg)
+    {
         string UNLOCK = Lang.Get("UNLOCK_SECTION");
         
         ChuteIsUnlock = cfg.BindSyncedEntry(
@@ -241,10 +254,7 @@ public class Config : SyncedConfig2<Config>
             "ship inventory",
             new ConfigDescription(Lang.Get("DESCRIPTION_UNLOCK_NAME"))
         );
-
-        #endregion
-
-        if (LethalConfigCompatibility.Enabled)
-            LethalConfigCompatibility.AddConfigs(this);
     }
+
+    #endregion
 }

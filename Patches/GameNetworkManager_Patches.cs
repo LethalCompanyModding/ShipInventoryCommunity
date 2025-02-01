@@ -6,9 +6,12 @@ namespace ShipInventory.Patches;
 [HarmonyPatch(typeof(GameNetworkManager))]
 public class GameNetworkManager_Patches
 {
+    /// <summary>
+    /// Loads the required assets when the game starts
+    /// </summary>
     [HarmonyPostfix]
     [HarmonyPatch(nameof(GameNetworkManager.Start))]
-    private static void AddPrefabsToNetwork(GameNetworkManager __instance)
+    private static void LoadRequiredAssets(GameNetworkManager __instance)
     {
         if (!ShipInventory.LoadChute(out var chutePrefab) || chutePrefab == null)
             return;

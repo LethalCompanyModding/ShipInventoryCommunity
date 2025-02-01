@@ -22,7 +22,10 @@ public class RoundManager_Patches
             return;
 
         var items = ItemManager.GetItems().ToList();
-        float keepRate = ShipInventory.Config.ActAsSafe.Value ? 1f : ShipInventory.Config.KeepRate.Value / 100f;
+
+        float keepRate = ShipInventory.Configuration.ActAsSafe.Value 
+            ? 1f 
+            : ShipInventory.Configuration.KeepRate.Value / 100f;
 
         for (int i = items.Count - 1; i >= 0; i--)
         {
