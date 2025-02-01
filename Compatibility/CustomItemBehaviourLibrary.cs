@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using CustomItemBehaviourLibrary.AbstractItems;
 using ShipInventory.Helpers;
-using ShipInventory.Objects;
+using ShipInventory.Items;
 
 namespace ShipInventory.Compatibility;
 

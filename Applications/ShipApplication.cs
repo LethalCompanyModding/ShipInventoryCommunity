@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using InteractiveTerminalAPI.UI;
@@ -7,7 +6,9 @@ using InteractiveTerminalAPI.UI.Application;
 using InteractiveTerminalAPI.UI.Cursor;
 using InteractiveTerminalAPI.UI.Page;
 using InteractiveTerminalAPI.UI.Screen;
+using ShipInventory.Extensions;
 using ShipInventory.Helpers;
+using ShipInventory.Items;
 using ShipInventory.Objects;
 using static UnityEngine.InputSystem.InputAction;
 

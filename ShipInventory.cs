@@ -3,9 +3,7 @@ using System.Reflection;
 using BepInEx;
 using HarmonyLib;
 using InteractiveTerminalAPI.UI;
-using LethalLib.Modules;
 using ShipInventory.Applications;
-using ShipInventory.Compatibility;
 using ShipInventory.Helpers;
 using ShipInventory.Objects;
 using ShipInventory.Patches;
@@ -116,10 +114,10 @@ public class ShipInventory : BaseUnityPlugin
         var badItem = errorItem.spawnPrefab.AddComponent<BadItem>();
         badItem.itemProperties = errorItem;
             
-        NetworkPrefabs.RegisterNetworkPrefab(errorItem.spawnPrefab);
-        Items.RegisterItem(errorItem);
+        LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(errorItem.spawnPrefab);
+        LethalLib.Modules.Items.RegisterItem(errorItem);
         
-        ItemData.FALLBACK_ITEM = errorItem;
+        Items.ItemManager.FALLBACK_ITEM = errorItem;
         return true;
     }
     internal static bool LoadChute(out GameObject? prefab)
@@ -160,9 +158,9 @@ public class ShipInventory : BaseUnityPlugin
             spawnPrefab = true,
         };
         
-        Unlockables.RegisterUnlockable(
+        LethalLib.Modules.Unlockables.RegisterUnlockable(
             unlock, 
-            StoreType.ShipUpgrade, 
+            LethalLib.Modules.StoreType.ShipUpgrade, 
             null!, 
             null!, 
             inventoryBuyNode, 

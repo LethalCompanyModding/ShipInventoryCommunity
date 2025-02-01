@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GameNetcodeStuff;
+using ShipInventory.Items;
 
 namespace ShipInventory.Helpers;
 

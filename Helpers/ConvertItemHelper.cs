@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ShipInventory.Compatibility;
-using ShipInventory.Objects;
+using ShipInventory.Items;
 
 namespace ShipInventory.Helpers;
 

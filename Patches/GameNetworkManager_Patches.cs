@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using ShipInventory.Items;
 using ShipInventory.Objects;
 
 namespace ShipInventory.Patches;
@@ -35,7 +36,7 @@ public class GameNetworkManager_Patches
         ES3.DeleteKey("shipScrapValues", currentSaveFileName);
         ES3.DeleteKey("shipItemSaveData", currentSaveFileName);
 
-        ItemData.SaveStoredItems(currentSaveFileName);
-        BadItem.SaveKeys(currentSaveFileName);
+        ItemsIO.SaveStoredItems(currentSaveFileName);
+        ItemsIO.SaveKeys(currentSaveFileName);
     }
 }

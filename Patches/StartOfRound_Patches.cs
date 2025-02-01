@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using ShipInventory.Helpers;
+using ShipInventory.Items;
 using ShipInventory.Objects;
 
 namespace ShipInventory.Patches;
@@ -16,8 +17,8 @@ internal class StartOfRound_Patches
     {
         string currentSaveFileName = GameNetworkManager.Instance.currentSaveFileName;
 
-        ItemData.LoadStoredItems(currentSaveFileName);
-        BadItem.LoadKeys(currentSaveFileName);
+        ItemsIO.LoadStoredItems(currentSaveFileName);
+        ItemsIO.LoadKeys(currentSaveFileName);
     }
 
     /// <summary>

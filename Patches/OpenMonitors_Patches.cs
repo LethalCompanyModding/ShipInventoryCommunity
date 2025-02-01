@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 using OpenMonitors.Monitors;
-using ShipInventory.Helpers;
+using ShipInventory.Items;
 
 namespace ShipInventory.Patches;
 

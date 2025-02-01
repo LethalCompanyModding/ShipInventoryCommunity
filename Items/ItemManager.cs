@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ShipInventory.Objects;
+using ShipInventory.Extensions;
 
-namespace ShipInventory.Helpers;
+namespace ShipInventory.Items;
 
 public static class ItemManager
 {
+    /// <summary>
+    /// Item to use when the original item is missing
+    /// </summary>
+    public static Item? FALLBACK_ITEM;
+    
     #region Getters
 
     public static IEnumerable<ItemData> GetInstances(ItemData data, int count)

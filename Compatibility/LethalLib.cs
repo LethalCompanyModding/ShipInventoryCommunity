@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ShipInventory.Objects;
+using ShipInventory.Items;
 using Logger = ShipInventory.Helpers.Logger;
 
 namespace ShipInventory.Compatibility;
 
-public static class LethalLibCompatibility
+public static class LethalLib
 {
     #region ID
 
@@ -29,7 +29,7 @@ public static class LethalLibCompatibility
     
     public static string GetID(Item item)
     {
-        if (item == ItemData.FALLBACK_ITEM)
+        if (item == ItemManager.FALLBACK_ITEM)
             return BAD_ITEM;
 
         return GetModdedID(item) ?? item.ID();
@@ -46,7 +46,7 @@ public static class LethalLibCompatibility
     {
         // If bad item, return fallback item
         if (ID == BAD_ITEM)
-            return ItemData.FALLBACK_ITEM;
+            return ItemManager.FALLBACK_ITEM;
         
         var (mod, name) = Extract(ID);
         return mod == VANILLA_ITEM_MOD ? GetVanillaItem(name) : GetModdedItem(ID);
@@ -72,13 +72,13 @@ public static class LethalLibCompatibility
         
         _cachedModdedItems = [];
 
-        foreach (var item in LethalLib.Modules.Items.scrapItems)
+        foreach (var item in global::LethalLib.Modules.Items.scrapItems)
             _cachedModdedItems.TryAdd(item.item.ID(item.modName), item.item);
 
-        foreach (var item in LethalLib.Modules.Items.shopItems)
+        foreach (var item in global::LethalLib.Modules.Items.shopItems)
             _cachedModdedItems.TryAdd(item.item.ID(item.modName), item.item);
 
-        foreach (var item in LethalLib.Modules.Items.plainItems)
+        foreach (var item in global::LethalLib.Modules.Items.plainItems)
             _cachedModdedItems.TryAdd(item.item.ID(item.modName), item.item);
     }
 

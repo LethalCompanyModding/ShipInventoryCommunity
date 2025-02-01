@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using HarmonyLib;
-using ShipInventory.Helpers;
+using ShipInventory.Items;
 
 namespace ShipInventory.Patches;
 

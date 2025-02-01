@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameNetcodeStuff;
-using ShipInventory.Compatibility;
+using ShipInventory.Extensions;
 using ShipInventory.Helpers;
+using ShipInventory.Items;
 using Unity.Netcode;
 using UnityEngine;
 using Logger = ShipInventory.Helpers.Logger;
