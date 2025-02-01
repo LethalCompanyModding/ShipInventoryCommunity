@@ -6,6 +6,17 @@ namespace ShipInventory.Patches;
 [HarmonyPatch(typeof(GameNetworkManager))]
 public class GameNetworkManager_Patches
 {
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(GameNetworkManager.Start))]
+    private static void AddPrefabsToNetwork(GameNetworkManager __instance)
+    {
+        if (!ShipInventory.LoadChute(out var chutePrefab) || chutePrefab == null)
+            return;
+
+        if (!ShipInventory.LoadTerminalNode(chutePrefab))
+            return;
+    }
+    
     /// <summary>
     /// Saves the inventory into the file
     /// </summary>

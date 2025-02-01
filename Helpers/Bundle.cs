@@ -22,15 +22,16 @@ internal static class Bundle
             Logger.Error($"No bundle named '{name}'.");
             return false;
         }
-
-        loadedBundle = AssetBundle.LoadFromStream(stream);
         
-        if (loadedBundle == null)
+        var bundle = AssetBundle.LoadFromStream(stream);
+        
+        if (bundle == null)
         {
-            Logger.Error("Failed to load custom assets.");
+            Logger.Error($"Failed to load the bundle '{name}'.");
             return false;
         }
-        
+
+        loadedBundle = bundle;
         return true;
     }
 
@@ -42,7 +43,7 @@ internal static class Bundle
     {
         if (loadedBundle == null)
         {
-            Logger.Error("Tried to load asset from unloaded bundle.");
+            Logger.Error($"Tried to load '{name}', but the bundle was not loaded.");
             return null;
         }
 

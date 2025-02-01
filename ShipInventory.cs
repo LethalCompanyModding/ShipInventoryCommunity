@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using BepInEx;
 using HarmonyLib;
@@ -29,17 +28,17 @@ public class ShipInventory : BaseUnityPlugin
     {
         Helpers.Logger.SetLogger(Logger);
         
-        // Load bundle
-        if (!Bundle.LoadBundle(Constants.BUNDLE))
-        {
-            Helpers.Logger.Error("Failed to load the bundle. This mod will not continue further.");
-            return;
-        }
-
         Config = new Config(base.Config);
         
-        PrepareNetwork();
-        PrepareItems();
+        if (!Bundle.LoadBundle(Constants.BUNDLE_MAIN))
+            return;
+        
+        if (!LoadFallbackItem())
+            return;
+
+        if (!PrepareRPCs())
+            return;
+        
         ApplyPatches();
 
         InteractiveTerminalManager.RegisterApplication<ShipApplication>(Config.InventoryCommand.Value, true);
@@ -60,7 +59,6 @@ public class ShipInventory : BaseUnityPlugin
         _harmony.PatchAll(typeof(GameNetworkManager_Patches));
         _harmony.PatchAll(typeof(RoundManager_Patches));
         _harmony.PatchAll(typeof(StartOfRound_Patches));
-        _harmony.PatchAll(typeof(NetworkPrefabUtils.GameNetworkManager_Patches));
         
         if (OpenMonitorsCompatibility.Enabled)
             OpenMonitorsCompatibility.PatchAll(_harmony);
@@ -79,49 +77,78 @@ public class ShipInventory : BaseUnityPlugin
 
     #endregion
     
-    #region Network
-
-    private static void PrepareNetwork()
+    private static bool PrepareRPCs()
     {
-        Helpers.Logger.Debug("Prepare RPCs...");
-        
-        var types = Assembly.GetExecutingAssembly().GetTypes();
-        foreach (var type in types)
+        try
         {
-            var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-            foreach (var method in methods)
+            var types = Assembly.GetExecutingAssembly().GetTypes();
+            foreach (var type in types)
             {
-                var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                if (attributes.Length > 0)
+                var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                foreach (var method in methods)
                 {
-                    method.Invoke(null, null);
+                    var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
+                    if (attributes.Length > 0)
+                    {
+                        method.Invoke(null, null);
+                    }
                 }
             }
         }
-        Helpers.Logger.Debug("RPCs prepared!");
-        
-        Helpers.Logger.Debug("Registering all prefabs...");
-        NetworkPrefabUtils.Register(Constants.VENT_PREFAB, LoadVent);
-        Helpers.Logger.Debug("All prefabs registered!");
+        catch (Exception e)
+        {
+            Helpers.Logger.Error($"Error while preparing RPCs: '{e.Message}'");
+            return false;
+        }
+
+        return true;
     }
-
-    private static void LoadVent(GameObject vent)
+    
+    private static bool LoadFallbackItem()
     {
-        var terminalNode = Bundle.LoadAsset<TerminalNode>(Constants.INVENTORY_BUY_TERMINAL_NODE);
+        var errorItem = Bundle.LoadAsset<Item>(Constants.ERROR_ITEM_ASSET);
 
-        if (terminalNode == null)
-            throw new NullReferenceException("Could not find the terminal node for the inventory.");
+        if (errorItem == null)
+            return false;
         
-        vent.AddComponent<ChuteInteract>();
+        var badItem = errorItem.spawnPrefab.AddComponent<BadItem>();
+        badItem.itemProperties = errorItem;
+            
+        NetworkPrefabs.RegisterNetworkPrefab(errorItem.spawnPrefab);
+        Items.RegisterItem(errorItem);
+        
+        ItemData.FALLBACK_ITEM = errorItem;
+        return true;
+    }
+    internal static bool LoadChute(out GameObject? prefab)
+    {
+        prefab = null;
 
-        var autoParent = vent.GetComponent<AutoParentToShip>();
+        var chutePrefab = Bundle.LoadAsset<GameObject>(Constants.CHUTE_PREFAB);
+
+        if (chutePrefab == null)
+            return false;
+        
+        chutePrefab.AddComponent<ChuteInteract>();
+
+        var autoParent = chutePrefab.GetComponent<AutoParentToShip>();
         ChuteInteract.SetOffsets(autoParent);
         autoParent.overrideOffset = true;
         
-        var unlock = new UnlockableItem
-        {
+        Unity.Netcode.NetworkManager.Singleton.AddNetworkPrefab(chutePrefab);
+        prefab = chutePrefab;
+        return true;
+    }
+    internal static bool LoadTerminalNode(GameObject prefab)
+    {
+        var inventoryBuyNode = Bundle.LoadAsset<TerminalNode>(Constants.INVENTORY_BUY_TERMINAL_NODE);
+
+        if (inventoryBuyNode == null)
+            return false;
+        
+        var unlock = new UnlockableItem {
             unlockableName = Config.ChuteUnlockName.Value,
-            prefabObject = vent,
+            prefabObject = prefab,
             unlockableType = 1,
             shopSelectionNode = null,
             alwaysInStock = true,
@@ -136,39 +163,10 @@ public class ShipInventory : BaseUnityPlugin
             StoreType.ShipUpgrade, 
             null!, 
             null!, 
-            terminalNode, 
+            inventoryBuyNode, 
             Config.ChuteUnlockCost.Value
         );
         ChuteInteract.UnlockableItem = unlock;
+        return true;
     }
-    
-    #endregion
-    
-    #region Items
-
-    public static void PrepareItems()
-    {
-        Helpers.Logger.Debug("Preparing items...");
-        Item? errorItem = Bundle.LoadAsset<Item>(Constants.ERROR_ITEM_ASSET);
-
-        if (errorItem != null)
-        {
-            var badItem = errorItem.spawnPrefab.AddComponent<BadItem>();
-            badItem.itemProperties = errorItem;
-            
-            NetworkPrefabs.RegisterNetworkPrefab(errorItem.spawnPrefab);
-            Items.RegisterItem(errorItem);
-
-            ItemData.FALLBACK_ITEM = errorItem;
-        }
-        else
-        {
-            var allItems = Resources.FindObjectsOfTypeAll<Item>();
-            ItemData.FALLBACK_ITEM = allItems.FirstOrDefault(i => i.itemName == "Gold bar") ?? allItems[0];
-        }
-        
-        Helpers.Logger.Debug("Items prepared!");
-    }
-
-    #endregion
 }

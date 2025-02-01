@@ -10,11 +10,13 @@ public static class Constants
     public const string BAD_ITEM_KEYS = "shipInventoryMissingKeys"; // Key for the data of the mod
     
     // --- ASSETS ---
-    public const string VENT_PREFAB = "VentChute"; // Name of the prefab
+    public const string CHUTE_PREFAB = "ChutePrefab"; // Name of the prefab
     public const string MOD_ICON = "icon"; // Name of the mod's icon
-    public const string BUNDLE = "ShipInventory.Resources.si-bundle"; // Name of the bundle
     public const string ERROR_ITEM_ASSET = "ErrorItem"; // Name of the item
     public const string INVENTORY_BUY_TERMINAL_NODE = "InventoryBuy"; // Name of the terminal node to buy
+
+    // --- BUNDLES ---
+    public const string BUNDLE_MAIN = MyPluginInfo.PLUGIN_NAME + ".Resources.si-bundle";
     
     // --- LAYERS ---
     public const string LAYER_PROPS = "Props"; // Name of the layer Props
