@@ -12,7 +12,7 @@ To access the ship's inventory, you need to type `ship` into the terminal. A win
 ![Image of the command](https://raw.githubusercontent.com/WarperSan/ShipInventory/master/ThunderStore/Assets/ship_command.png)
 
 ### Configs
-This mod tries to give a lot of control to the user. There are a lot of configurations so that you can enjoy the mod as you want.
+This mod tries to give a lot of control to the user. There are a lot of configurations so that you can enjoy the mod as you want. If you want a deeper look into the available settings, you can take a look at [this documentation](https://github.com/WarperSan/ShipInventory/blob/master/SETTINGS.md), which goes over every setting and explains each one.
 
 ### Save and Load
 This mod is compatible with saving and loading the game. The inventory is stored in the save file itself. 
