@@ -38,4 +38,4 @@ If you enjoy my work, consider supporting me on Ko-Fi ❤️
 
 ## License
 
-This project is Licensed under the [MIT](/LICENSE) License.
+This project is Licensed under the [MIT](/ThunderStore/LICENSE) License.
