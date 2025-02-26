@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using GameNetcodeStuff;
@@ -69,7 +70,7 @@ public class ChuteInteract : NetworkBehaviour
 
     private Transform itemRestorePoint = null!;
     private ParticleSystem? spawnParticles;
-    
+    private Transform dropShipTransform;
     private readonly Queue<ItemData> spawnQueue = [];
     private Coroutine? spawnCoroutine;
 
@@ -133,9 +134,20 @@ public class ChuteInteract : NetworkBehaviour
     {
         if (!networkObject.TryGet(out var obj))
             return;
-        
+
         // Set values
-        obj.transform.SetParent(itemRestorePoint, false);
+        // Set the parent to the Drop Ship's transform
+        try
+        {
+            obj.transform.SetParent(dropShipTransform, false);
+        }
+        catch
+        {
+            //Fallback should an error occur when parenting the object to the Drop Ship's transform
+            Logger.Warn("Failed to parent the object to the Drop Ship's transform.");
+            obj.transform.SetParent(itemRestorePoint, false);
+
+        }
         obj.transform.position = itemRestorePoint.position;
         obj.transform.rotation = itemRestorePoint.rotation;
         
@@ -410,7 +422,9 @@ public class ChuteInteract : NetworkBehaviour
 
         itemRestorePoint = transform.Find(Constants.DROP_NODE_PATH);
         spawnParticles = GetComponentInChildren<ParticleSystem>();
-        
+
+        dropShipTransform = GameObject.Find("/Environment/HangarShip").transform;
+
         Logger.Error("CHUTE CREATED");
         Instance = this;
         StartNewCheck();
