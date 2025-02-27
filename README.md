@@ -150,4 +150,4 @@ If you enjoy the original work, consider supporting the original creator on Ko-F
 
 # License
 
-This project is Licensed under the [MIT](https://github.com/WarperSan/ShipInventory/blob/master/LICENSE) License.
+This project is Licensed under the [MIT](https://github.com/TheSoftDiamond/ShipInventoryUpdated/blob/master/LICENSE) License.
