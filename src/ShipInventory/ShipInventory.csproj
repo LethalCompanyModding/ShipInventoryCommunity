@@ -6,7 +6,7 @@
         <Product>ShipInventoryUpdated</Product>
         <!-- Change to whatever version you're currently on. -->
         <Version>1.2.9</Version>
-        <Authors>WarperSan, SoftDiamond</Authors>
+        <Authors>LethalCompanyModding</Authors>
         <Description>Adds an inventory to the ship, allowing it to store items and retrieve them.</Description>
     </PropertyGroup>
 
