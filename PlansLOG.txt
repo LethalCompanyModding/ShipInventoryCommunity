@@ -1,0 +1,3 @@
+- Finish the restructuring WarperSan was working on for a 1.3.0 release. FEB 27, 2025
+
+- Fix duplicate upgrade terminalnode (see https://discord.com/channels/1168655651455639582/1327068908129095700/1338284953892421633). FEB 27, 2025
