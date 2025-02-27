@@ -7,3 +7,5 @@ riderModule.iml
 LC.targets
 ThunderStore/WarperSan-ShipInventory/ShipInventory.dll
 ThunderStore/SoftDiamond-ShipInventoryUpdated/ShipInventoryUpdated.dll
+ThunderStore/SoftDiamond-ShipInventoryUpdated/lang-en.json
+ThunderStore/SoftDiamond-ShipInventoryUpdated/lang-zh-hans.json
