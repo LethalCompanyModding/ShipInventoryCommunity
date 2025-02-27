@@ -1,9 +1,21 @@
 # Ship Inventory Updated
 This repository is a fork of the original [ShipInventory](https://github.com/WarperSan/ShipInventory) with permission. Adds a ship object that allows players to safely store items inside the ship's inventory.
 
+<details>
+  <summary>Special Thanks to</summary>
+<ul>
+  <li><a href="https://github.com/minimusubi">minimusubi</a>: Rework of the terminal UI</li>
+  <li><a href="https://github.com/WarperSan">WarperSan</a>: Original creator of the mod</li>
+</ul>
+</details>
+
 - This mod is required on all clients for it to work.
 - Highly customizable
 - All accessible by one command in terminal: `ship`
+- Compatible with saving and loading the game. The inventory is stored in the save file itself.
+  - Note: Adding or Removing Mods that add items or remove may corrupt the save
+- Has support for different languages.
+  - Copy the lang-en.json file and replace values. And put the file in the same folder as the mod itself.
 
 ## Features
 
@@ -125,17 +137,11 @@ This setting determines the command to type in order to buy the inventory. Comma
 
 </details>
 
-### Save and Load
-This mod is compatible with saving and loading the game. The inventory is stored in the save file itself. 
 
-*Note:*\
-This mod uses the default method of saving items. If you remove or add mods that add items, the save file might be corrupted.
 
-### Language support
-This mod supports different languages. To add or create a new language, simply copy the `lang-en.json` file and replace the values. The file has to be in the same folder as the mod itself.
+# Credits
 
-- **[minimusubi](https://github.com/minimusubi)**: Rework of the terminal UI
-- **[WarperSan](https://github.com/WarperSan)**: Original creator of the mod
+- "vent_chute" (https://skfb.ly/ozTrw) by jazz-the-giraffe is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 # Support
 If you enjoy the original work, consider supporting the original creator on Ko-Fi ❤️
