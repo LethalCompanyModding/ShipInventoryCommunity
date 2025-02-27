@@ -1,5 +1,6 @@
 # Ship Inventory Updated
-Adds a ship object that allows players to safely store items inside the ship's inventory.
+This repository is a fork of the original [ShipInventory](https://github.com/WarperSan/ShipInventory) with permission. Adds a ship object that allows players to safely store items inside the ship's inventory.
+
 
 ### Vent Chute
 By holding an item to the vent chute, you can put items into the ship's inventory. You can also retrieve them using the terminal.
@@ -28,15 +29,15 @@ This mod was originally created for 2 reasons:
 1. One of my friends kept throwing scrap off the ship, making us lose.
 2. I got lag spikes when around the ship (which I assumed is because of the items).
 
-### Special thank to:
+### Special thanks to:
 - **[minimusubi](https://github.com/minimusubi)**: Rework of the terminal UI
-- **[SoftDiamond](https://github.com/TheSoftDiamond)**: Fixing the parenting issues with spawned items
+- **[WarperSan](https://github.com/WarperSan)**: Original creator of the mod
 
-## Support
-If you enjoy my work, consider supporting me on Ko-Fi ❤️
+### Support
+If you enjoy the original work, consider supporting the original creator on Ko-Fi ❤️
 
 [![kofi](https://img.shields.io/badge/kofi-%23F16061.svg?&style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/warpersan)
 
-## License
+### License
 
-This project is Licensed under the [MIT](/ThunderStore/LICENSE) License.
+This project is Licensed under the [MIT](https://github.com/WarperSan/ShipInventory/blob/master/LICENSE) License.
