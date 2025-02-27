@@ -137,6 +137,8 @@ This setting determines the command to type in order to buy the inventory. Comma
 
 </details>
 
+
+
 # Credits
 
 - "vent_chute" (https://skfb.ly/ozTrw) by jazz-the-giraffe is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
@@ -148,4 +150,4 @@ If you enjoy the original work, consider supporting the original creator on Ko-F
 
 # License
 
-This project is Licensed under the [MIT](https://github.com/WarperSan/ShipInventory/blob/master/LICENSE) License.
+This project is Licensed under the [MIT](https://github.com/TheSoftDiamond/ShipInventoryUpdated/blob/master/LICENSE) License.
