@@ -4,3 +4,6 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 /.vs/
+LC.targets
+ThunderStore/WarperSan-ShipInventory/ShipInventory.dll
+ThunderStore/SoftDiamond-ShipInventoryUpdated/ShipInventoryUpdated.dll
