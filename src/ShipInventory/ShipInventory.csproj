@@ -44,52 +44,38 @@
 
     <!-- Primary Package References -->
     <ItemGroup>
-        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
-        <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all"/>
-        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" PrivateAssets="all"/>
-        <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all"/>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
+        <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all"/>
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile"
+            PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
-        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2"
+            PrivateAssets="all" />
     </ItemGroup>
 
     <!-- Dependencies -->
+    <!-- Replace these with Nuget packages-->
     <ItemGroup>
-      <Reference Include="bin\com.sigurd.csync.dll" />
-      <Reference Include="bin\InteractiveTerminalAPI.dll" />
-      <Reference Include="bin\LethalConfig.dll" />
-      <Reference Include="bin\LethalLib.dll" />
-      <Reference Include="bin\CustomItemBehaviourLibrary.dll" />
-      <Reference Include="bin\OpenMonitors.dll" Publicize="true"/>
-    </ItemGroup>
-	
-    <ItemGroup>
-      <Folder Include="ThunderStore\WarperSan-ShipInventory\" />
+        <Reference Include="bin\com.sigurd.csync.dll" />
+        <Reference Include="bin\InteractiveTerminalAPI.dll" />
+        <Reference Include="bin\LethalConfig.dll" />
+        <Reference Include="bin\LethalLib.dll" />
+        <Reference Include="bin\CustomItemBehaviourLibrary.dll" />
+        <Reference Include="bin\OpenMonitors.dll" Publicize="true" />
     </ItemGroup>
 
     <!-- Targets -->
     <PropertyGroup>
         <Profile>Ship Inventory</Profile>
     </PropertyGroup>
-    
-    <!-- BUILD EVENTS -->
-    <Target Name="MakeThunderStore" BeforeTargets="Build" Condition="!Exists('$(ProjectDir)ThunderStore')">
-        <Exec Command="mkdir ThunderStore"/>
-    </Target>
-    
-    <Target Name="CopyREADME" AfterTargets="Build" Condition="Exists('$(ProjectDir)/README.md')">
-        <Copy SourceFiles="$(ProjectDir)/README.md" DestinationFiles="$(ProjectDir)ThunderStore/README.md"/>
-    </Target>
-    
-    <Target Name="CopyLangs" AfterTargets="Build" Condition="Exists('$(ProjectDir)/Lang')">
-        <Exec Command="xcopy &quot;$(ProjectDir)Lang\*.*&quot; &quot;$(ProjectDir)ThunderStore\$(FolderName)&quot; /Y /I /E" />
-    </Target>
 
-	<Import Project="LC.targets" />
+    <Import Project="LC.targets" />
     <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
-        <Exec Command="netcode-patch -nv 1.5.2 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')"/>
+        <Exec
+            Command="dotnet tool run netcode-patch -nv 1.5.2 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
     </Target>
 </Project>
