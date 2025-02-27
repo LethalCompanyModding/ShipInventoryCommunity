@@ -425,7 +425,7 @@ public class ChuteInteract : NetworkBehaviour
 
         dropShipTransform = GameObject.Find("/Environment/HangarShip").transform;
 
-        Logger.Error("CHUTE CREATED");
+        Logger.Info("CHUTE CREATED");
         Instance = this;
         StartNewCheck();
     }
