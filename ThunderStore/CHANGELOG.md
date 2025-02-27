@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.6]() (2025-02-26)
+## Fixes
+* Fixed how the items spawn, now spawning inside the ship correctly
+
 ## [1.2.5]() (2025-01-18)
 ## Fixes
 * Fixed the blacklist to be case-insensitive
