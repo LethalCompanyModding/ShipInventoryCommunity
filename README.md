@@ -137,8 +137,6 @@ This setting determines the command to type in order to buy the inventory. Comma
 
 </details>
 
-
-
 # Credits
 
 - "vent_chute" (https://skfb.ly/ozTrw) by jazz-the-giraffe is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
@@ -147,6 +145,15 @@ This setting determines the command to type in order to buy the inventory. Comma
 If you enjoy the original work, consider supporting the original creator on Ko-Fi ❤️
 
 [![kofi](https://img.shields.io/badge/kofi-%23F16061.svg?&style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/warpersan)
+
+# Developer Contact
+
+| **Discord Server** | **Forum** | **Post** |  
+|--------------------|-----------|----------|  
+| [Lethal Company Modding](https://discord.gg/XeyYqRdRGC) | `#mod-releases` | [ShipInventoryUpgraded](https://discord.com/channels/1168655651455639582/1344527838283563131) |  `
+
+- **Email:** softdiamond@softdiamond.net
+- **Twitch:** [softdiamond](https://www.twitch.tv/softdiamond)  
 
 # License
 
