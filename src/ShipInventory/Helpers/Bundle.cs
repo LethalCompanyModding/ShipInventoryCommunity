@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using CSync;
+using UnityEngine;
 
 namespace ShipInventory.Helpers;
 
@@ -15,16 +17,18 @@ internal static class Bundle
     /// <returns>Success of the load</returns>
     public static bool LoadBundle(string name)
     {
-        var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
+        var directory = Path.GetDirectoryName(typeof(Bundle).Assembly.Location);
+        Logger.Info($"Loading bundle: {Path.Combine(directory, name)}");
+        var stream = new StreamReader(Path.Combine(directory, name)).BaseStream;
 
         if (stream == null)
         {
             Logger.Error($"No bundle named '{name}'.");
             return false;
         }
-        
+
         var bundle = AssetBundle.LoadFromStream(stream);
-        
+
         if (bundle == null)
         {
             Logger.Error($"Failed to load the bundle '{name}'.");
@@ -51,7 +55,7 @@ internal static class Bundle
 
         if (asset == null)
             Logger.Error($"No asset named '{name}' was found.");
-        
+
         return asset;
     }
 }
