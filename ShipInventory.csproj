@@ -2,11 +2,11 @@
 
     <!-- BepInEx Properties -->
     <PropertyGroup>
-        <AssemblyName>ShipInventory</AssemblyName>
-        <Product>ShipInventory</Product>
+        <AssemblyName>ShipInventoryUpdated</AssemblyName>
+        <Product>ShipInventoryUpdated</Product>
         <!-- Change to whatever version you're currently on. -->
         <Version>1.2.9</Version>
-        <Authors>WarperSan</Authors>
+        <Authors>WarperSan, SoftDiamond</Authors>
         <Description>Adds an inventory to the ship, allowing it to store items and retrieve them.</Description>
     </PropertyGroup>
 
