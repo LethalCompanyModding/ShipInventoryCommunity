@@ -11,7 +11,7 @@ namespace ShipInventory;
 
 public class Configuration : SyncedConfig2<Configuration>
 {
-    public Configuration(ConfigFile cfg) : base(MyPluginInfo.PLUGIN_GUID)
+    public Configuration(ConfigFile cfg) : base(LCMPluginInfo.PLUGIN_GUID)
     {
         LangUsed = cfg.Bind("Language", "Language", Lang.DEFAULT_LANG);
         Lang.LoadLang(LangUsed.Value);
@@ -21,16 +21,16 @@ public class Configuration : SyncedConfig2<Configuration>
         LoadTerminalConfig(cfg);
         LoadNetworkConfig(cfg);
         LoadUnlockConfig(cfg);
-        
+
         if (Compatibility.LethalConfig.Enabled)
             Compatibility.LethalConfig.AddConfigs(this);
     }
-    
+
     #region General
 
     public readonly ConfigEntry<string> LangUsed;
-    
-    public enum PermissionLevel { HOST_ONLY, CLIENTS_ONLY, EVERYONE, NO_ONE  }
+
+    public enum PermissionLevel { HOST_ONLY, CLIENTS_ONLY, EVERYONE, NO_ONE }
     public enum SortOrder { NONE, NAME_ASC, NAME_DESC, VALUE_ASC, VALUE_DESC }
 
     #endregion
@@ -42,41 +42,41 @@ public class Configuration : SyncedConfig2<Configuration>
     [SyncedEntryField] public SyncedEntry<float> TimeToRetrieve;
     [SyncedEntryField] public SyncedEntry<int> StopAfter;
     [SyncedEntryField] public SyncedEntry<string> Blacklist;
-    
+
     private void LoadChuteConfig(ConfigFile cfg)
     {
         string CHUTE = Lang.Get("CHUTE_SECTION");
-        
+
         ChutePermission = cfg.BindSyncedEntry(
             new ConfigDefinition(CHUTE, "ChutePermission"),
             PermissionLevel.EVERYONE,
             new ConfigDescription(Lang.Get("DESCRIPTION_CHUTE_PERMISSION"))
         );
-        
+
         RequireInOrbit = cfg.BindSyncedEntry(
             new ConfigDefinition(CHUTE, "ChuteInOrbit"),
             false,
             new ConfigDescription(Lang.Get("DESCRIPTION_REQUIRE_IN_ORBIT"))
         );
-        
+
         TimeToStore = cfg.BindSyncedEntry(
             new ConfigDefinition(CHUTE, "TimeToStore"),
             0.5f,
             new ConfigDescription(Lang.Get("DESCRIPTION_TIME_TO_STORE"))
         );
-        
+
         TimeToRetrieve = cfg.BindSyncedEntry(
             new ConfigDefinition(CHUTE, "ChuteDelay"),
             0.5f,
             new ConfigDescription(Lang.Get("DESCRIPTION_TIME_TO_RETRIEVE"))
         );
-        
+
         StopAfter = cfg.BindSyncedEntry(
             new ConfigDefinition(CHUTE, "ChuteMaxCapacity"),
             30,
             new ConfigDescription(Lang.Get("DESCRIPTION_STOP_AFTER"))
         );
-        
+
         Blacklist = cfg.BindSyncedEntry(
             new ConfigDefinition(CHUTE, "ChuteBlacklist"),
             "",
@@ -106,37 +106,37 @@ public class Configuration : SyncedConfig2<Configuration>
             PermissionLevel.EVERYONE,
             new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_PERMISSION"))
         );
-        
+
         ActAsSafe = cfg.BindSyncedEntry(
             new ConfigDefinition(INVENTORY, "ChuteSafe"),
             false,
             new ConfigDescription(Lang.Get("DESCRIPTION_AS_SAFE"))
         );
-        
+
         PersistThroughFire = cfg.BindSyncedEntry(
             new ConfigDefinition(INVENTORY, "PersistThroughFire"),
             false,
             new ConfigDescription(Lang.Get("DESCRIPTION_PERSIST_THROUGH_FIRE"))
         );
-        
+
         MaxItemCount = cfg.BindSyncedEntry(
             new ConfigDefinition(INVENTORY, "MaxItemCount"),
             5_000,
             new ConfigDescription(Lang.Get("DESCRIPTION_MAX_ITEM_COUNT"))
         );
-        
+
         KeepRate = cfg.BindSyncedEntry(
             new ConfigDefinition(INVENTORY, "KeepRate"),
             0f,
             new ConfigDescription(Lang.Get("DESCRIPTION_KEEP_RATE"))
         );
-        
+
         InventorySortOrder = cfg.Bind(
             new ConfigDefinition(INVENTORY, "InventorySortOrder"),
             SortOrder.NAME_ASC,
             new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_SORT_ORDER"))
         );
-        
+
         KeepRemoveAll = cfg.BindSyncedEntry(
             new ConfigDefinition(INVENTORY, "KeepRemoveAll"),
             true,
@@ -151,7 +151,7 @@ public class Configuration : SyncedConfig2<Configuration>
     public ConfigEntry<bool> YesPlease;
     public ConfigEntry<bool> ShowConfirmation;
     public ConfigEntry<bool> ShowTrademark;
-    
+
     private void LoadTerminalConfig(ConfigFile cfg)
     {
         string TERMINAL = Lang.Get("TERMINAL_SECTION");
@@ -161,19 +161,19 @@ public class Configuration : SyncedConfig2<Configuration>
             "ship",
             new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_COMMAND"))
         );
-        
+
         YesPlease = cfg.Bind(
             new ConfigDefinition(TERMINAL, "YesPlease"),
             false,
             new ConfigDescription(Lang.Get("DESCRIPTION_YES_PLEASE"))
         );
-        
+
         ShowConfirmation = cfg.Bind(
             new ConfigDefinition(TERMINAL, "ShowConfirmation"),
             true,
             new ConfigDescription(Lang.Get("DESCRIPTION_SHOW_CONFIRMATION"))
         );
-        
+
         ShowTrademark = cfg.Bind(
             new ConfigDefinition(TERMINAL, "ShowTrademark"),
             true,
@@ -188,17 +188,17 @@ public class Configuration : SyncedConfig2<Configuration>
     [SyncedEntryField] public SyncedEntry<bool> InventoryUpdateCheckSilencer;
     [SyncedEntryField] public SyncedEntry<bool> ForceUpdateUponAdding;
     [SyncedEntryField] public SyncedEntry<bool> ForceUpdateUponRemoving;
-    
+
     private void LoadNetworkConfig(ConfigFile cfg)
     {
         string NETWORK = Lang.Get("NETWORK_SECTION");
-        
+
         InventoryRefreshRate = cfg.BindSyncedEntry(
             new ConfigDefinition(NETWORK, "InventoryRefreshRate"),
             15f,
             new ConfigDescription(Lang.Get("DESCRIPTION_INVENTORY_REFRESH_RATE"))
         );
-        
+
         InventoryUpdateCheckSilencer = cfg.BindSyncedEntry(
             new ConfigDefinition(NETWORK, "InventoryUpdateCheckSilencer"),
             false,
@@ -209,13 +209,13 @@ public class Configuration : SyncedConfig2<Configuration>
             if (!e.OldValue && e.NewValue)
                 Logger.Debug("Inventory Update Check has been silenced.");
         };
-        
+
         ForceUpdateUponAdding = cfg.BindSyncedEntry(
             new ConfigDefinition(NETWORK, "ForceUpdateUponAdding"),
             true,
             new ConfigDescription(Lang.Get("DESCRIPTION_FORCE_UPDATE_UPON_ADDING"))
         );
-        
+
         ForceUpdateUponRemoving = cfg.BindSyncedEntry(
             new ConfigDefinition(NETWORK, "ForceUpdateUponRemoving"),
             true,
@@ -233,13 +233,13 @@ public class Configuration : SyncedConfig2<Configuration>
     private void LoadUnlockConfig(ConfigFile cfg)
     {
         string UNLOCK = Lang.Get("UNLOCK_SECTION");
-        
+
         ChuteIsUnlock = cfg.BindSyncedEntry(
             new ConfigDefinition(UNLOCK, "ChuteIsUnlock"),
             true,
             new ConfigDescription(Lang.Get("DESCRIPTION_CHUTE_IS_UNLOCK"))
         );
-        
+
         ChuteUnlockCost = cfg.BindSyncedEntry(
             new ConfigDefinition(UNLOCK, "ChuteUnlockCost"),
             60,
