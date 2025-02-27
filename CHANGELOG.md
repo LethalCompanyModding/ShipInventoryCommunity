@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.9]() (2025-02-27)
+## Changes
+- Fixed log level for chute creation
+- ShipInventory Bundle will be packaged outside of the file for now on.
+
+## [1.2.8]() (2025-02-26)
+## Additions
+* This update is functionally the same as Ship inventory's 1.2.6 update. This is just incremented to avoid any confusions.
+
 ## [1.2.6]() (2025-02-26)
 ## Fixes
 * Fixed how the items spawn, now spawning inside the ship correctly
