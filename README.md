@@ -29,7 +29,8 @@ This mod was originally created for 2 reasons:
 2. I got lag spikes when around the ship (which I assumed is because of the items).
 
 ### Special thank to:
-- **minimusubi**: rework of the terminal UI
+- **[minimusubi](https://github.com/minimusubi)**: Rework of the terminal UI
+- **[SoftDiamond](https://github.com/TheSoftDiamond)**: Fixing the parenting issues with spawned items
 
 ## Support
 If you enjoy my work, consider supporting me on Ko-Fi ❤️
