@@ -25,7 +25,12 @@ internal static class LethalConfig
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public static void AddConfigs(Configuration config)
     {
-        LethalConfigManager.SetModIcon(Bundle.LoadAsset<Sprite>(Constants.MOD_ICON));
+        Texture2D icon = Bundle.LoadAsset<Texture2D>(Constants.MOD_ICON)!;
+        LethalConfigManager.SetModIcon(Sprite.Create(
+            icon,
+            new Rect(0f, 0f, icon.width, icon.height),
+            new Vector2(0.5f, 0.5f))
+        );
         LethalConfigManager.SetModDescription(
             "Adds an inventory to the ship, allowing it to store items and retrieve them.");
 
