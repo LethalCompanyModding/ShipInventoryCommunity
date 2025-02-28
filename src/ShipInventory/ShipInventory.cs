@@ -27,11 +27,11 @@ public class ShipInventory : BaseUnityPlugin
     private void Awake()
     {
         Helpers.Logger.SetLogger(Logger);
-
-        Configuration = new Configuration(Config);
-
+        
         if (!Bundle.LoadBundle(Constants.BUNDLE_MAIN))
             return;
+
+        Configuration = new Configuration(Config);
 
         if (!LoadFallbackItem())
             return;
