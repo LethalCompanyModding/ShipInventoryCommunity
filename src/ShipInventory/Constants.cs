@@ -11,7 +11,7 @@ public static class Constants
 
     // --- ASSETS ---
     public const string CHUTE_PREFAB = "ChutePrefab"; // Name of the prefab
-    public const string MOD_ICON = "icon"; // Name of the mod's icon
+    public const string MOD_ICON = "icon.png"; // Name of the mod's icon
     public const string ERROR_ITEM_ASSET = "ErrorItem"; // Name of the item
     public const string INVENTORY_BUY_TERMINAL_NODE = "InventoryBuy"; // Name of the terminal node to buy
 
