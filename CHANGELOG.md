@@ -1,26 +1,44 @@
 # Changelog
 
-## [1.2.9]() (2025-02-27)
+<details>
+<summary>1.2.10</summary>
+
+## Changes
+- Asset Bundle loads earlier to prevent an error with LethalConfig
+- Sprite is created at runtime to prevent an error with loading the icon despite it being there.
+- ShipInventory should no longer duplicate when used alongside Terminal Stuff.
+</details>
+
+<details>
+<summary>1.2.9</summary>
 ## Changes
 - Fixed log level for chute creation
 - ShipInventory Bundle will be packaged outside of the file for now on.
+</details>
 
-## [1.2.8]() (2025-02-26)
+<details>
+<summary>1.2.8</summary>
 ## Additions
 * This update is functionally the same as Ship inventory's 1.2.6 update. This is just incremented to avoid any confusions.
+</details>
 
-## [1.2.6]() (2025-02-26)
+<details>
+<summary>1.2.6</summary>
 ## Fixes
 * Fixed how the items spawn, now spawning inside the ship correctly
+</details>
 
-## [1.2.5]() (2025-01-18)
+<details>
+<summary>1.2.5</summary>
 ## Fixes
 * Fixed the blacklist to be case-insensitive
 * Fixed items clearing when storing the chute
 * Fixed items being parented to the chute
 * Fixed a crash when a client tries to respawn the chute after being fired
+</details>
 
-## [1.2.4]() (2025-01-12)
+<details>
+<summary>1.2.4</summary>
 ## Fixes
 * Fixed an issue where selecting "Understood" does nothing
 * Fixed the blacklist to ignore whitespaces before and after items
@@ -36,9 +54,10 @@
 
 ## Changes
 * Changed the blacklist to support REGEX patterns
+</details>
 
-## [1.2.3]() (2025-01-01)
-
+<details>
+<summary>1.2.3</summary>
 ## Fixes
 * Fixed a type in the english version of the configs
 * Fixed typo in ItemManager.cs
@@ -53,9 +72,10 @@
 * Removed the update for the host, due to it being unnecessary
 * Changed the belt bags to store themselves and their items instead of just themselves
 * Softened the error when an item has an invalid ID (Exception => Logged Error)
+</details>
 
-## [1.2.2]() (2024-12-30)
-
+<details>
+<summary>1.2.2</summary>
 ## Fixes
 * Fixed the problems related to the unlock feature
 
@@ -65,16 +85,18 @@
 
 ## Changes
 * Changed 'ChuteIsUnlock' to  only requires a lobby reload
+</details>
 
-## [1.2.1]() (2024-12-29)
-
+<details>
+<summary>1.2.1</summary>
 ## Fixes:
 * Fixed the languages being wrongly extracted
 * Fixed the chute movement when the chute is not an upgrade
 * Removed the dependency of SmartItemSaving
+</details>
 
-## [1.2.0](https://github.com/WarperSan/ShipInventory/releases/tag/1.2.0) (2024-12-29)
-
+<details>
+<summary>1.2.0</summary>
 ## Fixes:
 * <strong>Changed how the item system works</strong>
 
@@ -97,13 +119,16 @@
 * Renamed SpawnDelay to TimeToRetrieve
 * Made the chute an unlockable upgrade
 * Made the chute movable
+</details>
 
-## [1.1.8](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.8) (2024-12-09)
-
+<details>
+<summary>1.1.8</summary>
 ## Fixes:
 * Saving the items in the inventory now works
+</details>
 
-## [1.1.7](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.7) (2024-12-08)
+<details>
+<summary>1.1.7</summary>
 <p style="color:#AAAA00">Previous saves are not compatible (again)</p>
 
 ## Fixes:
@@ -112,7 +137,10 @@
 ## Additions:
 * Fallback item if an item is not found
 
-## [1.1.6](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.6) (2024-11-25)
+</details>
+
+<details>
+<summary>1.1.6</summary>
 <p style="color:#AAAA00">Previous saves are not compatible</p>
 
 ### Fixes:
@@ -122,14 +150,21 @@
 * Permission to store items in the chute
 * Permission to retrieve items from the inventory
 
-## [1.1.5](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.5) (2024-10-24)
-Not sure what changed, since dates are messed up.
+</details>
 
-## [1.1.4](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.4) (2024-09-28)
+<details>
+<summary>1.1.5</summary>
+Not sure what changed, since dates are messed up.
+</details>
+
+<details>
+<summary>1.1.4</summary>
 ### Fixes:
 * The inventory now clears only when all players died
+</details>
 
-## [1.1.3](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.3) (2024-09-28)
+<details>
+<summary>1.1.3</summary>
 ### Additions:
 * Added a new config
 
@@ -143,8 +178,10 @@ Not sure what changed, since dates are messed up.
 
 ### Fixes:
 * Fixed the method ItemManager.GetInstances
+</details>
 
-## [1.1.2](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.2) (2024-09-27)
+<details>
+<summary>1.1.2</summary>
 ### Additions:
 * Added soft compatibility with LethalConfig
 * Added a new config (YesPlease)
@@ -158,14 +195,18 @@ Not sure what changed, since dates are messed up.
 * Fixed how the items are chosen to be allowed
 * Fixed bugs with ShipApplication.cs
 * Fixed how items spawn from the chute
+</details>
 
-## [1.1.1](https://github.com/WarperSan/ShipInventory/releases/tag/1.1.1) (2024-09-08)
+<details>
+<summary>1.1.1</summary>
 ### Additions:
 * Added localization support 
 * Added 2 configs 
 * Added that the inventory resets when fired
+</details>
 
-## [1.0.4](https://github.com/WarperSan/ShipInventory/releases/tag/1.0.4) (2024-08-25)
+<details>
+<summary>1.0.4</summary>
 ### Additions:
 * Added cycling idle information (total, amount)
 * Added method in ItemManager that returns the sum of the items stored 
@@ -178,8 +219,10 @@ Not sure what changed, since dates are messed up.
 ## Fixes:  
 * Fixed the unlockable bug(?)
 * Fixed a bug with the blacklist not updating upon joining
+</details>
 
-## [1.0.3](https://github.com/WarperSan/ShipInventory/releases/tag/1.0.3) (2024-08-16)
+<details>
+<summary>1.0.3</summary>
 ### Additions:
 * Added UI from Interactive Terminal API 
 * Added a blacklist for the items allowed
@@ -189,9 +232,10 @@ Not sure what changed, since dates are messed up.
 
 ### Fixes:
 * Fixed a duplication glitch
+</details>
 
-
-## [1.0.2](https://github.com/WarperSan/ShipInventory/releases/tag/1.0.2) (2024-08-8)
+<details>
+<summary>1.0.2</summary>
 ### Additions:
 * Added the command 'retrieve all' 
 * Added the command 'retrieve random' 
@@ -213,7 +257,10 @@ Not sure what changed, since dates are messed up.
 * The chute now doesn't count towards the day quota 
 * The chute loads empty when no items were saved in the save file
 
-## [1.0.1](https://github.com/WarperSan/ShipInventory/releases/tag/1.0.1) (2024-08-07)
+</details>
+
+<details>
+<summary>1.0.1</summary>
 ### Additions:
 * Unity Assets for this mod 
 * Clearing the inventory upon a loss 
@@ -230,7 +277,9 @@ Not sure what changed, since dates are messed up.
 * Fixed problems related to the object Chute 
 * Fixed the spawn of items from the chute 
 * Fixed the scan node for the chute
+</details>
 
-
-## [1.0.0](https://github.com/WarperSan/ShipInventory/releases/tag/1.0.0)  (2024-08-07)
+<details>
+<summary>1.0.0</summary>
 * Mod itself :3
+</details>
