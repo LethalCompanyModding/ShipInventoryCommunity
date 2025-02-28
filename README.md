@@ -150,7 +150,7 @@ If you enjoy the original work, consider supporting the original creator on Ko-F
 
 | **Discord Server** | **Forum** | **Post** |  
 |--------------------|-----------|----------|  
-| [Lethal Company Modding](https://discord.gg/XeyYqRdRGC) | `#mod-releases` | [ShipInventoryUpgraded](https://discord.com/channels/1168655651455639582/1344527838283563131) |  `
+| [Lethal Company Modding](https://discord.gg/XeyYqRdRGC) | `#mod-releases` | [ShipInventoryUpdated](https://discord.com/channels/1168655651455639582/1344527838283563131) |  `
 
 - **Email:** softdiamond@softdiamond.net
 - **Twitch:** [softdiamond](https://www.twitch.tv/softdiamond)  
