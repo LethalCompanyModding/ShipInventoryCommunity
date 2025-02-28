@@ -54,7 +54,9 @@ internal static class Bundle
         var asset = loadedBundle.LoadAsset<T>(name);
 
         if (asset == null)
+        {
             Logger.Error($"No asset named '{name}' was found.");
+        }
 
         return asset;
     }
