@@ -4,6 +4,8 @@
 <summary>1.2.11</summary>
 ## Fixes
 - Missing graphic when depositing items should be fixed
+- Fixed desync issue on multiplayer
+- Fixed missing object place sound
 </details>
 
 <details>
