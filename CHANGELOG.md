@@ -1,6 +1,12 @@
 # Changelog
 
 <details>
+<summary>1.2.11</summary>
+## Fixes
+- Missing graphic when depositing items should be fixed
+</details>
+
+<details>
 <summary>1.2.10</summary>
 
 ## Changes
