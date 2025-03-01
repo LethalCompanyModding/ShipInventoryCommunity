@@ -253,7 +253,7 @@ public class Configuration : SyncedConfig2<Configuration>
 
         ChuteUnlockName = cfg.BindSyncedEntry(
             new ConfigDefinition(UNLOCK, "ChuteUnlockName"),
-            "Ship Inventory",
+            "ship inventory",
             new ConfigDescription(Lang.Get("DESCRIPTION_UNLOCK_NAME"))
         );
     }
