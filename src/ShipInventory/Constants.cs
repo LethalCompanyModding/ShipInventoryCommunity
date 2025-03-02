@@ -16,7 +16,7 @@ public static class Constants
     public const string INVENTORY_BUY_TERMINAL_NODE = "InventoryBuy"; // Name of the terminal node to buy
 
     // --- BUNDLES ---
-    public const string BUNDLE_MAIN = "ShipInventory.bundle";
+    public const string BUNDLE_MAIN = LCMPluginInfo.PLUGIN_NAME + ".Resources.si-bundle";
 
     // --- LAYERS ---
     public const string LAYER_PROPS = "Props"; // Name of the layer Props
