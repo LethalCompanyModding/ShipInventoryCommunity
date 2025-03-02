@@ -5,7 +5,7 @@
         <AssemblyName>ShipInventoryUpdated</AssemblyName>
         <Product>ShipInventoryUpdated</Product>
         <!-- Change to whatever version you're currently on. -->
-        <Version>1.2.11</Version>
+        <Version>1.2.12</Version>
         <Authors>LethalCompanyModding</Authors>
         <Description>Adds an inventory to the ship, allowing it to store items and retrieve them.</Description>
     </PropertyGroup>
