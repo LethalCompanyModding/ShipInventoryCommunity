@@ -1,7 +1,17 @@
 # Changelog
 
 <details>
+<summary>1.2.12</summary>
+
+This update should hopefully fix everything that was wrong with versions 1.2.9-1.2.11, since none of them worked on multiplayer apparently. In all seriousness, apparently there was an issue to the bundle. But should be good now. (Hopefully, please).
+
+## Fixes
+- Hopefully everything (please)
+- WarperSan (for his sanity)
+</details>
+<details>
 <summary>1.2.11</summary>
+
 ## Fixes
 - Missing graphic when depositing items should be fixed
 - Fixed desync issue on multiplayer
