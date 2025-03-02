@@ -70,6 +70,9 @@
     "NAME_CHUTE_IS_UNLOCK": "Is Unlockable",
     "DESCRIPTION_CHUTE_IS_UNLOCK": "Determines if the chute is an unlockable item or if it is always available.\n\n<b>*You will need to close the lobby*</b>",
 
+    "NAME_UNLOCK_ID": "Unlock ID",
+    "DESCRIPTION_UNLOCK_ID": "Determines the ID the unlock will use. Everyone playing should have the same value here to avoid desync.",
+
     "NAME_UNLOCK_COST": "Unlock Cost",
     "DESCRIPTION_UNLOCK_COST": "Determines how expensive it is to unlock the chute.",
 

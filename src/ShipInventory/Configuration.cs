@@ -228,6 +228,7 @@ public class Configuration : SyncedConfig2<Configuration>
 
     [SyncedEntryField] public SyncedEntry<bool> ChuteIsUnlock;
     [SyncedEntryField] public SyncedEntry<int> ChuteUnlockCost;
+    [SyncedEntryField] public SyncedEntry<int> ChuteUnlockID;
     [SyncedEntryField] public SyncedEntry<string> ChuteUnlockName;
 
     private void LoadUnlockConfig(ConfigFile cfg)
@@ -238,6 +239,12 @@ public class Configuration : SyncedConfig2<Configuration>
             new ConfigDefinition(UNLOCK, "ChuteIsUnlock"),
             true,
             new ConfigDescription(Lang.Get("DESCRIPTION_CHUTE_IS_UNLOCK"))
+        );
+
+        ChuteUnlockID = cfg.BindSyncedEntry(
+            new ConfigDefinition(UNLOCK, "ChuteUnlockID"),
+            901,
+            new ConfigDescription(Lang.Get("DESCRIPTION_UNLOCK_ID"))
         );
 
         ChuteUnlockCost = cfg.BindSyncedEntry(

@@ -1,6 +1,13 @@
 # Changelog
 
 <details>
+<summary>1.2.13</summary>
+
+## Additions
+You can now specify the Chute's ship unlock ID. This can be useful if it conflicts with other ship unlocks.
+</details>
+
+<details>
 <summary>1.2.12</summary>
 
 This update should hopefully fix everything that was wrong with versions 1.2.9-1.2.11, since none of them worked on multiplayer apparently. In all seriousness, apparently there was an issue to the bundle. But should be good now. (Hopefully, please).

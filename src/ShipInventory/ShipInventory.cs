@@ -143,6 +143,9 @@ public class ShipInventory : BaseUnityPlugin
     {
         var inventoryBuyNode = Bundle.LoadAsset<TerminalNode>(Constants.INVENTORY_BUY_TERMINAL_NODE);
 
+        inventoryBuyNode.shipUnlockableID = Configuration.ChuteUnlockID.Value;
+        Helpers.Logger.Info($"Unlock ID: {inventoryBuyNode.shipUnlockableID}");
+
         if (inventoryBuyNode == null)
             return false;
 
