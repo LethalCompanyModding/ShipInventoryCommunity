@@ -78,6 +78,10 @@
             PrivateAssets="all" Publicize="true" />
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Include="Resources/**" />
+    </ItemGroup>
+
     <!-- Targets -->
     <PropertyGroup>
         <Profile>Ship Inventory</Profile>
