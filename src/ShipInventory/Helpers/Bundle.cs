@@ -1,6 +1,4 @@
-﻿using System.IO;
-using CSync;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ShipInventory.Helpers;
 
@@ -17,9 +15,7 @@ internal static class Bundle
     /// <returns>Success of the load</returns>
     public static bool LoadBundle(string name)
     {
-        var directory = Path.GetDirectoryName(typeof(Bundle).Assembly.Location);
-        Logger.Info($"Loading bundle: {Path.Combine(directory, name)}");
-        var stream = new StreamReader(Path.Combine(directory, name)).BaseStream;
+        var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
 
         if (stream == null)
         {
