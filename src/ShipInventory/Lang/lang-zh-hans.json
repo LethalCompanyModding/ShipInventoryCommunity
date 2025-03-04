@@ -70,6 +70,9 @@
     "NAME_CHUTE_IS_UNLOCK": "是个解锁项",
     "DESCRIPTION_CHUTE_IS_UNLOCK": "决定储物槽是可解锁项还是始终可用。\n\n<b>*您需要关闭大厅*</b>",
 
+    "NAME_UNLOCK_ID": "解锁ID",
+    "DESCRIPTION_UNLOCK_ID": "决定解锁将使用的ID值。每个玩家都应该在这里具有相同的值，以避免不同步。",
+
     "NAME_UNLOCK_COST": "解锁价格",
     "DESCRIPTION_UNLOCK_COST": "定义解锁储物槽的成本。",
 
