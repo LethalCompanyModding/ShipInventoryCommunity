@@ -8,5 +8,4 @@ abstract class Constants
     // --- ASSETS ---
     public const string CHUTE_PREFAB = "ChutePrefab";
     public const string INVENTORY_BUY_TERMINAL_NODE = "InventoryBuy";
-    public const string t = "T";
 }
