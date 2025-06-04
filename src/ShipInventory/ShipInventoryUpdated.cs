@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace ShipInventoryUpdated;
 
+[BepInDependency("evaisa.lethallib", BepInDependency.DependencyFlags.HardDependency)]
 [BepInPlugin(LCMPluginInfo.PLUGIN_GUID, LCMPluginInfo.PLUGIN_NAME, LCMPluginInfo.PLUGIN_VERSION)]
 public class ShipInventoryUpdated : BaseUnityPlugin
 {
@@ -92,11 +93,11 @@ public class ShipInventoryUpdated : BaseUnityPlugin
     {
         var inventoryBuyNode = Helpers.Bundle.LoadAsset<TerminalNode>(Constants.INVENTORY_BUY_TERMINAL_NODE);
 
-        Helpers.Logger.Info($"Unlock ID: {inventoryBuyNode.shipUnlockableID}");
-        inventoryBuyNode.shipUnlockableID = 901;
-
         if (inventoryBuyNode == null)
             return null;
+
+        Helpers.Logger.Info($"Unlock ID: {inventoryBuyNode.shipUnlockableID}");
+        inventoryBuyNode.shipUnlockableID = 901;
 
         var unlock = new UnlockableItem
         {
