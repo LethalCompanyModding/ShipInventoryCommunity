@@ -1,4 +1,5 @@
 using BepInEx;
+using HarmonyLib;
 using UnityEngine;
 
 namespace ShipInventoryUpdated;
@@ -12,6 +13,8 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 
         if (!LoadAssets("si-bundle"))
             return;
+        
+        Patch();
         
         Helpers.Logger.Info($"{LCMPluginInfo.PLUGIN_GUID} v{LCMPluginInfo.PLUGIN_VERSION} has loaded!");
     }
