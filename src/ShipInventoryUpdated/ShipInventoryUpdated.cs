@@ -5,6 +5,9 @@ using UnityEngine;
 namespace ShipInventoryUpdated;
 
 [BepInPlugin(LCMPluginInfo.PLUGIN_GUID, LCMPluginInfo.PLUGIN_NAME, LCMPluginInfo.PLUGIN_VERSION)]
+// Hard
+// Soft
+[BepInDependency(LethalConfig.PluginInfo.Guid, BepInDependency.DependencyFlags.SoftDependency)]
 public class ShipInventoryUpdated : BaseUnityPlugin
 {
     private void Awake()
@@ -14,6 +17,7 @@ public class ShipInventoryUpdated : BaseUnityPlugin
         if (!LoadAssets("si-bundle"))
             return;
         
+        LoadDependencies();
         Patch();
         
         Helpers.Logger.Info($"{LCMPluginInfo.PLUGIN_GUID} v{LCMPluginInfo.PLUGIN_VERSION} has loaded!");
@@ -35,6 +39,16 @@ public class ShipInventoryUpdated : BaseUnityPlugin
         CHUTE_CONFIRM_NODE = Helpers.Bundle.LoadAsset<TerminalNode>("ChuteConfirm");
 
         return true;
+    }
+
+    #endregion
+    
+    #region Dependencies
+
+    private static void LoadDependencies()
+    {
+        if (Dependencies.LethalConfig.Dependency.Enabled)
+            Dependencies.LethalConfig.Dependency.ApplyConfiguration();
     }
 
     #endregion

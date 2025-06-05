@@ -2,6 +2,12 @@
   "version": 1,
   "dependencies": {
     ".NETStandard,Version=v2.1": {
+      "AinaVT-LethalConfig": {
+        "type": "Direct",
+        "requested": "[1.4.6, )",
+        "resolved": "1.4.6",
+        "contentHash": "1Xxsa43VjNTPh4Bye70BicN2dFvHeuwBogru3ru4C5+VZ6a7RxTsvWKJSdm+tJDa44d8gzkmVRjhg6iR6CHeeA=="
+      },
       "BepInEx.Analyzers": {
         "type": "Direct",
         "requested": "[1.*, )",

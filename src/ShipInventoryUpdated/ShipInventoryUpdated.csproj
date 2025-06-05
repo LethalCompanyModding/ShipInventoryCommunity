@@ -59,6 +59,11 @@
     </ItemGroup>
 
     <!-- Dependencies -->
+    <ItemGroup>
+        <!-- Hard -->
+        <!-- Soft -->
+        <PackageReference Include="AinaVT-LethalConfig" Version="1.4.6" />
+    </ItemGroup>
 
     <!-- Targets -->
     <PropertyGroup>
