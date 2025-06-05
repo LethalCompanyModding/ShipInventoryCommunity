@@ -1,4 +1,5 @@
 using BepInEx;
+using UnityEngine;
 
 namespace ShipInventoryUpdated;
 
@@ -27,6 +28,18 @@ public class ShipInventoryUpdated : BaseUnityPlugin
         CHUTE_PREFAB = Helpers.Bundle.LoadAsset<GameObject>("ChutePrefab");
 
         return true;
+    }
+
+    #endregion
+
+    #region Patches
+
+    private Harmony? Harmony;
+
+    private void Patch()
+    {
+        Harmony = new Harmony(LCMPluginInfo.PLUGIN_GUID);
+        Harmony.PatchAll(typeof(Patches.GameNetworkManager_Patches));
     }
 
     #endregion
