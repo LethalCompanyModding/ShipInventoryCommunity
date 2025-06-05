@@ -59,8 +59,6 @@
     </ItemGroup>
 
     <!-- Dependencies -->
-    <ItemGroup>
-    </ItemGroup>
 
     <!-- Targets -->
     <PropertyGroup>
