@@ -22,6 +22,8 @@ public class ShipInventoryUpdated : BaseUnityPlugin
     #region Bundle
 
     internal static GameObject? CHUTE_PREFAB;
+    internal static TerminalNode? CHUTE_BUY_NODE;
+    internal static TerminalNode? CHUTE_CONFIRM_NODE;
 
     private static bool LoadAssets(string name)
     {
@@ -29,6 +31,8 @@ public class ShipInventoryUpdated : BaseUnityPlugin
             return false;
 
         CHUTE_PREFAB = Helpers.Bundle.LoadAsset<GameObject>("ChutePrefab");
+        CHUTE_BUY_NODE = Helpers.Bundle.LoadAsset<TerminalNode>("ChuteBuy");
+        CHUTE_CONFIRM_NODE = Helpers.Bundle.LoadAsset<TerminalNode>("ChuteConfirm");
 
         return true;
     }
@@ -43,6 +47,7 @@ public class ShipInventoryUpdated : BaseUnityPlugin
     {
         Harmony = new Harmony(LCMPluginInfo.PLUGIN_GUID);
         Harmony.PatchAll(typeof(Patches.GameNetworkManager_Patches));
+        Harmony.PatchAll(typeof(Patches.Terminal_Patches));
     }
 
     #endregion
