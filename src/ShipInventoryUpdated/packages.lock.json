@@ -2,12 +2,6 @@
   "version": 1,
   "dependencies": {
     ".NETStandard,Version=v2.1": {
-      "AinaVT-LethalConfig": {
-        "type": "Direct",
-        "requested": "[1.4.6, )",
-        "resolved": "1.4.6",
-        "contentHash": "1Xxsa43VjNTPh4Bye70BicN2dFvHeuwBogru3ru4C5+VZ6a7RxTsvWKJSdm+tJDa44d8gzkmVRjhg6iR6CHeeA=="
-      },
       "BepInEx.Analyzers": {
         "type": "Direct",
         "requested": "[1.*, )",
@@ -30,23 +24,11 @@
           "HarmonyX": "2.7.0"
         }
       },
-      "Evaisa-LethalLib": {
-        "type": "Direct",
-        "requested": "[0.16.2, )",
-        "resolved": "0.16.2",
-        "contentHash": "vz+XYmkg6HlTGEhBvkTbKTiPCcdffN/yeGAT13NAZX18Jm58O102dz/PkaGTOXGVnQTacXMnuEcNIbOX3XH52g=="
-      },
-      "JulianMods-OpenMonitors": {
-        "type": "Direct",
-        "requested": "[1.1.1, )",
-        "resolved": "1.1.1",
-        "contentHash": "Xd+Qw3s65LKgcFWgoQn+mHkENq2t40nx+bMCFOE19NOabh5bhqFE6OPlxnGpl6rJfVNiaOcXtCd6a1VK4eno0g=="
-      },
       "LethalCompany.GameLibs.Steam": {
         "type": "Direct",
         "requested": "[*-*, )",
-        "resolved": "67.0.0-ngd.0",
-        "contentHash": "aalLgTolq6NNlSmnYrgboma+/Y4tMBVIDibtKeV3R1XX1aM8yeayWjjx4lYRkmfpeamtBkwxYh6ck/il4FrtHQ==",
+        "resolved": "70.0.0-ngd.0",
+        "contentHash": "i2Iqz1Q8fbF5J5tM39r7hHsTtuiPS0SvFFz7qFL7NVSPj/kJJ1R5eI6xaApLFTWvIOzq1ZbVny6CUcU5wgLfxA==",
         "dependencies": {
           "Newtonsoft.JSON": "13.0.3",
           "UnityEngine.Modules": "2022.3.9"
@@ -58,29 +40,11 @@
         "resolved": "4.7.0",
         "contentHash": "pTj+D3uJWyN3My70i2Hqo+OXixq3Os2D1nJ2x92FFo6sk8fYS1m1WLNTs0Dc1uPaViH0YvEEwvzddQ7y4rhXmA=="
       },
-      "Sigurd-CSync": {
-        "type": "Direct",
-        "requested": "[5.0.1, )",
-        "resolved": "5.0.1",
-        "contentHash": "fUuMGImAQxpU5Y7QxheZMpabonCW8CglKPv60x61RPn6yS+4n3itMI4fk4g12UfCb5RxuM1ij7XbooUNlCJ8SA=="
-      },
       "UnityEngine.Modules": {
         "type": "Direct",
         "requested": "[2022.3.9, )",
         "resolved": "2022.3.9",
         "contentHash": "sSxqZjd05U0NWlX+eappdlsEuXFvDRHkUaClDVTocGRzCmIwNvgGJIPh22lGklIpNZ3cJZneYJkIUnEIazR8VA=="
-      },
-      "WhiteSpike-Custom_Item_Behaviour_Library": {
-        "type": "Direct",
-        "requested": "[1.2.6, )",
-        "resolved": "1.2.6",
-        "contentHash": "Q2HrUb8UCJtsTE+d2qvl721MF5xZlFVxoixx0+MaK1OJDQqA4Fj9uNUh+CmbBXUbH4uqrPDUhAU1h4JVMoh06w=="
-      },
-      "WhiteSpike-Interactive_Terminal_API": {
-        "type": "Direct",
-        "requested": "[1.2.0, )",
-        "resolved": "1.2.0",
-        "contentHash": "0CeI0RvQmhciHCTQ5QyhwFJegByE7I2boVglIFPdRFll+zl3HIDBQ0WZuZn7Ft48eMfuDE0heJx3hVmVDFoHeQ=="
       },
       "BepInEx.BaseLib": {
         "type": "Transitive",

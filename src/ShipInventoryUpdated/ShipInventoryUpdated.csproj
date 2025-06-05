@@ -60,25 +60,6 @@
 
     <!-- Dependencies -->
     <ItemGroup>
-        <PackageReference Include="Sigurd-CSync" Version="5.0.1" IncludeAssets="compile"
-            PrivateAssets="all" />
-        <PackageReference Include="Evaisa-LethalLib" Version="0.16.2" IncludeAssets="compile"
-            PrivateAssets="all" />
-        <PackageReference Include="AinaVT-LethalConfig" Version="1.4.6" IncludeAssets="compile"
-            PrivateAssets="all" />
-        <PackageReference Include="WhiteSpike-Interactive_Terminal_API" Version="1.2.0"
-            IncludeAssets="compile"
-            PrivateAssets="all" />
-        <PackageReference Include="WhiteSpike-Custom_Item_Behaviour_Library" Version="1.2.6"
-            IncludeAssets="compile"
-            PrivateAssets="all" />
-        <PackageReference Include="JulianMods-OpenMonitors" Version="1.1.1"
-            IncludeAssets="compile"
-            PrivateAssets="all" Publicize="true" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <EmbeddedResource Include="Resources/**" />
     </ItemGroup>
 
     <!-- Targets -->
@@ -86,7 +67,6 @@
         <Profile>Ship Inventory</Profile>
     </PropertyGroup>
 
-    <!-- <Import Project="LC.targets" /> -->
     <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
         <Exec
             Command="dotnet tool run netcode-patch -nv 1.5.2 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
