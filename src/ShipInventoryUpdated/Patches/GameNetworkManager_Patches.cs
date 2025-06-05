@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 using Unity.Netcode;
-using Logger = ShipInventoryUpdated.Helpers.Logger;
+using ShipInventoryUpdated.Helpers;
 
 namespace ShipInventoryUpdated.Patches;
 
@@ -15,10 +15,13 @@ internal class GameNetworkManager_Patches
             Logger.Error($"Tried to add prefabs to the network, but '{nameof(NetworkManager.Singleton)}' is not defined.");
             return;
         }
-        
-        if (ShipInventoryUpdated.CHUTE_PREFAB)
-            NetworkManager.Singleton.AddNetworkPrefab(ShipInventoryUpdated.CHUTE_PREFAB);
-        else
+
+        if (!ShipInventoryUpdated.CHUTE_PREFAB)
+        {
             Logger.Error($"Tried to add '{nameof(ShipInventoryUpdated.CHUTE_PREFAB)}' to the network, but it was not defined.");
+            return;
+        }
+        
+        NetworkManager.Singleton.AddNetworkPrefab(ShipInventoryUpdated.CHUTE_PREFAB);
     }
 }
