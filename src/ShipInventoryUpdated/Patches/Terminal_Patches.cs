@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using ShipInventoryUpdated.Configurations;
 using UnityEngine;
 using Logger = ShipInventoryUpdated.Helpers.Logger;
 
@@ -7,17 +8,29 @@ namespace ShipInventoryUpdated.Patches;
 [HarmonyPatch(typeof(Terminal))]
 internal class Terminal_Patches
 {
+    private static UnlockableItem? registeredUnlockable;
+    private static TerminalKeyword? registeredKeyword;
+    
     [HarmonyPatch(nameof(Terminal.Awake)), HarmonyPrefix]
     private static void Awake_Prefix(Terminal __instance)
     {
-        const string name = "ship inventory";
-        
-        RegisterUnlockable(name);
-        RegisterTerminal(__instance, name);
+        var entry = ShipInventoryUpdated.Configuration?.Terminal.InventoryCommand;
+
+        if (entry == null)
+        {
+            Logger.Error($"Tried to access the configuration for '{nameof(TerminalConfig.InventoryCommand)}', but it was not defined.");
+            return;
+        }
+
+        RegisterUnlockable(entry.Value);
+        RegisterKeyword(__instance, entry.Value);
     }
 
-    private static void RegisterUnlockable(string name)
+    private static void RegisterUnlockable(string command)
     {
+        if (registeredUnlockable != null)
+            return;
+        
         if (StartOfRound.Instance == null)
         {
             Logger.Error($"Tried to find '{nameof(StartOfRound.Instance)}', but it was not defined.");
@@ -41,7 +54,7 @@ internal class Terminal_Patches
         
         var unlockable = new UnlockableItem
         {
-            unlockableName = name,
+            unlockableName = command,
             prefabObject = ShipInventoryUpdated.CHUTE_PREFAB,
             unlockableType = 1,
             shopSelectionNode = null,
@@ -51,6 +64,8 @@ internal class Terminal_Patches
             maxNumber = 1,
             spawnPrefab = true
         };
+
+        registeredUnlockable = unlockable;
         
         unlockables.Add(unlockable);
 
@@ -63,13 +78,18 @@ internal class Terminal_Patches
         ShipInventoryUpdated.CHUTE_CONFIRM_NODE.shipUnlockableID = unlockableID;
     }
 
-    private static void RegisterTerminal(Terminal __instance, string name)
+    private static void RegisterKeyword(Terminal __instance, string command)
     {
+        if (registeredKeyword != null)
+            return;
+
         const string buyWord = "buy";
         TerminalKeyword? buyNode = null;
         
         var unlockKeyword = ScriptableObject.CreateInstance<TerminalKeyword>();
-        unlockKeyword.name = unlockKeyword.word = name;
+        unlockKeyword.name = unlockKeyword.word = command;
+
+        registeredKeyword = unlockKeyword;
         
         __instance.terminalNodes.allKeywords = __instance.terminalNodes.allKeywords.AddToArray(unlockKeyword);
 
@@ -95,5 +115,14 @@ internal class Terminal_Patches
         });
         
         unlockKeyword.defaultVerb = buyNode;
+    }
+
+    public static void AssignNewCommand(string command)
+    {
+        if (registeredUnlockable != null)
+            registeredUnlockable.unlockableName = command;
+
+        if (registeredKeyword != null)
+            registeredKeyword.name = registeredKeyword.word = command;
     }
 }

@@ -1,5 +1,7 @@
 using BepInEx;
+using BepInEx.Configuration;
 using HarmonyLib;
+using ShipInventoryUpdated.Configurations;
 using UnityEngine;
 
 namespace ShipInventoryUpdated;
@@ -17,6 +19,7 @@ public class ShipInventoryUpdated : BaseUnityPlugin
         if (!LoadAssets("si-bundle"))
             return;
         
+        LoadConfiguration(Config);
         LoadDependencies();
         Patch();
         
@@ -48,7 +51,7 @@ public class ShipInventoryUpdated : BaseUnityPlugin
     private static void LoadDependencies()
     {
         if (Dependencies.LethalConfig.Dependency.Enabled)
-            Dependencies.LethalConfig.Dependency.ApplyConfiguration();
+            Dependencies.LethalConfig.Dependency.ApplyConfiguration(Configuration);
     }
 
     #endregion
@@ -62,6 +65,17 @@ public class ShipInventoryUpdated : BaseUnityPlugin
         Harmony = new Harmony(LCMPluginInfo.PLUGIN_GUID);
         Harmony.PatchAll(typeof(Patches.GameNetworkManager_Patches));
         Harmony.PatchAll(typeof(Patches.Terminal_Patches));
+    }
+
+    #endregion
+    
+    #region Configuration
+
+    internal static Configuration? Configuration;
+
+    private static void LoadConfiguration(ConfigFile file)
+    {
+        Configuration = new Configuration(file);
     }
 
     #endregion

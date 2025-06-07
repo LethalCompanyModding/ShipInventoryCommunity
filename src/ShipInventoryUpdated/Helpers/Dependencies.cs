@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace ShipInventoryUpdated.Dependencies;
+namespace ShipInventoryUpdated.Helpers;
 
+/// <summary>
+/// Helper to manage dependencies easier
+/// </summary>
 internal static class Dependencies
 {
     private static readonly Dictionary<string, bool> cachedStatus = [];
