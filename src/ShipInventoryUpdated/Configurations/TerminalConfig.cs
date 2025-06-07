@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using ShipInventoryUpdated.Helpers;
 
 namespace ShipInventoryUpdated.Configurations;
 
@@ -16,7 +17,7 @@ internal class TerminalConfig
         InventoryCommand = cfg.Bind(
             new ConfigDefinition(SECTION, "InventoryCommand"),
             "ship",
-            new ConfigDescription("DESCRIPTION_INVENTORY_COMMAND")
+            new ConfigDescription(Localization.Get("configuration.terminal.command.description"))
         );
 
         InventoryCommand.SettingChanged += (_, _) =>

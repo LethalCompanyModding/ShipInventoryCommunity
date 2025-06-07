@@ -18,6 +18,9 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 
         if (!LoadAssets("si-bundle"))
             return;
+
+        var language = Helpers.Localization.LoadLanguage("en");
+        Helpers.Localization.SetAsDefault(language);
         
         LoadConfiguration(Config);
         LoadDependencies();

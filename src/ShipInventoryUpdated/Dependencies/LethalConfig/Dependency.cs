@@ -50,6 +50,7 @@ internal static class Dependency
             config.InventoryCommand,
             new TextInputFieldOptions
             {
+                Name = Localization.Get("configuration.terminal.command.name"),
                 NumberOfLines = 1,
                 CharacterLimit = 64,
                 TrimText = true,
