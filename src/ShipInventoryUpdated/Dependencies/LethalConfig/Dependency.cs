@@ -21,7 +21,7 @@ internal static class Dependency
         if (configuration != null)
         {
             LethalConfigManager.SkipAutoGen();
-            ApplyTerminalConfiguration(configuration.Terminal);
+            ApplyUnlockConfiguration(configuration.Unlock);
         }
         else
             Logger.Info($"Tried to load the configurations into '{nameof(LethalConfig)}', but none were given.");
@@ -44,16 +44,27 @@ internal static class Dependency
         LethalConfigManager.SetModDescription("Adds an inventory to the ship, allowing it to store items and retrieve them.");
     }
 
-    private static void ApplyTerminalConfiguration(TerminalConfig config)
+    private static void ApplyUnlockConfiguration(UnlockConfig config)
     {
         LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(
-            config.InventoryCommand,
+            config.UnlockName,
             new TextInputFieldOptions
             {
-                Name = Localization.Get("configuration.terminal.command.name"),
+                Name = Localization.Get("configuration.unlock.unlockName.name"),
                 NumberOfLines = 1,
                 CharacterLimit = 64,
                 TrimText = true,
+                RequiresRestart = false
+            }
+        ));
+        
+        LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(
+            config.UnlockCost,
+            new IntInputFieldOptions
+            {
+                Name = Localization.Get("configuration.unlock.unlockCost.name"),
+                Min = 0,
+                Max = 999_999_999,
                 RequiresRestart = false
             }
         ));

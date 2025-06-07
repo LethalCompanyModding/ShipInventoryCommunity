@@ -7,10 +7,10 @@ namespace ShipInventoryUpdated.Configurations;
 /// </summary>
 internal class Configuration
 {
-    public readonly TerminalConfig Terminal;
+    public readonly UnlockConfig Unlock;
 
     public Configuration(ConfigFile cfg)
     {
-        Terminal = new TerminalConfig(cfg);
+        Unlock = new UnlockConfig(cfg);
     }
 }

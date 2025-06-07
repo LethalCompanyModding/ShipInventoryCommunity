@@ -1,9 +1,13 @@
 ﻿{
   "configuration": {
-    "terminal": {
-      "command": {
-        "name": "Inventory Command",
-        "description": "Determines the command to type to access the ship's inventory."
+    "unlock": {
+      "unlockName": {
+        "name": "Unlock Name",
+        "description": "Determines the text to type in order to unlock the chute.\n\nNote that some texts like 'inventory' can already been taken by other unlockables."
+      },
+      "unlockCost": {
+        "name": "Unlock Cost",
+        "description": "Determines how expensive it is to unlock the chute."
       }
     }
   }

@@ -14,11 +14,11 @@ internal class Terminal_Patches
     [HarmonyPatch(nameof(Terminal.Awake)), HarmonyPrefix]
     private static void Awake_Prefix(Terminal __instance)
     {
-        var entry = ShipInventoryUpdated.Configuration?.Terminal.InventoryCommand;
+        var entry = ShipInventoryUpdated.Configuration?.Unlock.UnlockName;
 
         if (entry == null)
         {
-            Logger.Error($"Tried to access the configuration for '{nameof(TerminalConfig.InventoryCommand)}', but it was not defined.");
+            Logger.Error($"Tried to access the configuration for '{nameof(UnlockConfig.UnlockName)}', but it was not defined.");
             return;
         }
 
@@ -124,5 +124,14 @@ internal class Terminal_Patches
 
         if (registeredKeyword != null)
             registeredKeyword.name = registeredKeyword.word = command;
+    }
+
+    public static void AssignNewCost(int cost)
+    {
+        if (ShipInventoryUpdated.CHUTE_BUY_NODE != null)
+            ShipInventoryUpdated.CHUTE_BUY_NODE.itemCost = cost;
+        
+        if (ShipInventoryUpdated.CHUTE_CONFIRM_NODE != null)
+            ShipInventoryUpdated.CHUTE_CONFIRM_NODE.itemCost = cost;
     }
 }
