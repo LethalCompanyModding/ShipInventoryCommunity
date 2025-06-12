@@ -18,9 +18,7 @@ internal static class Localization
     public static LanguagePackage? LoadLanguage(string languageCode)
     {
         string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-        UriBuilder uri = new UriBuilder(codeBase);
-            
-        string? dllPath = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
+        string? dllPath = Path.GetDirectoryName(new Uri(codeBase).LocalPath);
 
         if (dllPath == null)
         {
@@ -51,9 +49,11 @@ internal static class Localization
     /// <summary>
     /// Sets the given language package as the default language
     /// </summary>
-    /// <param name="languagePackage"></param>
     public static void SetAsDefault(LanguagePackage? languagePackage) => defaultLanguage = languagePackage;
 
+    /// <summary>
+    /// Fetches the localized value at the given key, parsing the parameters in it
+    /// </summary>
     public static string Get(string key, Dictionary<string, string>? parameters = null)
     {
         var value = defaultLanguage?.Get(key);
@@ -69,15 +69,26 @@ internal static class Localization
 
         return value;
     }
-    
-    public class LanguagePackage
+
+    /// <summary>
+    /// Represents a language package that contains localized strings
+    /// </summary>
+    public sealed class LanguagePackage
     {
         private readonly Dictionary<string, string> loadedData;
 
-        public LanguagePackage(JObject root)
+        internal LanguagePackage(JObject node)
         {
             loadedData = [];
 
+            ParseTree(node);
+        }
+
+        /// <summary>
+        /// Compiles the localized strings into their IDs from the given root
+        /// </summary>
+        private void ParseTree(JObject root)
+        {
             var stack = new Stack<(JToken, string)>();
             stack.Push((root, ""));
 
