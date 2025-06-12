@@ -41,7 +41,7 @@ internal static class Dependency
             LethalConfigManager.SetModIcon(sprite);
         }
         
-        LethalConfigManager.SetModDescription("Adds an inventory to the ship, allowing it to store items and retrieve them.");
+        LethalConfigManager.SetModDescription(Localization.Get("mod.description"));
     }
 
     private static void ApplyUnlockConfiguration(UnlockConfig config)

@@ -1,4 +1,7 @@
 ﻿{
+  "mod": {
+    "description": "Adds an inventory to the ship, allowing it to store items and retrieve them."
+  },
   "configuration": {
     "unlock": {
       "unlockName": {
