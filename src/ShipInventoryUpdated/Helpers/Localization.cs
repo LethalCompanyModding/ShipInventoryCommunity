@@ -9,6 +9,9 @@ using File = System.IO.File;
 
 namespace ShipInventoryUpdated.Helpers;
 
+/// <summary>
+/// Helper to handle the localization of the mod
+/// </summary>
 internal static class Localization
 {
     private static LanguagePackage? defaultLanguage;
