@@ -43,8 +43,7 @@ public class ItemManager : NetworkBehaviour
     /// </summary>
     public void Add(GrabbableObject item)
     {
-        //var data = ConvertItemHelper.ConvertItem(item);
-        var data = new ItemData(item);
+        var data = ItemConverter.Convert(item);
         
         AddServerRpc(data);
     }
