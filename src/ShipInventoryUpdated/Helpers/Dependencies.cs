@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ShipInventoryUpdated.Configurations;
 
 namespace ShipInventoryUpdated.Helpers;
 
@@ -20,5 +21,14 @@ internal static class Dependencies
         isEnabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(guid);
         cachedStatus.Add(guid, isEnabled);
         return isEnabled;
+    }
+
+    /// <summary>
+    /// Loads all the dependencies
+    /// </summary>
+    public static void LoadDependencies(Configuration? config)
+    {
+        if (global::ShipInventoryUpdated.Dependencies.LethalConfig.Dependency.Enabled)
+            global::ShipInventoryUpdated.Dependencies.LethalConfig.Dependency.ApplyConfiguration(config);
     }
 }
