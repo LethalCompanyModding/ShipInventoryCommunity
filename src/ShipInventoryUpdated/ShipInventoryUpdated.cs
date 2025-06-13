@@ -30,6 +30,8 @@ public class ShipInventoryUpdated : BaseUnityPlugin
         LoadConfiguration(Config);
         Helpers.Dependencies.LoadDependencies(Configuration);
         Patch();
+
+        Helpers.InteractionHelper.LoadConditions();
         
         Helpers.Logger.Info($"{LCMPluginInfo.PLUGIN_GUID} v{LCMPluginInfo.PLUGIN_VERSION} has loaded!");
     }

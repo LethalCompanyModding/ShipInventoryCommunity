@@ -19,5 +19,12 @@
       "main": "You have requested to order the ship's inventory.\nTotal cost of item: [totalCost].\n\nPlease CONFIRM or DENY.\n\n",
       "confirm": "The Company congrats you for purchasing the ship's inventory.\n\nYou can access it by executing '{command}' into the terminal.\n\n\n<color=red><align=center>Due to previous accidents, we are obligated to include this warning</align></color>\n\n<align=justified>Placing fellow employees inside the inventory is strictly prohibited. Violations may result in salary penalties or termination of employment.\n</align>\n\n"
     }
+  },
+  "tooltip": {
+    "trigger": {
+      "hover": "Store item: [{key}]",
+      "emptyHand": "[Nothing to store]",
+      "invalidItem": "[Item not allowed]"
+    }
   }
 }
