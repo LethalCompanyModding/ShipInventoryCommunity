@@ -73,4 +73,22 @@ internal static class Localization
 
         return value;
     }
+    
+#if DEBUG
+    /// <summary>
+    /// Reloads the default language package
+    /// </summary>
+    public static void ReloadDefault()
+    {
+        var code = defaultLanguage?.Language;
+        
+        SetAsDefault(null);
+
+        if (code != null)
+        {
+            var package = LoadLanguage(code);
+            SetAsDefault(package);
+        }
+    }
+#endif
 }

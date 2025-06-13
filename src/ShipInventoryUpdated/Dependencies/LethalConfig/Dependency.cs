@@ -22,6 +22,16 @@ internal static class Dependency
         {
             LethalConfigManager.SkipAutoGen();
             ApplyUnlockConfiguration(configuration.Unlock);
+            
+#if DEBUG
+            LethalConfigManager.AddConfigItem(new GenericButtonConfigItem(
+                "DEBUG",
+                "Reload Localization",
+                "Reloads the current localization",
+                "Reload",
+                Localization.ReloadDefault
+            ));
+#endif
         }
         else
             Logger.Info($"Tried to load the configurations into '{nameof(LethalConfig)}', but none were given.");
