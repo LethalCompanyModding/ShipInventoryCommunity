@@ -8,14 +8,19 @@ namespace ShipInventoryUpdated.Objects;
 /// </summary>
 internal sealed class LanguagePackage
 {
+    /// <summary>
+    /// Language code of this package
+    /// </summary>
+    public readonly string Language;
     private readonly Dictionary<string, string> loadedData;
 
-    internal LanguagePackage(JObject node)
+    internal LanguagePackage(string language)
     {
+        Language = language;
         loadedData = [];
-
-        ParseTree(node);
     }
+    
+    internal LanguagePackage(string language, JObject node) : this(language) => ParseTree(node);
 
     /// <summary>
     /// Compiles the localized strings into their IDs from the given root

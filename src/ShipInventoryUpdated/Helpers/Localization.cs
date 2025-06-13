@@ -47,7 +47,7 @@ internal static class Localization
             return null;
         }
 
-        return new LanguagePackage(rawData);
+        return new LanguagePackage(languageCode, rawData);
     }
 
     /// <summary>
