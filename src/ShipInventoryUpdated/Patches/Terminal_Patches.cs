@@ -1,5 +1,7 @@
-﻿using HarmonyLib;
+﻿using System.Collections.Generic;
+using HarmonyLib;
 using ShipInventoryUpdated.Configurations;
+using ShipInventoryUpdated.Helpers;
 using UnityEngine;
 using Logger = ShipInventoryUpdated.Helpers.Logger;
 
@@ -75,7 +77,13 @@ internal class Terminal_Patches
             placeable.unlockableID = unlockableID;
 
         ShipInventoryUpdated.CHUTE_BUY_NODE.shipUnlockableID = unlockableID;
+        ShipInventoryUpdated.CHUTE_BUY_NODE.displayText = Localization.Get("terminal.buy.main");
+
         ShipInventoryUpdated.CHUTE_CONFIRM_NODE.shipUnlockableID = unlockableID;
+        ShipInventoryUpdated.CHUTE_CONFIRM_NODE.displayText = Localization.Get("terminal.buy.confirm", new Dictionary<string, string>
+        {
+            ["command"] = command
+        });
     }
 
     private static void RegisterKeyword(Terminal __instance, string command)
@@ -124,6 +132,14 @@ internal class Terminal_Patches
 
         if (registeredKeyword != null)
             registeredKeyword.name = registeredKeyword.word = command;
+
+        if (ShipInventoryUpdated.CHUTE_CONFIRM_NODE != null)
+        {
+            ShipInventoryUpdated.CHUTE_CONFIRM_NODE.displayText = Localization.Get("terminal.buy.confirm", new Dictionary<string, string>
+            {
+                ["command"] = command
+            });
+        }
     }
 
     public static void AssignNewCost(int cost)
