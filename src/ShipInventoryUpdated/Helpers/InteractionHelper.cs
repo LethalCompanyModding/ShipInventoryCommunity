@@ -18,15 +18,8 @@ public static class InteractionHelper
     /// </summary>
     /// <param name="condition">Returns true if the condition allows the item</param>
     /// <param name="error">Error message to display</param>
-    /// <param name="appendToStart"></param>
-    public static void AddCondition(Func<PlayerControllerB, bool> condition, string error, bool appendToStart = false)
-    {
-        if (appendToStart)
-            triggerConditions.Insert(0, (condition, error));
-        else
-            triggerConditions.Add((condition, error));
-    }
-    
+    public static void AddCondition(Func<PlayerControllerB, bool> condition, string error) => triggerConditions.Add((condition, error));
+
     /// <summary>
     /// Sets the status of the given trigger depending on if it meets certain criteria or not
     /// </summary>
