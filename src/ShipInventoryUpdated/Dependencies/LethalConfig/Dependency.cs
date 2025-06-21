@@ -22,6 +22,7 @@ internal static class Dependency
         {
             LethalConfigManager.SkipAutoGen();
             ApplyUnlockConfiguration(configuration.Unlock);
+            ApplyTerminalConfiguration(configuration.Terminal);
             
 #if DEBUG
             LethalConfigManager.AddConfigItem(new GenericButtonConfigItem(
