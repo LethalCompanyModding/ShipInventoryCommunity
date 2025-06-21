@@ -79,4 +79,19 @@ internal static class Dependency
             }
         ));
     }
+
+    private static void ApplyTerminalConfiguration(TerminalConfig config)
+    {
+        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(
+            config.InventoryCommand,
+            new TextInputFieldOptions
+            {
+                Name = Localization.Get("configuration.terminal.inventoryCommand.name"),
+                NumberOfLines = 1,
+                CharacterLimit = 64,
+                TrimText = true,
+                RequiresRestart = true
+            }
+        ));
+    }
 }

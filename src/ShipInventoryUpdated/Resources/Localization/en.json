@@ -12,6 +12,12 @@
         "name": "Unlock Cost",
         "description": "Determines how expensive it is to unlock the chute."
       }
+    },
+    "terminal": {
+      "inventoryCommand": {
+        "name": "Inventory Command",
+        "description": "Determines the command to type to access the ship's inventory."
+      }
     }
   },
   "terminal": {
