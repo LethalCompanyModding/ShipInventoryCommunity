@@ -17,7 +17,7 @@ internal class UnlockConfig
     {
         UnlockName = cfg.Bind(
             new ConfigDefinition(SECTION, "ChuteUnlockName"),
-            "ship",
+            "ship inventory",
             new ConfigDescription(Localization.Get("configuration.unlock.unlockName.description"))
         );
         
