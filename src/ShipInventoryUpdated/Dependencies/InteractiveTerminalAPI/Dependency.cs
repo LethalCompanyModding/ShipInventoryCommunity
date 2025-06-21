@@ -20,6 +20,6 @@ internal static class Dependency
             return;
         }
 
-        //InteractiveTerminalManager.RegisterApplication<ShipApplication>(entry.Value, true);
+        InteractiveTerminalManager.RegisterApplication<ShipApplication>(entry.Value, true);
     }
 }

@@ -32,5 +32,24 @@
       "emptyHand": "[Nothing to store]",
       "invalidItem": "[Item not allowed]"
     }
+  },
+  "application": {
+    "titles": {
+      "inventory": "Inventory"
+    },
+    "answers": {
+      "blocked": "Understood"
+    },
+    "screens": {
+      "locked": {
+        "message": "We are sorry to inform you that you <color=red>do not</color> possess the required equipment on board to utilize this function.",
+        "tip": "Please consider buying or restoring the inventory by typing '{command}'.",
+        "offer": "If funds are hard to gather, the Company can suggest a therapist to help you or offer you a loan that will span on several generations."
+      },
+      "main": {
+        "welcome": "Welcome aboard, {level} {username}",
+        "home": "Select the desired action to execute from the provided list:"
+      }
+    }
   }
 }
