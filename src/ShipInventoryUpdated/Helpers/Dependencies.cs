@@ -30,5 +30,8 @@ internal static class Dependencies
     {
         if (global::ShipInventoryUpdated.Dependencies.LethalConfig.Dependency.Enabled)
             global::ShipInventoryUpdated.Dependencies.LethalConfig.Dependency.ApplyConfiguration(config);
+        
+        if (global::ShipInventoryUpdated.Dependencies.InteractiveTerminalAPI.Dependency.Enabled)
+            global::ShipInventoryUpdated.Dependencies.InteractiveTerminalAPI.Dependency.RegisterApplication();
     }
 }

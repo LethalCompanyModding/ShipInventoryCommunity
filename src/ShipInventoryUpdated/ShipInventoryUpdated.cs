@@ -9,6 +9,7 @@ namespace ShipInventoryUpdated;
 
 [BepInPlugin(LCMPluginInfo.PLUGIN_GUID, LCMPluginInfo.PLUGIN_NAME, LCMPluginInfo.PLUGIN_VERSION)]
 // Hard
+[BepInDependency("WhiteSpike.InteractiveTerminalAPI", "1.2.0")]
 // Soft
 [BepInDependency(LethalConfig.PluginInfo.Guid, BepInDependency.DependencyFlags.SoftDependency)]
 public class ShipInventoryUpdated : BaseUnityPlugin

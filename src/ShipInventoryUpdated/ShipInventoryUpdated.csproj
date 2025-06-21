@@ -51,6 +51,7 @@
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile"
             PrivateAssets="all" />
+        <PackageReference Include="WhiteSpike-Interactive_Terminal_API" Version="1.2.0" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
