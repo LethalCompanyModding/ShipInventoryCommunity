@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using BepInEx;
-using BepInEx.Configuration;
 using HarmonyLib;
 using ShipInventoryUpdated.Configurations;
 using UnityEngine;
@@ -27,8 +26,8 @@ public class ShipInventoryUpdated : BaseUnityPlugin
         var language = Helpers.Localization.LoadLanguage("en");
         Helpers.Localization.SetAsDefault(language);
         
-        LoadConfiguration(Config);
-        Helpers.Dependencies.LoadDependencies(Configuration);
+        Configuration.Load(Config);
+        Helpers.Dependencies.LoadDependencies(Configuration.Instance);
         Patch();
 
         Helpers.InteractionHelper.LoadConditions();
@@ -70,17 +69,6 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 
     #endregion
     
-    #region Configuration
-
-    internal static Configuration? Configuration;
-
-    private static void LoadConfiguration(ConfigFile file)
-    {
-        Configuration = new Configuration(file);
-    }
-
-    #endregion
-
     #region RPCs
 
     private static bool PrepareRPCs()

@@ -16,7 +16,7 @@ internal class Terminal_Patches
     [HarmonyPatch(nameof(Terminal.Awake)), HarmonyPrefix]
     private static void Awake_Prefix(Terminal __instance)
     {
-        var entry = ShipInventoryUpdated.Configuration?.Unlock.UnlockName;
+        var entry = Configuration.Instance?.Unlock.UnlockName;
 
         if (entry == null)
         {

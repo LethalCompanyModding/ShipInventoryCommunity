@@ -13,4 +13,17 @@ internal class Configuration
     {
         Unlock = new UnlockConfig(cfg);
     }
+
+    /// <summary>
+    /// Configuration loaded
+    /// </summary>
+    public static Configuration? Instance;
+
+    /// <summary>
+    /// Loads the configuration from the given configuration file
+    /// </summary>
+    public static void Load(ConfigFile cfg)
+    {
+        Instance = new Configuration(cfg);
+    }
 }
