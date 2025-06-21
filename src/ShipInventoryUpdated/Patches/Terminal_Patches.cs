@@ -125,6 +125,9 @@ internal class Terminal_Patches
         unlockKeyword.defaultVerb = buyNode;
     }
 
+    /// <summary>
+    /// Changes the command of the upgrade to use to the given command
+    /// </summary>
     public static void AssignNewCommand(string command)
     {
         if (registeredUnlockable != null)
@@ -142,6 +145,9 @@ internal class Terminal_Patches
         }
     }
 
+    /// <summary>
+    /// Changes the cost of the upgrade to the given cost
+    /// </summary>
     public static void AssignNewCost(int cost)
     {
         if (ShipInventoryUpdated.CHUTE_BUY_NODE != null)
@@ -150,4 +156,9 @@ internal class Terminal_Patches
         if (ShipInventoryUpdated.CHUTE_CONFIRM_NODE != null)
             ShipInventoryUpdated.CHUTE_CONFIRM_NODE.itemCost = cost;
     }
+
+    /// <summary>
+    /// Checks if the chute is unlocked
+    /// </summary>
+    public static bool IsChuteUnlocked() => registeredUnlockable?.hasBeenUnlockedByPlayer ?? false;
 }
