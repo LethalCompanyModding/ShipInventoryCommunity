@@ -16,12 +16,14 @@ internal class GameNetworkManager_Patches
             return;
         }
 
-        if (!ShipInventoryUpdated.CHUTE_PREFAB)
-        {
+        if (ShipInventoryUpdated.CHUTE_PREFAB is not null)
+            NetworkManager.Singleton.AddNetworkPrefab(ShipInventoryUpdated.CHUTE_PREFAB);
+        else
             Logger.Error($"Tried to add '{nameof(ShipInventoryUpdated.CHUTE_PREFAB)}' to the network, but it was not defined.");
-            return;
-        }
-        
-        NetworkManager.Singleton.AddNetworkPrefab(ShipInventoryUpdated.CHUTE_PREFAB);
+
+        if (ShipInventoryUpdated.INVENTORY_PREFAB is not null)
+            NetworkManager.Singleton.AddNetworkPrefab(ShipInventoryUpdated.INVENTORY_PREFAB);
+        else
+            Logger.Error($"Tried to add '{nameof(ShipInventoryUpdated.INVENTORY_PREFAB)}' to the network, but it was not defined.");
     }
 }
