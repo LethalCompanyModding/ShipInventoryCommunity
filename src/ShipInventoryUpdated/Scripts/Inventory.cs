@@ -37,18 +37,17 @@ public class Inventory : NetworkBehaviour
         Instance.AddServerRpc(data);
     }
 
-    public static void Remove()
+    /// <summary>
+    /// Removes the given items from the inventory
+    /// </summary>
+    /// <param name="items"></param>
+    public static void Remove(ItemData[] items)
     {
         if (Instance == null)
         {
             Logger.Warn("Tried to remove an item to the inventory, but no instance was defined.");
             return;
         }
-
-        var items = new ItemData[Instance.storedItems.Count];
-
-        for (int i = 0; i < items.Length; i++)
-            items[i] = Instance.storedItems[i];
 
         Instance.RemoveServerRpc(items);
     }
