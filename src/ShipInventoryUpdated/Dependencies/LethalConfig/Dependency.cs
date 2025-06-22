@@ -18,26 +18,30 @@ internal static class Dependency
     {
         ApplyInformation();
 
-        if (configuration != null)
+        if (configuration == null)
         {
-            LethalConfigManager.SkipAutoGen();
-            ApplyUnlockConfiguration(configuration.Unlock);
-            ApplyTerminalConfiguration(configuration.Terminal);
+            Logger.Info($"Tried to load the configurations into '{nameof(LethalConfig)}', but none were given."); 
+            return;
+        }
+
+        LethalConfigManager.SkipAutoGen();
+        ApplyUnlockConfiguration(configuration.Unlock);
+        ApplyTerminalConfiguration(configuration.Terminal);
             
 #if DEBUG
-            LethalConfigManager.AddConfigItem(new GenericButtonConfigItem(
-                "DEBUG",
-                "Reload Localization",
-                "Reloads the current localization",
-                "Reload",
-                Localization.ReloadDefault
-            ));
+        LethalConfigManager.AddConfigItem(new GenericButtonConfigItem(
+            "DEBUG",
+            "Reload Localization",
+            "Reloads the current localization",
+            "Reload",
+            Localization.ReloadDefault
+        ));
 #endif
-        }
-        else
-            Logger.Info($"Tried to load the configurations into '{nameof(LethalConfig)}', but none were given.");
     }
 
+    /// <summary>
+    /// Applies the general information for the mod
+    /// </summary>
     private static void ApplyInformation()
     {
         var modIcon = Bundle.LoadAsset<Texture2D>("mod-icon");
@@ -55,6 +59,9 @@ internal static class Dependency
         LethalConfigManager.SetModDescription(Localization.Get("mod.description"));
     }
 
+    /// <summary>
+    /// Applies all the configurations for <see cref="UnlockConfig"/>
+    /// </summary>
     private static void ApplyUnlockConfiguration(UnlockConfig config)
     {
         LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(
@@ -81,6 +88,9 @@ internal static class Dependency
         ));
     }
 
+    /// <summary>
+    /// Applies all the configurations for <see cref="TerminalConfig"/>
+    /// </summary>
     private static void ApplyTerminalConfiguration(TerminalConfig config)
     {
         LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace ShipInventoryUpdated.Scripts;
 
+/// <summary>
+/// Script that handles the interactions with the chute
+/// </summary>
 [RequireComponent(typeof(Collider))]
 public class ChuteTrigger : InteractTrigger
 {
