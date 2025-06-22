@@ -1,4 +1,5 @@
 ﻿using System;
+using ShipInventoryUpdated.Helpers;
 using Unity.Collections;
 using Unity.Netcode;
 
@@ -34,7 +35,7 @@ public struct ItemData : INetworkSerializable, IEquatable<ItemData>
 
     public ItemData(GrabbableObject? item)
     {
-        ID = item?.itemProperties?.itemName ?? "";
+        ID = ItemIdentifier.GetID(item?.itemProperties);
         SCRAP_VALUE = item?.scrapValue ?? 0;
         
         if (item?.itemProperties != null && item.itemProperties.saveItemVariable)
@@ -46,7 +47,7 @@ public struct ItemData : INetworkSerializable, IEquatable<ItemData>
     /// <summary>
     /// Fetches the item represented by this data
     /// </summary>
-    public Item? GetItem() => null;
+    public Item? GetItem() => ItemIdentifier.GetItem(ID.Value);
     
     /// <inheritdoc/>
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
