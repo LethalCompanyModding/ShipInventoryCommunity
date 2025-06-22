@@ -25,13 +25,12 @@ public class ChuteStore : MonoBehaviour
 
     #region Store
 
-    [SerializeField] private ItemManager? itemManager;
     [SerializeField] private InteractTrigger? trigger;
 
     /// <summary>
     /// Sends the item held by the given player to the server to be stored
     /// </summary>
-    private void StoreHeldItem(PlayerControllerB player)
+    private static void StoreHeldItem(PlayerControllerB player)
     {
         GrabbableObject item = player.currentlyHeldObjectServer;
 
@@ -42,7 +41,7 @@ public class ChuteStore : MonoBehaviour
             return;
         }
 
-        itemManager?.Add(item);
+        Inventory.Add(item);
 
         // Update scrap collected
         item.isInShipRoom = false;
