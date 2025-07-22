@@ -1,4 +1,5 @@
 ﻿using GameNetcodeStuff;
+using ShipInventoryUpdated.Helpers;
 using UnityEngine;
 
 #pragma warning disable CS0649
@@ -41,7 +42,8 @@ public class ChuteStore : MonoBehaviour
             return;
         }
 
-        Inventory.Add(item);
+        var data = ItemConverter.Convert(item);
+        Inventory.Add(data);
 
         // Update scrap collected
         item.isInShipRoom = false;

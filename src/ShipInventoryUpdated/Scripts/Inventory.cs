@@ -24,7 +24,7 @@ public class Inventory : NetworkBehaviour
     /// <summary>
     /// Adds the given items to the inventory
     /// </summary>
-    public static void Add(GrabbableObject item)
+    public static void Add(ItemData[] items)
     {
         if (Instance == null)
         {
@@ -32,9 +32,7 @@ public class Inventory : NetworkBehaviour
             return;
         }
         
-        var data = ItemConverter.Convert(item);
-        
-        Instance.AddServerRpc(data);
+        Instance.AddServerRpc(items);
     }
 
     /// <summary>
