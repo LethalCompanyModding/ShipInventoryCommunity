@@ -42,7 +42,9 @@
       "single": "Retrieve single",
       "type": "Retrieve type",
       "random": "Retrieve random",
-      "all": "Retrieve all"
+      "all": "Retrieve all",
+      "information": "Print status",
+      "status": "Status"
     },
     "answers": {
       "positive": "Yes",
@@ -78,6 +80,10 @@
       },
       "all": {
         "message": "You are about to retrieve {amount} items, for a total of ${total}."
+      },
+      "information": {
+        "total": "Total value: ${total}",
+        "count": "Number of items: {count}"
       }
     }
   }

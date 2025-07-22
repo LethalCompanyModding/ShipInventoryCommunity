@@ -186,11 +186,12 @@ public class ShipApplication : PageApplication
             RetrieveSingleElement(),
             RetrieveTypeElement(),
             RetrieveRandomElement(),
-            RetrieveAllElement()
+            RetrieveAllElement(),
+            InfoCursorElement()
         };
 
         var optionMenu = new CursorMenu {
-            //cursorIndex = ItemManager.HasItems() ? selectedIndex : elements.Length - 1,
+            cursorIndex = Inventory.Count > 0 ? default : elements.Length - 1,
             elements = elements
         };
 
@@ -415,6 +416,45 @@ public class ShipApplication : PageApplication
             MainScreen();
         });
         
+        RegisterExitAction(_ => MainScreen());
+    }
+
+    #endregion
+    
+    #region Info Screen
+
+    private CursorElement InfoCursorElement() => new()
+    {
+        Name = Localization.Get("application.titles.information"),
+        Action = GetInfo
+    };
+    
+    private void GetInfo()
+    {
+        var items = Inventory.Items;
+
+        var options = new CursorMenu
+        {
+            cursorIndex = 0,
+            elements = []
+        };
+        
+        var screen = CreateScreen(Localization.Get("application.titles.status"),
+            [
+                TextElement.Create(Localization.Get("application.screens.information.total", new Dictionary<string, string>
+                {
+                    ["total"] = items.Sum(i => i.SCRAP_VALUE).ToString()
+                })),
+                TextElement.Create(Localization.Get("application.screens.information.count", new Dictionary<string, string>
+                {
+                    ["count"] = items.Length.ToString()
+                }))
+            ]
+        );
+        
+        currentPage = PageCursorElement.Create(0, [screen], [options]);
+        SwitchScreen(screen, options, true);
+
         RegisterExitAction(_ => MainScreen());
     }
 
