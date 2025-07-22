@@ -35,10 +35,20 @@
   },
   "application": {
     "titles": {
-      "inventory": "Inventory"
+      "locked": "UNAUTHORIZED ACCESS",
+      "main": "Inventory",
+      "confirm": "Confirmation",
+      "selection": "Selection",
+      "single": "Retrieve single",
+      "type": "Retrieve type",
+      "random": "Retrieve random",
+      "all": "Retrieve all"
     },
     "answers": {
-      "blocked": "Understood"
+      "positive": "Yes",
+      "negative": "No",
+      "blocked": "Understood",
+      "unknown": "???"
     },
     "screens": {
       "locked": {
@@ -49,6 +59,25 @@
       "main": {
         "welcome": "Welcome aboard, {level} {username}",
         "home": "Select the desired action to execute from the provided list:"
+      },
+      "confirm": {
+        "message": "Do you really want to proceed?",
+        "warning": "The Company and its Partners <color=red>will not</color> be responsible for your poor decisions."
+      },
+      "single": {
+        "message": "From the list below, please select the item you would like to retrieve:",
+        "item": "{name} (${value})",
+        "confirm": "You are about to retrieve '{name}'."
+      },
+      "type": {
+        "item": "{name} x{amount} (${total})",
+        "confirm": "You are about to retrieve {amount} instances of '{name}'."
+      },
+      "random": {
+        "message": "You are about to retrieve '{name}'."
+      },
+      "all": {
+        "message": "You are about to retrieve {amount} items, for a total of ${total}."
       }
     }
   }
