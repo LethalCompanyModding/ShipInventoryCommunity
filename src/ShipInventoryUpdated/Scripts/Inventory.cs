@@ -51,6 +51,20 @@ public class Inventory : NetworkBehaviour
     }
 
     /// <summary>
+    /// Clears the items stored in the inventory
+    /// </summary>
+    public static void Clear()
+    {
+        if (Instance == null)
+        {
+            Logger.Warn("Tried to remove an item to the inventory, but no instance was defined.");
+            return;
+        }
+
+        Instance.ClearServerRpc();
+    }
+
+    /// <summary>
     /// Gets the number of items stored in the inventory
     /// </summary>
     public static int Count => Instance?.storedItems.Count ?? 0;
@@ -111,6 +125,12 @@ public class Inventory : NetworkBehaviour
             storedItems.Remove(item);
 
         OnRemoved?.Invoke(items);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ClearServerRpc()
+    {
+        storedItems.Clear();
     }
     
     #endregion
