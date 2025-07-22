@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using ShipInventoryUpdated.Dependencies.Newtonsoft;
 using ShipInventoryUpdated.Helpers;
+using ShipInventoryUpdated.Helpers.API;
 using Unity.Collections;
 using Unity.Netcode;
 

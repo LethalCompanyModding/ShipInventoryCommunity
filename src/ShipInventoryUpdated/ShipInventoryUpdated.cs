@@ -3,6 +3,7 @@ using System.Reflection;
 using BepInEx;
 using HarmonyLib;
 using ShipInventoryUpdated.Configurations;
+using ShipInventoryUpdated.Helpers.API;
 using UnityEngine;
 
 namespace ShipInventoryUpdated;
@@ -31,8 +32,8 @@ public class ShipInventoryUpdated : BaseUnityPlugin
         Helpers.Dependencies.LoadDependencies(Configuration.Instance);
         Patch();
 
-        Helpers.InteractionHelper.LoadConditions();
-        Helpers.ItemConverter.LoadConversions();
+        InteractionHelper.LoadConditions();
+        ItemConverter.LoadConversions();
         
         Helpers.Logger.Info($"{LCMPluginInfo.PLUGIN_GUID} v{LCMPluginInfo.PLUGIN_VERSION} has loaded!");
     }

@@ -1,4 +1,4 @@
-﻿namespace ShipInventoryUpdated.Helpers;
+﻿namespace ShipInventoryUpdated.Helpers.API;
 
 internal static class ItemIdentifier
 {

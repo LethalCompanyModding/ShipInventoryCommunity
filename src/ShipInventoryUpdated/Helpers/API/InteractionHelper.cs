@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using GameNetcodeStuff;
 
-namespace ShipInventoryUpdated.Helpers;
+namespace ShipInventoryUpdated.Helpers.API;
 
 /// <summary>
 /// Helper to handle the interaction condition of items

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ShipInventoryUpdated.Objects;
 
-namespace ShipInventoryUpdated.Helpers;
+namespace ShipInventoryUpdated.Helpers.API;
 
 /// <summary>
 /// Helper to handle the conversion of items into <see cref="ItemData"/>
