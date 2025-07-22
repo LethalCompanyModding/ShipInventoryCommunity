@@ -52,4 +52,24 @@ internal class StartOfRound_Patches
         
         Inventory.Add(items.ToArray());
     }
+    
+    [HarmonyPatch(nameof(StartOfRound.GetValueOfAllScrap)), HarmonyPostfix]
+    private static void GetValueOfAllScrap_Postfix(ref int __result, bool onlyScrapCollected, bool onlyNewScrap)
+    {
+        foreach (var data in Inventory.Items)
+        {
+            if (data.PERSISTED_THROUGH_ROUNDS)
+                continue;
+            
+            var item = data.GetItem();
+            
+            if (item == null)
+                continue;
+            
+            if (!item.isScrap)
+                continue;
+
+            __result += data.SCRAP_VALUE;
+        }
+    }
 }
