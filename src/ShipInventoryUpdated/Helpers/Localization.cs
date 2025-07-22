@@ -14,6 +14,23 @@ namespace ShipInventoryUpdated.Helpers;
 /// </summary>
 internal static class Localization
 {
+    private static string? LocalDirectory
+    {
+        get
+        {
+            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+            string? localDir = Path.GetDirectoryName(new Uri(codeBase).LocalPath);
+
+            if (localDir == null)
+            {
+                Logger.Error("Tried to find the location of the assembly, but it was not found.");
+                return null;
+            }
+
+            return localDir;
+        }
+    }
+
     private static LanguagePackage? defaultLanguage;
 
     /// <summary>
@@ -21,16 +38,12 @@ internal static class Localization
     /// </summary>
     public static LanguagePackage? LoadLanguage(string languageCode)
     {
-        string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-        string? dllPath = Path.GetDirectoryName(new Uri(codeBase).LocalPath);
+        var localDir = LocalDirectory;
 
-        if (dllPath == null)
-        {
-            Logger.Error("Tried to find the location of the assembly, but it was not found.");
+        if (localDir == null)
             return null;
-        }
 
-        string file = Path.Combine(dllPath, $"{languageCode}.json");
+        string file = Path.Combine(localDir, $"{languageCode}.json");
 
         if (!File.Exists(file))
         {
