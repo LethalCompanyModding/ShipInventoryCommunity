@@ -1,4 +1,6 @@
 ﻿using System;
+using Newtonsoft.Json;
+using ShipInventoryUpdated.Dependencies.Newtonsoft;
 using ShipInventoryUpdated.Helpers;
 using Unity.Collections;
 using Unity.Netcode;
@@ -14,6 +16,7 @@ public struct ItemData : INetworkSerializable, IEquatable<ItemData>
     /// <summary>
     /// Unique identifier for this item type
     /// </summary>
+    [JsonConverter(typeof(FixedString32BytesJsonConverter))]
     public FixedString32Bytes ID;
     
     /// <summary>

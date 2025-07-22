@@ -40,6 +40,7 @@ public class ShipInventoryUpdated : BaseUnityPlugin
     #region Constants
 
     public const string DEFAULT_LANG = "en";
+    public const string SAVE_KEY = "shipInventoryItems";
 
     #endregion
 

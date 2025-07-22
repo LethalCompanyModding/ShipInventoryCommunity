@@ -1,4 +1,7 @@
-﻿using HarmonyLib;
+﻿using System.Collections.Generic;
+using System.Linq;
+using HarmonyLib;
+using ShipInventoryUpdated.Objects;
 using ShipInventoryUpdated.Scripts;
 using Unity.Netcode;
 using UnityEngine;
@@ -26,5 +29,27 @@ internal class StartOfRound_Patches
         
         if (inventory.TryGetComponent(out NetworkObject networkObject))
             networkObject.Spawn();
+    }
+    
+    [HarmonyPatch(nameof(StartOfRound.LoadShipGrabbableItems)), HarmonyPrefix]
+    private static void LoadShipGrabbableItems_Prefix()
+    {
+        string currentSaveFileName = GameNetworkManager.Instance.currentSaveFileName;
+
+        Inventory.Clear();
+        
+        if (!ES3.KeyExists(ShipInventoryUpdated.SAVE_KEY, currentSaveFileName))
+            return;
+        
+        string json = ES3.Load<string>(ShipInventoryUpdated.SAVE_KEY, currentSaveFileName);
+        var items = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<ItemData>>(json);
+
+        if (items == null)
+        {
+            Logger.Error("Could not load items from the save file.");
+            return;
+        }
+        
+        Inventory.Add(items.ToArray());
     }
 }
