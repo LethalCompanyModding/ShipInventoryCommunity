@@ -52,6 +52,30 @@ public class Inventory : NetworkBehaviour
         Instance.RemoveServerRpc(items);
     }
 
+    /// <summary>
+    /// Gets the number of items stored in the inventory
+    /// </summary>
+    public static int Count => Instance?.storedItems.Count ?? 0;
+
+    /// <summary>
+    /// Gets the items stored in the inventory
+    /// </summary>
+    public static ItemData[] Items
+    {
+        get
+        {
+            if (Instance == null)
+                return [];
+
+            var items = new ItemData[Count];
+
+            for (int i = 0; i < items.Length; i++)
+                items[i] = Instance.storedItems[i];
+            
+            return items;
+        }
+    }
+
     #endregion
 
     #region Unity
