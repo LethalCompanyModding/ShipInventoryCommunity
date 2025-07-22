@@ -38,7 +38,6 @@ public class ChuteRetrieve : MonoBehaviour
         LAYER_PROPS = LayerMask.NameToLayer("Props");
         
         Inventory.OnRemoved += RetrieveItemsServerRpc;
-        Inventory.OnAdded += Inventory.Remove;
     }
 
     private void FixedUpdate()
