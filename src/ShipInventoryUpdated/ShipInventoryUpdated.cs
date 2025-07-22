@@ -24,7 +24,7 @@ public class ShipInventoryUpdated : BaseUnityPlugin
         if (!PrepareRPCs())
             return;
 
-        var language = Helpers.Localization.LoadLanguage("en");
+        var language = Helpers.Localization.LoadLanguage(DEFAULT_LANG);
         Helpers.Localization.SetAsDefault(language);
         
         Configuration.Load(Config);
@@ -36,6 +36,12 @@ public class ShipInventoryUpdated : BaseUnityPlugin
         
         Helpers.Logger.Info($"{LCMPluginInfo.PLUGIN_GUID} v{LCMPluginInfo.PLUGIN_VERSION} has loaded!");
     }
+
+    #region Constants
+
+    public const string DEFAULT_LANG = "en";
+
+    #endregion
 
     #region Bundle
 
