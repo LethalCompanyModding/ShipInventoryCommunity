@@ -97,11 +97,20 @@ internal static class Dependency
             config.InventoryCommand,
             new TextInputFieldOptions
             {
-                Name = Localization.Get("configuration.terminal.inventoryCommand.name"),
+                Name = Localization.Get("configuration.terminal.command.name"),
                 NumberOfLines = 1,
                 CharacterLimit = 64,
                 TrimText = true,
                 RequiresRestart = true
+            }
+        ));
+        
+        LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<TerminalConfig.SortOrder>(
+            config.InventorySortOrder,
+            new EnumDropDownOptions
+            {
+                Name = Localization.Get("configuration.terminal.inventorySortOrder.name"),
+                RequiresRestart = false
             }
         ));
     }

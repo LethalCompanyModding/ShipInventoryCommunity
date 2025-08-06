@@ -64,6 +64,28 @@ public class ShipApplication : PageApplication
     #endregion
     
     #region Utils
+
+    private static ItemData[] GetItems(bool applySortOrder)
+    {
+        var items = Inventory.Items;
+
+        if (!applySortOrder)
+            return items;
+
+        var order = Configuration.Instance?.Terminal.InventorySortOrder.Value ?? TerminalConfig.SortOrder.NONE;
+        var defaultName = Localization.Get("application.answers.unknown");
+
+        IEnumerable<ItemData> orderedItems = order switch
+        {
+            TerminalConfig.SortOrder.NAME_ASC => items.OrderBy(i => i.GetItem()?.itemName ?? defaultName),
+            TerminalConfig.SortOrder.NAME_DESC => items.OrderByDescending(i => i.GetItem()?.itemName ?? defaultName),
+            TerminalConfig.SortOrder.VALUE_ASC => items.OrderBy(i => i.SCRAP_VALUE),
+            TerminalConfig.SortOrder.VALUE_DESC => items.OrderByDescending(i => i.SCRAP_VALUE),
+            _ => items
+        };
+
+        return orderedItems.ToArray();
+    }
     
     private void CreateItemPages<T>(
         T[] items,
@@ -305,7 +327,7 @@ public class ShipApplication : PageApplication
     }
     
     private void RetrieveSingle(int selectedIndex = 0) => CreateItemPages(
-        Inventory.Items, 
+        GetItems(true), 
         selectedIndex, 
         Localization.Get("application.screens.single.message"),
         RenderSingle,
@@ -347,7 +369,7 @@ public class ShipApplication : PageApplication
     }
 
     private void RetrieveType(int selectedIndex = 0) => CreateItemPages(
-        Inventory.Items.GroupBy(i => i.ID.ToString()).ToArray(), 
+        GetItems(true).GroupBy(i => i.ID.ToString()).ToArray(), 
         selectedIndex, 
         Localization.Get("application.screens.single.message"),
         RenderType,
@@ -402,7 +424,7 @@ public class ShipApplication : PageApplication
     
     private void RetrieveAll()
     {
-        var items = Inventory.Items;
+        var items = GetItems(false);
         
         string message = Localization.Get("application.screens.all.message", new Dictionary<string, string>
         {

@@ -14,9 +14,13 @@
       }
     },
     "terminal": {
-      "inventoryCommand": {
+      "command": {
         "name": "Inventory Command",
         "description": "Determines the command to type to access the ship's inventory."
+      },
+      "inventorySortOrder": {
+        "name": "Inventory Sort Order",
+        "description": "Determines in what order the items are displayed in the inventory."
       }
     }
   },
