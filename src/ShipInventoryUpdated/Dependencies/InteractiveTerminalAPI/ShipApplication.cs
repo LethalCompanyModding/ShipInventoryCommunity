@@ -245,9 +245,10 @@ public class ShipApplication : PageApplication
         ConfirmExitCallback = declineCallback;
         
         // Elements
+        var automaticPositive = Configuration.Instance?.Terminal.AutomaticPositiveAnswer.Value ?? false;
         var optionMenu = new CursorMenu
         {
-            cursorIndex = 0,
+            cursorIndex = automaticPositive ? 1 : 0,
             elements = [
                 new CursorElement
                 {

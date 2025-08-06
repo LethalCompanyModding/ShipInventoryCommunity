@@ -1,4 +1,5 @@
-﻿using BepInEx.Configuration;
+﻿using System.Collections.Generic;
+using BepInEx.Configuration;
 using ShipInventoryUpdated.Helpers;
 
 namespace ShipInventoryUpdated.Configurations;
@@ -13,6 +14,7 @@ internal class TerminalConfig
     
     public readonly ConfigEntry<string> InventoryCommand;
     public readonly ConfigEntry<SortOrder> InventorySortOrder;
+    public readonly ConfigEntry<bool> AutomaticPositiveAnswer;
 
     public TerminalConfig(ConfigFile cfg)
     {
@@ -26,6 +28,15 @@ internal class TerminalConfig
             new ConfigDefinition(SECTION, "InventorySortOrder"),
             SortOrder.NAME_ASC,
             new ConfigDescription(Localization.Get("configuration.terminal.inventorySortOrder.description"))
+        );
+        
+        AutomaticPositiveAnswer = cfg.Bind(
+            new ConfigDefinition(SECTION, "YesPlease"),
+            false,
+            new ConfigDescription(Localization.Get("configuration.terminal.automaticPositive.description", new Dictionary<string, string>
+            {
+                ["positiveAnswer"] = Localization.Get("application.answers.positive")
+            }))
         );
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 using LethalConfig.ConfigItems.Options;
@@ -110,6 +111,18 @@ internal static class Dependency
             new EnumDropDownOptions
             {
                 Name = Localization.Get("configuration.terminal.inventorySortOrder.name"),
+                RequiresRestart = false
+            }
+        ));
+        
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
+            config.AutomaticPositiveAnswer,
+            new BoolCheckBoxOptions
+            {
+                Name = Localization.Get("configuration.terminal.automaticPositive.name", new Dictionary<string, string>
+                {
+                    ["positiveAnswer"] = Localization.Get("application.answers.positive")
+                }),
                 RequiresRestart = false
             }
         ));
