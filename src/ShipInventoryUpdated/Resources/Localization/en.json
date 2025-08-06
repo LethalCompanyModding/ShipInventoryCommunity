@@ -21,6 +21,18 @@
       "inventorySortOrder": {
         "name": "Inventory Sort Order",
         "description": "Determines in what order the items are displayed in the inventory."
+      },
+      "automaticPositive": {
+        "name": "Pre-Select '{positiveAnswer}'",
+        "description": "Determines if the cursor is automatically places on the '{positiveAnswer}' option when retrieving an item."
+      },
+      "showConfirmation": {
+        "name": "Show Confirmation",
+        "description": "Determines if a confirmation is shown when retrieving an item."
+      },
+      "showTrademark": {
+        "name": "Show Trademark",
+        "description": "Determines if the Company's trademark is shown in the terminal."
       }
     }
   },
@@ -89,6 +101,9 @@
         "total": "Total value: ${total}",
         "count": "Number of items: {count}"
       }
+    },
+    "footers": {
+      "trademark": "<color=#666666>     [ PROPERTY OF Halden Eletronics © ]</color>"
     }
   }
 }
