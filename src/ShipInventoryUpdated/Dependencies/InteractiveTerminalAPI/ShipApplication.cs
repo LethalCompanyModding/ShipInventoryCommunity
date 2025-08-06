@@ -300,6 +300,19 @@ public class ShipApplication : PageApplication
     {
         UnregisterExitAction();
 
+        var showTrademark = Configuration.Instance?.Terminal.ShowTrademark.Value ?? true;
+
+        if (showTrademark)
+        {
+            var copyElements = new List<ITextElement>(elements)
+            {
+                TextElement.Create(" "),
+                TextElement.Create(Localization.Get("application.footers.trademark"))
+            };
+
+            elements = copyElements.ToArray();
+        }
+
         return new BoxedScreen
         {
             Title = title,

@@ -135,5 +135,14 @@ internal static class Dependency
                 RequiresRestart = false
             }
         ));
+        
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
+            config.ShowTrademark,
+            new BoolCheckBoxOptions
+            {
+                Name = Localization.Get("configuration.terminal.showTrademark.name"),
+                RequiresRestart = false
+            }
+        ));
     }
 }

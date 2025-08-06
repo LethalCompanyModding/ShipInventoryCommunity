@@ -16,6 +16,7 @@ internal class TerminalConfig
     public readonly ConfigEntry<SortOrder> InventorySortOrder;
     public readonly ConfigEntry<bool> AutomaticPositiveAnswer;
     public readonly ConfigEntry<bool> ShowConfirmation;
+    public readonly ConfigEntry<bool> ShowTrademark;
 
     public TerminalConfig(ConfigFile cfg)
     {
@@ -44,6 +45,12 @@ internal class TerminalConfig
             new ConfigDefinition(SECTION, "ShowConfirmation"),
             true,
             new ConfigDescription(Localization.Get("configuration.terminal.showConfirmation.description"))
+        );
+        
+        ShowTrademark = cfg.Bind(
+            new ConfigDefinition(SECTION, "ShowTrademark"),
+            true,
+            new ConfigDescription(Localization.Get("configuration.terminal.showTrademark.description"))
         );
     }
 }
