@@ -15,6 +15,7 @@ internal class TerminalConfig
     public readonly ConfigEntry<string> InventoryCommand;
     public readonly ConfigEntry<SortOrder> InventorySortOrder;
     public readonly ConfigEntry<bool> AutomaticPositiveAnswer;
+    public readonly ConfigEntry<bool> ShowConfirmation;
 
     public TerminalConfig(ConfigFile cfg)
     {
@@ -37,6 +38,12 @@ internal class TerminalConfig
             {
                 ["positiveAnswer"] = Localization.Get("application.answers.positive")
             }))
+        );
+        
+        ShowConfirmation = cfg.Bind(
+            new ConfigDefinition(SECTION, "ShowConfirmation"),
+            true,
+            new ConfigDescription(Localization.Get("configuration.terminal.showConfirmation.description"))
         );
     }
 }

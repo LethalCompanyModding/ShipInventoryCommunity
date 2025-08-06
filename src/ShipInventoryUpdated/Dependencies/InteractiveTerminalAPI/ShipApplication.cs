@@ -242,8 +242,16 @@ public class ShipApplication : PageApplication
     
     private void ConfirmElement(string message, Action? confirmCallback, Action? declineCallback = null)
     {
-        ConfirmExitCallback = declineCallback;
+        var showConfirmation = Configuration.Instance?.Terminal.ShowConfirmation.Value ?? true;
+
+        if (!showConfirmation)
+        {
+            confirmCallback?.Invoke();
+            return;
+        }
         
+        ConfirmExitCallback = declineCallback;
+
         // Elements
         var automaticPositive = Configuration.Instance?.Terminal.AutomaticPositiveAnswer.Value ?? false;
         var optionMenu = new CursorMenu
