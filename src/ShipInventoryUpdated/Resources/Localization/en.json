@@ -9,6 +9,12 @@
         "description": "Determines the items that are not allowed in the chute.\n\nThe items' name should be separated by a comma (,).\nEach entry uses regular expressions."
       }
     },
+    "inventory": {
+      "maxItemCount": {
+        "name": "Maximum Item Count",
+        "description": "Determines the maximum amount of items that can be stored inside the inventory."
+      }
+    },
     "unlock": {
       "unlockName": {
         "name": "Unlock Name",
