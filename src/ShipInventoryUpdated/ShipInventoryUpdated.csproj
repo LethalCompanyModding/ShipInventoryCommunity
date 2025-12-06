@@ -44,4 +44,9 @@
         <Exec
             Command="dotnet tool run netcode-patch -uv 2022.3.62 -nv 1.12.0 -tv 1.0.0 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')"/>
     </Target>
+
+    <ItemGroup>
+        <None Update="Resources\Bundles\si-bundle" CopyToOutputDirectory="PreserveNewest" Link="si-bundle" />
+        <None Update="Resources\Localization\*.json" CopyToOutputDirectory="PreserveNewest" Link="%(FileName)%(Extension)" />
+    </ItemGroup>
 </Project>

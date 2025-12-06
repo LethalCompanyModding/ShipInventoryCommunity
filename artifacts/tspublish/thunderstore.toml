@@ -19,8 +19,7 @@
   #DependencyNamespace-ModName = "version.number.here"
   [package.dependencies]
     BepInEx-BepInExPack                ="5.4.2100"
-    Evaisa-LethalLib                   ="0.16.2"
-    Sigurd-CSync                       ="5.0.1"
+    Evaisa-LethalLib                   ="1.1.1"
     WhiteSpike-Interactive_Terminal_API="1.2.0"
 
 #These settings will import the repo's README.md file and the icon in the
