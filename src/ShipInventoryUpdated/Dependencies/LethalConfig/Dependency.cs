@@ -117,6 +117,17 @@ internal static class Dependency
 				RequiresRestart = false
 			}
 		));
+		
+		LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(
+			config.RetrieveSpeed,
+			new FloatInputFieldOptions
+			{
+				Name = Localization.Get("configuration.chute.retrieveSpeed.name"),
+				Min = 0,
+				Max = float.MaxValue,
+				RequiresRestart = true
+			}
+		));
 	}
 
 	/// <summary>

@@ -21,6 +21,10 @@
       "clearOnWipe": {
         "name": "Clear on Wipe",
         "description": "Determines if the inventory clears upon a team wipe."
+      },
+      "retrieveSpeed": {
+        "name": "Retrieve Speed",
+        "description": "Determines the speed in seconds at which a player can retrieve items."
       }
     },
     "unlock": {

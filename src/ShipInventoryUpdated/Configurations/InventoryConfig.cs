@@ -12,6 +12,7 @@ internal class InventoryConfig
 
 	public readonly ConfigEntry<int> MaxItemCount;
 	public readonly ConfigEntry<bool> ClearOnWipe;
+	public readonly ConfigEntry<float> RetrieveSpeed;
 
 	public InventoryConfig(ConfigFile cfg)
 	{
@@ -25,6 +26,12 @@ internal class InventoryConfig
 			new ConfigDefinition(SECTION, "ChuteSafe"),
 			true,
 			new ConfigDescription(Localization.Get("configuration.inventory.clearOnWipe.description"))
+		);
+
+		RetrieveSpeed = cfg.Bind(
+			new ConfigDefinition(SECTION, "ChuteDelay"),
+			0.5f,
+			new ConfigDescription(Localization.Get("configuration.inventory.retrieveSpeed.description"))
 		);
 	}
 }
