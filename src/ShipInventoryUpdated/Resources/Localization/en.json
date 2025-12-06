@@ -17,6 +17,10 @@
       "unlockCost": {
         "name": "Unlock Cost",
         "description": "Determines how expensive it is to unlock the chute."
+      },
+      "isUnlockable": {
+        "name": "Is Unlockable",
+        "description": "Determines if the chute is an unlockable item or if it is always available."
       }
     },
     "terminal": {

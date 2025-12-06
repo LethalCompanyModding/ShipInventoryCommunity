@@ -108,6 +108,15 @@ internal static class Dependency
 				RequiresRestart = false
 			}
 		));
+
+		LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
+			config.IsUnlockable,
+			new BoolCheckBoxOptions
+			{
+				Name = Localization.Get("configuration.unlock.isUnlockable.name"),
+				RequiresRestart = true
+			}
+		));
 	}
 
 	/// <summary>

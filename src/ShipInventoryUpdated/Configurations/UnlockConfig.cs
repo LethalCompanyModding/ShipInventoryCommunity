@@ -12,6 +12,7 @@ internal class UnlockConfig
 
 	public readonly ConfigEntry<string> UnlockName;
 	public readonly ConfigEntry<int> UnlockCost;
+	public readonly ConfigEntry<bool> IsUnlockable;
 
 	public UnlockConfig(ConfigFile cfg)
 	{
@@ -25,6 +26,12 @@ internal class UnlockConfig
 			new ConfigDefinition(SECTION, "ChuteUnlockCost"),
 			60,
 			new ConfigDescription(Localization.Get("configuration.unlock.unlockCost.description"))
+		);
+
+		IsUnlockable = cfg.Bind(
+			new ConfigDefinition(SECTION, "ChuteIsUnlock"),
+			true,
+			new ConfigDescription(Localization.Get("configuration.unlock.isUnlockable.description"))
 		);
 
 		UnlockName.SettingChanged += (_, _) => Patches.Terminal_Patches.AssignNewCommand(UnlockName.Value);
