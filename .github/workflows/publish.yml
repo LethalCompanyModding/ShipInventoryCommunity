@@ -17,13 +17,12 @@ jobs:
         with:
           dotnet-version: "8.x"
           cache: true
-          cache-dependency-path: '**/packages.lock.json'
+          cache-dependency-path: "**/packages.lock.json"
 
       - name: Restore and Build
         run: |
           dotnet restore --locked-mode
           dotnet tool restore
-          dotnet build
 
       - name: Publish to TS
         env:
