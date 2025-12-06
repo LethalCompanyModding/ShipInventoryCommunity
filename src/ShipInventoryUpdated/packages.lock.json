@@ -2,12 +2,6 @@
   "version": 1,
   "dependencies": {
     ".NETStandard,Version=v2.1": {
-      "AinaVT-LethalConfig": {
-        "type": "Direct",
-        "requested": "[1.4.6, )",
-        "resolved": "1.4.6",
-        "contentHash": "8eb+ZrEQs4K1PTh0CyEWrfCfvXGvrjhLq3Ej4h1VpqeidUsrpKyV4nPG2G64Mjl9w91uy+dY0vB1w24yzoNRgA=="
-      },
       "BepInEx.Analyzers": {
         "type": "Direct",
         "requested": "[1.*, )",
@@ -28,15 +22,6 @@
         "dependencies": {
           "BepInEx.BaseLib": "5.4.20",
           "HarmonyX": "2.7.0"
-        }
-      },
-      "Evaisa.LethalLib": {
-        "type": "Direct",
-        "requested": "[1.1.1, )",
-        "resolved": "1.1.1",
-        "contentHash": "ZHy0gSo79ImSE0SXOTG6Qy0YrSzzBHk93VajkQmH4cgM5um0LL0CAnVa4pAV4bK9bXTCgjJrsAg4hCLWfiYe4Q==",
-        "dependencies": {
-          "BepInEx.Core": "5.4.21"
         }
       },
       "LethalCompany.GameLibs.Steam": {
@@ -66,12 +51,6 @@
         "requested": "[2022.3.9, )",
         "resolved": "2022.3.9",
         "contentHash": "sSxqZjd05U0NWlX+eappdlsEuXFvDRHkUaClDVTocGRzCmIwNvgGJIPh22lGklIpNZ3cJZneYJkIUnEIazR8VA=="
-      },
-      "WhiteSpike-Interactive_Terminal_API": {
-        "type": "Direct",
-        "requested": "[1.2.0, )",
-        "resolved": "1.2.0",
-        "contentHash": "Ux5GxTSzozOvgypVKMKFYV3QQgaHKc0Hw5NJpuSMCmfadqaGvYsBqILRGAnMws+ZLIQcCtX9S38r1vBZIKAhXg=="
       },
       "BepInEx.BaseLib": {
         "type": "Transitive",

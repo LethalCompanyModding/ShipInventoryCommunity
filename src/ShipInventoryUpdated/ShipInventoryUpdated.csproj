@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <!-- BepInEx Properties -->
     <PropertyGroup>
         <AssemblyName>ShipInventoryUpdated</AssemblyName>
@@ -24,15 +24,6 @@
         <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile"
                           PrivateAssets="all"/>
         <PackageReference Include="MinVer" Version="6.*" PrivateAssets="all"/>
-    </ItemGroup>
-
-    <!-- Dependencies -->
-    <ItemGroup>
-        <!-- Hard -->
-        <PackageReference Include="WhiteSpike-Interactive_Terminal_API" Version="1.2.0"/>
-        <PackageReference Include="Evaisa.LethalLib" Version="1.1.1"/>
-        <!-- Soft -->
-        <PackageReference Include="AinaVT-LethalConfig" Version="1.4.6"/>
     </ItemGroup>
 
     <!-- Targets -->
