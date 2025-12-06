@@ -26,10 +26,10 @@ internal static class Dependency
 		}
 
 		LethalConfigManager.SkipAutoGen();
-		ApplyChuteConfiguration(configuration.Chute);
-		ApplyInventoryConfiguration(configuration.Inventory);
 		ApplyUnlockConfiguration(configuration.Unlock);
+		ApplyChuteConfiguration(configuration.Chute);
 		ApplyTerminalConfiguration(configuration.Terminal);
+		ApplyInventoryConfiguration(configuration.Inventory);
 
 		#if DEBUG
 		LethalConfigManager.AddConfigItem(new GenericButtonConfigItem(
