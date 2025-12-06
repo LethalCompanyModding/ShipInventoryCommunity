@@ -16,12 +16,10 @@ jobs:
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "9.x"
-          cache: true
-          cache-dependency-path: "**/packages.lock.json"
 
       - name: Restore and Build
         run: |
-          dotnet restore --locked-mode
+          dotnet restore
           dotnet tool restore
 
       - name: Publish to TS

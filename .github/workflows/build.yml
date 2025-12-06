@@ -3,9 +3,10 @@ name: Build on Push
 on:
   push:
     branches: [master]
+  pull_request:
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     steps:
       # Use checkout to publish the files in your repo
