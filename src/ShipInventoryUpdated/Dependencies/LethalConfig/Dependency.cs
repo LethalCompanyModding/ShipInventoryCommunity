@@ -27,6 +27,7 @@ internal static class Dependency
 
 		LethalConfigManager.SkipAutoGen();
 		ApplyChuteConfiguration(configuration.Chute);
+		ApplyInventoryConfiguration(configuration.Inventory);
 		ApplyUnlockConfiguration(configuration.Unlock);
 		ApplyTerminalConfiguration(configuration.Terminal);
 
@@ -76,6 +77,23 @@ internal static class Dependency
 				Name = Localization.Get("configuration.chute.blacklist.name"),
 				NumberOfLines = 5,
 				TrimText = true,
+				RequiresRestart = false
+			}
+		));
+	}
+
+	/// <summary>
+	/// Applies all the configurations for <see cref="InventoryConfig"/>
+	/// </summary>
+	private static void ApplyInventoryConfiguration(InventoryConfig config)
+	{
+		LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(
+			config.MaxItemCount,
+			new IntInputFieldOptions
+			{
+				Name = Localization.Get("configuration.inventory.maxItemCount.name"),
+				Min = 1,
+				Max = int.MaxValue,
 				RequiresRestart = false
 			}
 		));
