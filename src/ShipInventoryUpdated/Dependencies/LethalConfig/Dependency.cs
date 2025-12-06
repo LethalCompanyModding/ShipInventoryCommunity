@@ -25,6 +25,7 @@ internal static class Dependency
 		}
 
 		LethalConfigManager.SkipAutoGen();
+		ApplyChuteConfiguration(configuration.Chute);
 		ApplyUnlockConfiguration(configuration.Unlock);
 		ApplyTerminalConfiguration(configuration.Terminal);
 
@@ -60,6 +61,23 @@ internal static class Dependency
 		}
 
 		LethalConfigManager.SetModDescription(Localization.Get("mod.description"));
+	}
+
+	/// <summary>
+	/// Applies all the configurations for <see cref="ChuteConfig"/>
+	/// </summary>
+	private static void ApplyChuteConfiguration(ChuteConfig config)
+	{
+		LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(
+			config.Blacklist,
+			new TextInputFieldOptions
+			{
+				Name = Localization.Get("configuration.chute.blacklist.name"),
+				NumberOfLines = 5,
+				TrimText = true,
+				RequiresRestart = false
+			}
+		));
 	}
 
 	/// <summary>

@@ -3,6 +3,12 @@
     "description": "Adds an inventory to the ship, allowing it to store items and retrieve them."
   },
   "configuration": {
+    "chute": {
+      "blacklist": {
+        "name": "Blacklist",
+        "description": "Determines the items that are not allowed in the chute.\n\nThe items' name should be separated by a comma (,).\nEach entry uses regular expressions."
+      }
+    },
     "unlock": {
       "unlockName": {
         "name": "Unlock Name",
@@ -46,7 +52,8 @@
     "trigger": {
       "hover": "Store item: [{key}]",
       "emptyHand": "[Nothing to store]",
-      "invalidItem": "[Item not allowed]"
+      "invalidItem": "[Item not allowed]",
+      "itemBlacklisted": "[Item blacklisted]"
     }
   },
   "application": {
