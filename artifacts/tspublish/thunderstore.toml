@@ -21,7 +21,6 @@
     BepInEx-BepInExPack                ="5.4.2100"
     Evaisa-LethalLib                   ="1.1.1"
     WhiteSpike-Interactive_Terminal_API="1.2.0"
-    Sigurd-CSync                       ="5.0.1"
 
 #These settings will import the repo's README.md file and the icon in the
 #same folder as this TOML file as your icon. Please replace the icon with
