@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ShipInventoryUpdated.Configurations;
+﻿using ShipInventoryUpdated.Configurations;
 
 namespace ShipInventoryUpdated.Helpers;
 

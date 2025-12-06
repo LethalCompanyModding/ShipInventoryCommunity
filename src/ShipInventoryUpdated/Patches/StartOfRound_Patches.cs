@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
+﻿using HarmonyLib;
 using ShipInventoryUpdated.Objects;
 using ShipInventoryUpdated.Scripts;
 using Unity.Netcode;
-using UnityEngine;
 using Logger = ShipInventoryUpdated.Helpers.Logger;
+using Object = UnityEngine.Object;
 
 namespace ShipInventoryUpdated.Patches;
 

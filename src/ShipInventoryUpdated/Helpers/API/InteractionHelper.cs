@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using GameNetcodeStuff;
+﻿using GameNetcodeStuff;
 
 namespace ShipInventoryUpdated.Helpers.API;
 

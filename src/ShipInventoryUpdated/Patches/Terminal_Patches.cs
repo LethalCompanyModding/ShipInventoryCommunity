@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using HarmonyLib;
+﻿using HarmonyLib;
 using ShipInventoryUpdated.Configurations;
 using ShipInventoryUpdated.Helpers;
 using UnityEngine;

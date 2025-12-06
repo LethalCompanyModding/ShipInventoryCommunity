@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ShipInventoryUpdated.Helpers;
+﻿using ShipInventoryUpdated.Helpers;
 using ShipInventoryUpdated.Helpers.API;
 using UnityEngine;
 

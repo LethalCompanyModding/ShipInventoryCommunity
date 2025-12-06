@@ -13,7 +13,8 @@
       "version": "0.2.4",
       "commands": [
         "tcli"
-      ]
+      ],
+      "rollForward": false
     }
   }
 }

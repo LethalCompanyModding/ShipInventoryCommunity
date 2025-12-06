@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using BepInEx.Configuration;
+﻿using BepInEx.Configuration;
 using ShipInventoryUpdated.Helpers;
 
 namespace ShipInventoryUpdated.Configurations;
