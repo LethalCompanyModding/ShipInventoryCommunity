@@ -29,10 +29,10 @@
     <!-- Dependencies -->
     <ItemGroup>
         <!-- Hard -->
-        <PackageReference Include="WhiteSpike-Interactive_Terminal_API" Version="1.2.0" PrivateAssets="all"/>
+        <PackageReference Include="WhiteSpike-Interactive_Terminal_API" Version="1.1.4" PrivateAssets="all"/>
         <PackageReference Include="Evaisa.LethalLib" Version="1.1.1" PrivateAssets="all"/>
         <!-- Soft -->
-        <PackageReference Include="AinaVT-LethalConfig" Version="1.4.6" PrivateAssets="all"/>
+        <PackageReference Include="AinaVT-LethalConfig" Version="1.4.5" PrivateAssets="all"/>
     </ItemGroup>
 
     <!-- Targets -->

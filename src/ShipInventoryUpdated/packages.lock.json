@@ -4,9 +4,9 @@
     ".NETStandard,Version=v2.1": {
       "AinaVT-LethalConfig": {
         "type": "Direct",
-        "requested": "[1.4.6, )",
-        "resolved": "1.4.6",
-        "contentHash": "1Xxsa43VjNTPh4Bye70BicN2dFvHeuwBogru3ru4C5+VZ6a7RxTsvWKJSdm+tJDa44d8gzkmVRjhg6iR6CHeeA=="
+        "requested": "[1.4.5, )",
+        "resolved": "1.4.5",
+        "contentHash": "WrmYfiv+LdyXpXJecUnNS/QQUuV4+vc7lf46YSTx+xajcoUgI1tNH7vbcmtholbLXMz5zVhwCdZo0rHLcD1Otg=="
       },
       "BepInEx.Analyzers": {
         "type": "Direct",
@@ -69,9 +69,9 @@
       },
       "WhiteSpike-Interactive_Terminal_API": {
         "type": "Direct",
-        "requested": "[1.2.0, )",
-        "resolved": "1.2.0",
-        "contentHash": "0CeI0RvQmhciHCTQ5QyhwFJegByE7I2boVglIFPdRFll+zl3HIDBQ0WZuZn7Ft48eMfuDE0heJx3hVmVDFoHeQ=="
+        "requested": "[1.1.4, )",
+        "resolved": "1.1.4",
+        "contentHash": "gXUTAnVzpudAySKMvELRu3Qs52vEouP7faX542WiOngQYFJnugAx3LyCbiXOWcbf7qwJNUZe9rStMtyzIRK4ZQ=="
       },
       "BepInEx.BaseLib": {
         "type": "Transitive",
