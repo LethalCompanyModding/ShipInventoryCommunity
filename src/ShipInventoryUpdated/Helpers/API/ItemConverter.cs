@@ -9,20 +9,20 @@ public static class ItemConverter
 {
 	#region API
 
-	private static readonly List<Func<GrabbableObject, ItemData[]?>> conversions = [];
+	private static readonly List<Func<GrabbableObject, ItemData[]?>> Conversions = [];
 
 	/// <summary>
 	/// Adds a conversion that defines how the given object is converted to its data form
 	/// </summary>
 	/// <param name="conversion">Returns the list of data for the given object or <c>null</c> if this conversion doesn't handle this object</param>
-	public static void AddConversion(Func<GrabbableObject, ItemData[]?> conversion) => conversions.Add(conversion);
+	public static void AddConversion(Func<GrabbableObject, ItemData[]?> conversion) => Conversions.Add(conversion);
 
 	/// <summary>
 	/// Converts the given item into <see cref="ItemData"/>, using registered conversions
 	/// </summary>
 	internal static ItemData[] Convert(GrabbableObject item)
 	{
-		foreach (var conversion in conversions)
+		foreach (var conversion in Conversions)
 		{
 			var items = conversion?.Invoke(item);
 
@@ -54,12 +54,12 @@ public static class ItemConverter
 
 		for (var i = beltBagItem.objectsInBag.Count - 1; i >= 0; i--)
 		{
-			var _item = beltBagItem.objectsInBag[i];
+			var itemInBag = beltBagItem.objectsInBag[i];
 
-			if (_item == null)
+			if (itemInBag == null)
 				continue;
 
-			items.AddRange(Convert(_item));
+			items.AddRange(Convert(itemInBag));
 		}
 
 		items.Add(new ItemData(beltBagItem));

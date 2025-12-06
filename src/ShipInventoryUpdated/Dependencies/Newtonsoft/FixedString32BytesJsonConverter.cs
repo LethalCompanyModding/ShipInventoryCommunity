@@ -21,6 +21,6 @@ internal class FixedString32BytesJsonConverter : JsonConverter<FixedString32Byte
 	)
 	{
 		var value = reader.Value as string;
-		return new FixedString32Bytes(value ?? default);
+		return new FixedString32Bytes(value ?? null);
 	}
 }

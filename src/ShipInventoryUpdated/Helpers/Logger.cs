@@ -7,11 +7,11 @@ namespace ShipInventoryUpdated.Helpers;
 /// </summary>
 internal static class Logger
 {
-	private static ManualLogSource? log;
+	private static ManualLogSource? _log;
 
-	public static void SetLogger(ManualLogSource logSource) => log = logSource;
+	public static void SetLogger(ManualLogSource logSource) => _log = logSource;
 
-	private static void Log(LogLevel level, object? content) => log?.Log(level, content ?? "null");
+	private static void Log(LogLevel level, object? content) => _log?.Log(level, content ?? "null");
 
 	/// <summary>
 	/// Logs information for developers to know important steps of the mod

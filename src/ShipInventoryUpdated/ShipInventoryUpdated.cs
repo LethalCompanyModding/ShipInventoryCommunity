@@ -47,10 +47,12 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 
 	#region Bundle
 
+	// ReSharper disable InconsistentNaming
 	internal static GameObject? INVENTORY_PREFAB;
 	internal static GameObject? CHUTE_PREFAB;
 	internal static TerminalNode? CHUTE_BUY_NODE;
 	internal static TerminalNode? CHUTE_CONFIRM_NODE;
+	// ReSharper restore InconsistentNaming
 
 	private static bool LoadAssets(string name)
 	{
@@ -69,14 +71,14 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 
 	#region Patches
 
-	private Harmony? Harmony;
+	private Harmony? _harmony;
 
 	private void Patch()
 	{
-		Harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
-		Harmony.PatchAll(typeof(Patches.GameNetworkManager_Patches));
-		Harmony.PatchAll(typeof(Patches.StartOfRound_Patches));
-		Harmony.PatchAll(typeof(Patches.Terminal_Patches));
+		_harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
+		_harmony.PatchAll(typeof(Patches.GameNetworkManager_Patches));
+		_harmony.PatchAll(typeof(Patches.StartOfRound_Patches));
+		_harmony.PatchAll(typeof(Patches.Terminal_Patches));
 	}
 
 	#endregion

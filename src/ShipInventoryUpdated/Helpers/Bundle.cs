@@ -9,7 +9,7 @@ namespace ShipInventoryUpdated.Helpers;
 /// </summary>
 internal static class Bundle
 {
-	private static AssetBundle? loadedBundle;
+	private static AssetBundle? _loadedBundle;
 
 	/// <summary>
 	/// Tries to load the bundle with the given name
@@ -21,9 +21,9 @@ internal static class Bundle
 		path = Path.GetDirectoryName(path) ?? "";
 		path = Path.Combine(path, name);
 
-		loadedBundle = AssetBundle.LoadFromFile(path);
+		_loadedBundle = AssetBundle.LoadFromFile(path);
 
-		if (loadedBundle == null)
+		if (_loadedBundle == null)
 		{
 			Logger.Error($"Failed to load the bundle '{name}'.");
 			return false;
@@ -38,13 +38,13 @@ internal static class Bundle
 	/// <returns>Asset loaded or null</returns>
 	public static T? LoadAsset<T>(string name) where T : Object
 	{
-		if (loadedBundle == null)
+		if (_loadedBundle == null)
 		{
 			Logger.Error($"Tried to load '{name}', but the bundle was not loaded.");
 			return null;
 		}
 
-		var asset = loadedBundle.LoadAsset<T>(name);
+		var asset = _loadedBundle.LoadAsset<T>(name);
 
 		if (asset == null)
 			Logger.Error($"No asset named '{name}' was found.");

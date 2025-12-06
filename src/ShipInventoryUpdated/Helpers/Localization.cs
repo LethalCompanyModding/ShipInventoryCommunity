@@ -28,7 +28,7 @@ internal static class Localization
 		}
 	}
 
-	private static LanguagePackage? defaultLanguage;
+	private static LanguagePackage? _defaultLanguage;
 
 	/// <summary>
 	/// Loads the language package with the given language code
@@ -63,14 +63,14 @@ internal static class Localization
 	/// <summary>
 	/// Sets the given language package as the default language
 	/// </summary>
-	public static void SetAsDefault(LanguagePackage? languagePackage) => defaultLanguage = languagePackage;
+	public static void SetAsDefault(LanguagePackage? languagePackage) => _defaultLanguage = languagePackage;
 
 	/// <summary>
 	/// Fetches the localized value at the given key, parsing the parameters in it
 	/// </summary>
 	public static string Get(string key, Dictionary<string, string>? parameters = null)
 	{
-		var value = defaultLanguage?.Get(key);
+		var value = _defaultLanguage?.Get(key);
 
 		if (value == null)
 			return key;
@@ -90,7 +90,7 @@ internal static class Localization
 	/// </summary>
 	public static void ReloadDefault()
 	{
-		var code = defaultLanguage?.Language;
+		var code = _defaultLanguage?.Language;
 
 		SetAsDefault(null);
 

@@ -5,6 +5,7 @@ using ShipInventoryUpdated.Helpers;
 
 namespace ShipInventoryUpdated.Dependencies.InteractiveTerminalAPI;
 
+// https://github.com/WhiteSpike/InteractiveTerminalAPI
 internal static class Dependency
 {
 	public static bool Enabled => Helpers.Dependencies.IsEnabled("WhiteSpike.InteractiveTerminalAPI");

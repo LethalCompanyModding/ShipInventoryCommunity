@@ -3,6 +3,7 @@ using ShipInventoryUpdated.Dependencies.Newtonsoft;
 using ShipInventoryUpdated.Helpers.API;
 using Unity.Collections;
 using Unity.Netcode;
+// ReSharper disable InconsistentNaming
 
 namespace ShipInventoryUpdated.Objects;
 

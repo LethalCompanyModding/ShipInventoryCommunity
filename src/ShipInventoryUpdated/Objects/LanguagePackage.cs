@@ -12,12 +12,12 @@ internal sealed class LanguagePackage
 	/// </summary>
 	public readonly string Language;
 
-	private readonly Dictionary<string, string> loadedData;
+	private readonly Dictionary<string, string> _loadedData;
 
 	internal LanguagePackage(string language)
 	{
 		Language = language;
-		loadedData = [];
+		_loadedData = [];
 	}
 
 	internal LanguagePackage(string language, JObject node) : this(language)
@@ -50,12 +50,12 @@ internal sealed class LanguagePackage
 					stack.Push((prop.Value, newPath));
 				}
 			} else if (!string.IsNullOrWhiteSpace(path))
-				loadedData[path] = token.ToString();
+				_loadedData[path] = token.ToString();
 		}
 	}
 
 	/// <summary>
 	/// Fetches the localized value for the given key
 	/// </summary>
-	public string? Get(string key) => loadedData.ContainsKey(key) ? loadedData[key] : null;
+	public string? Get(string key) => _loadedData.ContainsKey(key) ? _loadedData[key] : null;
 }

@@ -9,6 +9,7 @@ using Logger = ShipInventoryUpdated.Helpers.Logger;
 
 namespace ShipInventoryUpdated.Dependencies.LethalConfig;
 
+// https://github.com/AinaVT/LethalConfig
 internal static class Dependency
 {
 	public static bool Enabled => Helpers.Dependencies.IsEnabled(PluginInfo.Guid);

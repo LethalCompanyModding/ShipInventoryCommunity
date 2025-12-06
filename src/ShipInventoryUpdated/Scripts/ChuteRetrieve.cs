@@ -31,17 +31,17 @@ public class ChuteRetrieve : NetworkBehaviour
 
 	#region Unity
 
-	private int LAYER_IGNORE = -1;
-	private int LAYER_INTERACTABLE = -1;
-	private int LAYER_PROPS = -1;
+	private int _layerIgnore = -1;
+	private int _layerInteractable = -1;
+	private int _layerProps = -1;
 
-	private readonly Collider[] buffer = new Collider[1];
+	private readonly Collider[] _buffer = new Collider[1];
 
 	private void Awake()
 	{
-		LAYER_IGNORE = LayerMask.NameToLayer("Ignore Raycast");
-		LAYER_INTERACTABLE = LayerMask.NameToLayer("InteractableObject");
-		LAYER_PROPS = LayerMask.NameToLayer("Props");
+		_layerIgnore = LayerMask.NameToLayer("Ignore Raycast");
+		_layerInteractable = LayerMask.NameToLayer("InteractableObject");
+		_layerProps = LayerMask.NameToLayer("Props");
 
 		Inventory.OnRemoved += RetrieveItemsServerRpc;
 	}
@@ -54,12 +54,12 @@ public class ChuteRetrieve : NetworkBehaviour
 		var amount = Physics.OverlapBoxNonAlloc(
 			itemRestorePoint.position,
 			itemDetectionSize / 2,
-			buffer,
+			_buffer,
 			itemRestorePoint.rotation,
-			1 << LAYER_PROPS
+			1 << _layerProps
 		);
 
-		trigger.gameObject.layer = amount > 0 ? LAYER_IGNORE : LAYER_INTERACTABLE;
+		trigger.gameObject.layer = amount > 0 ? _layerIgnore : _layerInteractable;
 	}
 
 	public override void OnNetworkDespawn()
@@ -71,8 +71,8 @@ public class ChuteRetrieve : NetworkBehaviour
 
 	#region Coroutines
 
-	private readonly Queue<ItemData> spawnQueue = [];
-	private Coroutine? spawnCoroutine;
+	private readonly Queue<ItemData> _spawnQueue = [];
+	private Coroutine? _spawnCoroutine;
 
 	/// <summary>
 	/// Plays the dropping sound of the given item
@@ -91,9 +91,9 @@ public class ChuteRetrieve : NetworkBehaviour
 	/// </summary>
 	private IEnumerator SpawnCoroutine()
 	{
-		while (spawnQueue.Count > 0)
+		while (_spawnQueue.Count > 0)
 		{
-			var data = spawnQueue.Dequeue();
+			var data = _spawnQueue.Dequeue();
 			var obj = SpawnItemServer(data);
 
 			if (obj is not null)
@@ -103,7 +103,7 @@ public class ChuteRetrieve : NetworkBehaviour
 		}
 
 		// Mark as completed
-		spawnCoroutine = null;
+		_spawnCoroutine = null;
 	}
 
 	/// <summary>
@@ -206,9 +206,9 @@ public class ChuteRetrieve : NetworkBehaviour
 	{
 		// Queue items
 		foreach (var i in items)
-			spawnQueue.Enqueue(i);
+			_spawnQueue.Enqueue(i);
 
-		spawnCoroutine ??= StartCoroutine(SpawnCoroutine());
+		_spawnCoroutine ??= StartCoroutine(SpawnCoroutine());
 	}
 
 	#endregion

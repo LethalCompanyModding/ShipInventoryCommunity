@@ -35,22 +35,22 @@ public class ShipApplication : PageApplication
 
 	#region Exit Action
 
-	private Action<InputAction.CallbackContext>? LastExitPerformedAction;
+	private Action<InputAction.CallbackContext>? _lastExitPerformedAction;
 
 	private void RegisterExitAction(Action<InputAction.CallbackContext> action)
 	{
 		UnregisterExitAction();
-		LastExitPerformedAction = action;
+		_lastExitPerformedAction = action;
 		global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= OnScreenExit;
 		global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed += action;
 	}
 
 	private void UnregisterExitAction()
 	{
-		if (LastExitPerformedAction != null)
+		if (_lastExitPerformedAction != null)
 		{
-			global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= LastExitPerformedAction;
-			LastExitPerformedAction = null;
+			global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= _lastExitPerformedAction;
+			_lastExitPerformedAction = null;
 		}
 		// If OnScreenExit is not already registered, this is a no-op
 		// Ensures OnScreenExit is never double-registered
@@ -92,7 +92,7 @@ public class ShipApplication : PageApplication
 		Action<int>                           action
 	)
 	{
-		var ENTRIES_PER_PAGE = GetEntriesPerPage<int>([]);
+		var entriesPerPage = GetEntriesPerPage<int>([]);
 
 		var cursorCount = items.Length;
 		(T[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(items);
@@ -110,7 +110,7 @@ public class ShipApplication : PageApplication
 					continue;
 
 				var result = render.Invoke(data);
-				var itemIndex = i * ENTRIES_PER_PAGE + j;
+				var itemIndex = i * entriesPerPage + j;
 
 				elements[j] = new CursorElement
 				{
@@ -149,8 +149,8 @@ public class ShipApplication : PageApplication
 
 		selectedIndex = Math.Clamp(selectedIndex, 0, cursorCount - 1);
 
-		var currentPageIndex = selectedIndex / ENTRIES_PER_PAGE;
-		var currentCursorIndex = selectedIndex % ENTRIES_PER_PAGE;
+		var currentPageIndex = selectedIndex / entriesPerPage;
+		var currentCursorIndex = selectedIndex % entriesPerPage;
 
 		// Set the current page's cursor
 		cursorMenus[currentPageIndex].cursorIndex = currentCursorIndex;
@@ -220,7 +220,7 @@ public class ShipApplication : PageApplication
 
 		var optionMenu = new CursorMenu
 		{
-			cursorIndex = Inventory.Count > 0 ? default : elements.Length - 1,
+			cursorIndex = Inventory.Count > 0 ? 0 : elements.Length - 1,
 			elements = elements
 		};
 
@@ -246,7 +246,7 @@ public class ShipApplication : PageApplication
 
 	#region Confirm Screen
 
-	private Action? ConfirmExitCallback;
+	private Action? _confirmExitCallback;
 
 	private void ConfirmElement(string message, Action? confirmCallback, Action? declineCallback = null)
 	{
@@ -258,7 +258,7 @@ public class ShipApplication : PageApplication
 			return;
 		}
 
-		ConfirmExitCallback = declineCallback;
+		_confirmExitCallback = declineCallback;
 
 		// Elements
 		var automaticPositive = Configuration.Instance?.Terminal.AutomaticPositiveAnswer.Value ?? false;
@@ -303,7 +303,7 @@ public class ShipApplication : PageApplication
 		currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
 		SwitchScreen(screen, optionMenu, true);
 
-		RegisterExitAction(_ => ConfirmExitCallback?.Invoke());
+		RegisterExitAction(_ => _confirmExitCallback?.Invoke());
 	}
 
 	private BoxedScreen CreateScreen(string title, ITextElement[] elements)
