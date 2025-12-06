@@ -2,35 +2,35 @@
 
 internal static class ItemIdentifier
 {
-    private const string INVALID_ITEM_ID = "InvalidItem";
+	private const string INVALID_ITEM_ID = "InvalidItem";
 
-    /// <summary>
-    /// Fetches the generic ID of the given item
-    /// </summary>
-    public static string GetID(Item? item)
-    {
-        if (item == null)
-            return INVALID_ITEM_ID;
-        
-        return $"Vanilla/{item.itemName}";
-    }
+	/// <summary>
+	/// Fetches the generic ID of the given item
+	/// </summary>
+	public static string GetID(Item? item)
+	{
+		if (item == null)
+			return INVALID_ITEM_ID;
 
-    /// <summary>
-    /// Fetches the generic ID of the given item
-    /// </summary>
-    public static Item? GetItem(string id)
-    {
-        if (id == INVALID_ITEM_ID)
-            return null;
+		return $"Vanilla/{item.itemName}";
+	}
 
-        foreach (var item in StartOfRound.Instance?.allItemsList?.itemsList ?? [])
-        {
-            var currentId = GetID(item);
+	/// <summary>
+	/// Fetches the generic ID of the given item
+	/// </summary>
+	public static Item? GetItem(string id)
+	{
+		if (id == INVALID_ITEM_ID)
+			return null;
 
-            if (currentId == id)
-                return item;
-        }
+		foreach (var item in StartOfRound.Instance?.allItemsList?.itemsList ?? [])
+		{
+			var currentId = GetID(item);
 
-        return null;
-    }
+			if (currentId == id)
+				return item;
+		}
+
+		return null;
+	}
 }

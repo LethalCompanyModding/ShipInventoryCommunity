@@ -12,49 +12,50 @@ namespace ShipInventoryUpdated.Scripts;
 /// </summary>
 public class ChuteStore : MonoBehaviour
 {
-    #region Unity
+	#region Unity
 
-    private void Start()
-    {
-        if (trigger != null)
-        {
-            trigger.onInteract.AddListener(StoreHeldItem);
-            trigger.timeToHold = 0.5f;
-        }
-    }
+	private void Start()
+	{
+		if (trigger != null)
+		{
+			trigger.onInteract.AddListener(StoreHeldItem);
+			trigger.timeToHold = 0.5f;
+		}
+	}
 
-    #endregion
+	#endregion
 
-    #region Store
+	#region Store
 
-    [SerializeField] private InteractTrigger? trigger;
+	[SerializeField]
+	private InteractTrigger? trigger;
 
-    /// <summary>
-    /// Sends the item held by the given player to the server to be stored
-    /// </summary>
-    private static void StoreHeldItem(PlayerControllerB player)
-    {
-        GrabbableObject item = player.currentlyHeldObjectServer;
+	/// <summary>
+	/// Sends the item held by the given player to the server to be stored
+	/// </summary>
+	private static void StoreHeldItem(PlayerControllerB player)
+	{
+		var item = player.currentlyHeldObjectServer;
 
-        // If item invalid, skip
-        if (item == null)
-        {
-            Helpers.Logger.Info($"Player '{player.playerUsername}' is not holding any item.");
-            return;
-        }
+		// If item invalid, skip
+		if (item == null)
+		{
+			Helpers.Logger.Info($"Player '{player.playerUsername}' is not holding any item.");
+			return;
+		}
 
-        var data = ItemConverter.Convert(item);
-        Inventory.Add(data);
+		var data = ItemConverter.Convert(item);
+		Inventory.Add(data);
 
-        // Update scrap collected
-        item.isInShipRoom = false;
-        item.scrapPersistedThroughRounds = true;
-        player.SetItemInElevator(true, true, item);
+		// Update scrap collected
+		item.isInShipRoom = false;
+		item.scrapPersistedThroughRounds = true;
+		player.SetItemInElevator(true, true, item);
 
-        // Despawn the held item
-        Helpers.Logger.Debug("Despawn held object...");
-        player.DestroyItemInSlotAndSync(player.currentItemSlot);
-    }
+		// Despawn the held item
+		Helpers.Logger.Debug("Despawn held object...");
+		player.DestroyItemInSlotAndSync(player.currentItemSlot);
+	}
 
-    #endregion
+	#endregion
 }

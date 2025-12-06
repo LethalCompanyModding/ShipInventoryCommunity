@@ -8,52 +8,55 @@ namespace ShipInventoryUpdated.Objects;
 /// </summary>
 internal sealed class LanguagePackage
 {
-    /// <summary>
-    /// Language code of this package
-    /// </summary>
-    public readonly string Language;
-    private readonly Dictionary<string, string> loadedData;
+	/// <summary>
+	/// Language code of this package
+	/// </summary>
+	public readonly string Language;
 
-    internal LanguagePackage(string language)
-    {
-        Language = language;
-        loadedData = [];
-    }
-    
-    internal LanguagePackage(string language, JObject node) : this(language) => ParseTree(node);
+	private readonly Dictionary<string, string> loadedData;
 
-    /// <summary>
-    /// Compiles the localized strings into their IDs from the given root
-    /// </summary>
-    private void ParseTree(JObject root)
-    {
-        var stack = new Stack<(JToken, string)>();
-        stack.Push((root, ""));
+	internal LanguagePackage(string language)
+	{
+		Language = language;
+		loadedData = [];
+	}
 
-        while (stack.Count > 0)
-        {
-            var (token, path) = stack.Pop();
+	internal LanguagePackage(string language, JObject node) : this(language)
+	{
+		ParseTree(node);
+	}
 
-            if (token.Type == JTokenType.Object)
-            {
-                var obj = (JObject)token;
+	/// <summary>
+	/// Compiles the localized strings into their IDs from the given root
+	/// </summary>
+	private void ParseTree(JObject root)
+	{
+		var stack = new Stack<(JToken, string)>();
+		stack.Push((root, ""));
 
-                if (!obj.HasValues)
-                    continue;
+		while (stack.Count > 0)
+		{
+			(var token, var path) = stack.Pop();
 
-                foreach (var prop in obj.Properties())
-                {
-                    string newPath = string.IsNullOrEmpty(path) ? prop.Name : $"{path}.{prop.Name}";
-                    stack.Push((prop.Value, newPath));
-                }
-            }
-            else if (!string.IsNullOrWhiteSpace(path))
-                loadedData[path] = token.ToString();
-        }
-    }
+			if (token.Type == JTokenType.Object)
+			{
+				var obj = (JObject)token;
 
-    /// <summary>
-    /// Fetches the localized value for the given key
-    /// </summary>
-    public string? Get(string key) => loadedData.ContainsKey(key) ? loadedData[key] : null;
+				if (!obj.HasValues)
+					continue;
+
+				foreach (var prop in obj.Properties())
+				{
+					var newPath = string.IsNullOrEmpty(path) ? prop.Name : $"{path}.{prop.Name}";
+					stack.Push((prop.Value, newPath));
+				}
+			} else if (!string.IsNullOrWhiteSpace(path))
+				loadedData[path] = token.ToString();
+		}
+	}
+
+	/// <summary>
+	/// Fetches the localized value for the given key
+	/// </summary>
+	public string? Get(string key) => loadedData.ContainsKey(key) ? loadedData[key] : null;
 }

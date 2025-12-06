@@ -12,137 +12,141 @@ namespace ShipInventoryUpdated.Dependencies.LethalConfig;
 
 internal static class Dependency
 {
-    public static bool Enabled => Helpers.Dependencies.IsEnabled(PluginInfo.Guid);
+	public static bool Enabled => Helpers.Dependencies.IsEnabled(PluginInfo.Guid);
 
-    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-    public static void ApplyConfiguration(Configuration? configuration)
-    {
-        ApplyInformation();
+	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+	public static void ApplyConfiguration(Configuration? configuration)
+	{
+		ApplyInformation();
 
-        if (configuration == null)
-        {
-            Logger.Info($"Tried to load the configurations into '{nameof(LethalConfig)}', but none were given."); 
-            return;
-        }
+		if (configuration == null)
+		{
+			Logger.Info($"Tried to load the configurations into '{nameof(LethalConfig)}', but none were given.");
+			return;
+		}
 
-        LethalConfigManager.SkipAutoGen();
-        ApplyUnlockConfiguration(configuration.Unlock);
-        ApplyTerminalConfiguration(configuration.Terminal);
-            
-#if DEBUG
-        LethalConfigManager.AddConfigItem(new GenericButtonConfigItem(
-            "DEBUG",
-            "Reload Localization",
-            "Reloads the current localization",
-            "Reload",
-            Localization.ReloadDefault
-        ));
-#endif
-    }
+		LethalConfigManager.SkipAutoGen();
+		ApplyUnlockConfiguration(configuration.Unlock);
+		ApplyTerminalConfiguration(configuration.Terminal);
 
-    /// <summary>
-    /// Applies the general information for the mod
-    /// </summary>
-    private static void ApplyInformation()
-    {
-        var modIcon = Bundle.LoadAsset<Texture2D>("mod-icon");
+		#if DEBUG
+		LethalConfigManager.AddConfigItem(new GenericButtonConfigItem(
+			"DEBUG",
+			"Reload Localization",
+			"Reloads the current localization",
+			"Reload",
+			Localization.ReloadDefault
+		));
+		#endif
+	}
 
-        if (modIcon != null)
-        {
-            var sprite = Sprite.Create(
-                modIcon,
-                new Rect(0f, 0f, modIcon.width, modIcon.height),
-                new Vector2(0.5f, 0.5f)
-            );
-            LethalConfigManager.SetModIcon(sprite);
-        }
-        
-        LethalConfigManager.SetModDescription(Localization.Get("mod.description"));
-    }
+	/// <summary>
+	/// Applies the general information for the mod
+	/// </summary>
+	private static void ApplyInformation()
+	{
+		var modIcon = Bundle.LoadAsset<Texture2D>("mod-icon");
 
-    /// <summary>
-    /// Applies all the configurations for <see cref="UnlockConfig"/>
-    /// </summary>
-    private static void ApplyUnlockConfiguration(UnlockConfig config)
-    {
-        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(
-            config.UnlockName,
-            new TextInputFieldOptions
-            {
-                Name = Localization.Get("configuration.unlock.unlockName.name"),
-                NumberOfLines = 1,
-                CharacterLimit = 64,
-                TrimText = true,
-                RequiresRestart = false
-            }
-        ));
-        
-        LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(
-            config.UnlockCost,
-            new IntInputFieldOptions
-            {
-                Name = Localization.Get("configuration.unlock.unlockCost.name"),
-                Min = 0,
-                Max = 999_999_999,
-                RequiresRestart = false
-            }
-        ));
-    }
+		if (modIcon != null)
+		{
+			var sprite = Sprite.Create(
+				modIcon,
+				new Rect(0f,
+					0f,
+					modIcon.width,
+					modIcon.height),
+				new Vector2(0.5f, 0.5f)
+			);
+			LethalConfigManager.SetModIcon(sprite);
+		}
 
-    /// <summary>
-    /// Applies all the configurations for <see cref="TerminalConfig"/>
-    /// </summary>
-    private static void ApplyTerminalConfiguration(TerminalConfig config)
-    {
-        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(
-            config.InventoryCommand,
-            new TextInputFieldOptions
-            {
-                Name = Localization.Get("configuration.terminal.command.name"),
-                NumberOfLines = 1,
-                CharacterLimit = 64,
-                TrimText = true,
-                RequiresRestart = true
-            }
-        ));
-        
-        LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<TerminalConfig.SortOrder>(
-            config.InventorySortOrder,
-            new EnumDropDownOptions
-            {
-                Name = Localization.Get("configuration.terminal.inventorySortOrder.name"),
-                RequiresRestart = false
-            }
-        ));
-        
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
-            config.AutomaticPositiveAnswer,
-            new BoolCheckBoxOptions
-            {
-                Name = Localization.Get("configuration.terminal.automaticPositive.name", new Dictionary<string, string>
-                {
-                    ["positiveAnswer"] = Localization.Get("application.answers.positive")
-                }),
-                RequiresRestart = false
-            }
-        ));
-        
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
-            config.ShowConfirmation,
-            new BoolCheckBoxOptions
-            {
-                Name = Localization.Get("configuration.terminal.showConfirmation.name"),
-                RequiresRestart = false
-            }
-        ));
-        
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
-            config.ShowTrademark,
-            new BoolCheckBoxOptions
-            {
-                Name = Localization.Get("configuration.terminal.showTrademark.name"),
-                RequiresRestart = false
-            }
-        ));
-    }
+		LethalConfigManager.SetModDescription(Localization.Get("mod.description"));
+	}
+
+	/// <summary>
+	/// Applies all the configurations for <see cref="UnlockConfig"/>
+	/// </summary>
+	private static void ApplyUnlockConfiguration(UnlockConfig config)
+	{
+		LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(
+			config.UnlockName,
+			new TextInputFieldOptions
+			{
+				Name = Localization.Get("configuration.unlock.unlockName.name"),
+				NumberOfLines = 1,
+				CharacterLimit = 64,
+				TrimText = true,
+				RequiresRestart = false
+			}
+		));
+
+		LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(
+			config.UnlockCost,
+			new IntInputFieldOptions
+			{
+				Name = Localization.Get("configuration.unlock.unlockCost.name"),
+				Min = 0,
+				Max = 999_999_999,
+				RequiresRestart = false
+			}
+		));
+	}
+
+	/// <summary>
+	/// Applies all the configurations for <see cref="TerminalConfig"/>
+	/// </summary>
+	private static void ApplyTerminalConfiguration(TerminalConfig config)
+	{
+		LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(
+			config.InventoryCommand,
+			new TextInputFieldOptions
+			{
+				Name = Localization.Get("configuration.terminal.command.name"),
+				NumberOfLines = 1,
+				CharacterLimit = 64,
+				TrimText = true,
+				RequiresRestart = true
+			}
+		));
+
+		LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<TerminalConfig.SortOrder>(
+			config.InventorySortOrder,
+			new EnumDropDownOptions
+			{
+				Name = Localization.Get("configuration.terminal.inventorySortOrder.name"),
+				RequiresRestart = false
+			}
+		));
+
+		LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
+			config.AutomaticPositiveAnswer,
+			new BoolCheckBoxOptions
+			{
+				Name = Localization.Get("configuration.terminal.automaticPositive.name",
+					new Dictionary<string, string>
+					{
+						["positiveAnswer"] = Localization.Get("application.answers.positive")
+					}),
+				RequiresRestart = false
+			}
+		));
+
+		LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
+			config.ShowConfirmation,
+			new BoolCheckBoxOptions
+			{
+				Name = Localization.Get("configuration.terminal.showConfirmation.name"),
+				RequiresRestart = false
+			}
+		));
+
+		LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
+			config.ShowTrademark,
+			new BoolCheckBoxOptions
+			{
+				Name = Localization.Get("configuration.terminal.showTrademark.name"),
+				RequiresRestart = false
+			}
+		));
+	}
 }

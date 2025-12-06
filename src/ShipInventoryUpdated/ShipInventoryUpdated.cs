@@ -15,100 +15,101 @@ namespace ShipInventoryUpdated;
 [BepInDependency(LethalConfig.PluginInfo.Guid, BepInDependency.DependencyFlags.SoftDependency)]
 public class ShipInventoryUpdated : BaseUnityPlugin
 {
-    private void Awake()
-    {
-        Helpers.Logger.SetLogger(Logger);
+	private void Awake()
+	{
+		Helpers.Logger.SetLogger(Logger);
 
-        if (!LoadAssets("si-bundle"))
-            return;
-        
-        if (!PrepareRPCs())
-            return;
+		if (!LoadAssets("si-bundle"))
+			return;
 
-        var language = Helpers.Localization.LoadLanguage(DEFAULT_LANG);
-        Helpers.Localization.SetAsDefault(language);
-        
-        Configuration.Load(Config);
-        Helpers.Dependencies.LoadDependencies(Configuration.Instance);
-        Patch();
+		if (!PrepareRPCs())
+			return;
 
-        InteractionHelper.LoadConditions();
-        ItemConverter.LoadConversions();
-        
-        Helpers.Logger.Info($"{LCMPluginInfo.PLUGIN_GUID} v{LCMPluginInfo.PLUGIN_VERSION} has loaded!");
-    }
+		var language = Helpers.Localization.LoadLanguage(DEFAULT_LANG);
+		Helpers.Localization.SetAsDefault(language);
 
-    #region Constants
+		Configuration.Load(Config);
+		Helpers.Dependencies.LoadDependencies(Configuration.Instance);
+		Patch();
 
-    public const string DEFAULT_LANG = "en";
-    public const string SAVE_KEY = "shipInventoryItems";
+		InteractionHelper.LoadConditions();
+		ItemConverter.LoadConversions();
 
-    #endregion
+		Helpers.Logger.Info($"{LCMPluginInfo.PLUGIN_GUID} v{LCMPluginInfo.PLUGIN_VERSION} has loaded!");
+	}
 
-    #region Bundle
+	#region Constants
 
-    internal static GameObject? INVENTORY_PREFAB;
-    internal static GameObject? CHUTE_PREFAB;
-    internal static TerminalNode? CHUTE_BUY_NODE;
-    internal static TerminalNode? CHUTE_CONFIRM_NODE;
+	public const string DEFAULT_LANG = "en";
+	public const string SAVE_KEY = "shipInventoryItems";
 
-    private static bool LoadAssets(string name)
-    {
-        if (!Helpers.Bundle.LoadBundle(name))
-            return false;
+	#endregion
 
-        INVENTORY_PREFAB = Helpers.Bundle.LoadAsset<GameObject>("InventoryPrefab");
-        CHUTE_PREFAB = Helpers.Bundle.LoadAsset<GameObject>("ChutePrefab");
-        CHUTE_BUY_NODE = Helpers.Bundle.LoadAsset<TerminalNode>("ChuteBuy");
-        CHUTE_CONFIRM_NODE = Helpers.Bundle.LoadAsset<TerminalNode>("ChuteConfirm");
+	#region Bundle
 
-        return true;
-    }
+	internal static GameObject? INVENTORY_PREFAB;
+	internal static GameObject? CHUTE_PREFAB;
+	internal static TerminalNode? CHUTE_BUY_NODE;
+	internal static TerminalNode? CHUTE_CONFIRM_NODE;
 
-    #endregion
+	private static bool LoadAssets(string name)
+	{
+		if (!Helpers.Bundle.LoadBundle(name))
+			return false;
 
-    #region Patches
+		INVENTORY_PREFAB = Helpers.Bundle.LoadAsset<GameObject>("InventoryPrefab");
+		CHUTE_PREFAB = Helpers.Bundle.LoadAsset<GameObject>("ChutePrefab");
+		CHUTE_BUY_NODE = Helpers.Bundle.LoadAsset<TerminalNode>("ChuteBuy");
+		CHUTE_CONFIRM_NODE = Helpers.Bundle.LoadAsset<TerminalNode>("ChuteConfirm");
 
-    private Harmony? Harmony;
+		return true;
+	}
 
-    private void Patch()
-    {
-        Harmony = new Harmony(LCMPluginInfo.PLUGIN_GUID);
-        Harmony.PatchAll(typeof(Patches.GameNetworkManager_Patches));
-        Harmony.PatchAll(typeof(Patches.StartOfRound_Patches));
-        Harmony.PatchAll(typeof(Patches.Terminal_Patches));
-    }
+	#endregion
 
-    #endregion
-    
-    #region RPCs
+	#region Patches
 
-    private static bool PrepareRPCs()
-    {
-        try
-        {
-            var types = Assembly.GetExecutingAssembly().GetTypes();
-            foreach (var type in types)
-            {
-                var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-                foreach (var method in methods)
-                {
-                    var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                    if (attributes.Length > 0)
-                    {
-                        method.Invoke(null, null);
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Helpers.Logger.Error($"Error while preparing RPCs: '{e.Message}'");
-            return false;
-        }
+	private Harmony? Harmony;
 
-        return true;
-    }
+	private void Patch()
+	{
+		Harmony = new Harmony(LCMPluginInfo.PLUGIN_GUID);
+		Harmony.PatchAll(typeof(Patches.GameNetworkManager_Patches));
+		Harmony.PatchAll(typeof(Patches.StartOfRound_Patches));
+		Harmony.PatchAll(typeof(Patches.Terminal_Patches));
+	}
 
-    #endregion
+	#endregion
+
+	#region RPCs
+
+	private static bool PrepareRPCs()
+	{
+		try
+		{
+			var types = Assembly.GetExecutingAssembly().GetTypes();
+
+			foreach (var type in types)
+			{
+				var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+
+				foreach (var method in methods)
+				{
+					var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
+
+					if (attributes.Length > 0)
+						method.Invoke(null, null);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Helpers.Logger.Error($"Error while preparing RPCs: '{e.Message}'");
+			return false;
+		}
+
+		return true;
+	}
+
+	#endregion
 }

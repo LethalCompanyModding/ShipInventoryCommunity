@@ -17,490 +17,515 @@ namespace ShipInventoryUpdated.Dependencies.InteractiveTerminalAPI;
 
 public class ShipApplication : PageApplication
 {
-    #region Application
+	#region Application
 
-    /// <inheritdoc/>
-    public override void Initialization()
-    {
-        if (!Terminal_Patches.IsChuteUnlocked())
-        {
-            LockedScreen();
-            return;
-        }
-        
-        MainScreen();
-    }
+	/// <inheritdoc/>
+	public override void Initialization()
+	{
+		if (!Terminal_Patches.IsChuteUnlocked())
+		{
+			LockedScreen();
+			return;
+		}
 
-    /// <inheritdoc/>
-    protected override int GetEntriesPerPage<T>(T[] entries) => 10;
+		MainScreen();
+	}
 
-    #endregion
+	/// <inheritdoc/>
+	protected override int GetEntriesPerPage<T>(T[] entries) => 10;
 
-    #region Exit Action
+	#endregion
 
-    private Action<InputAction.CallbackContext>? LastExitPerformedAction;
-    
-    private void RegisterExitAction(Action<InputAction.CallbackContext> action)
-    {
-        UnregisterExitAction();
-        LastExitPerformedAction = action;
-        global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= OnScreenExit;
-        global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed += action;
-    }
+	#region Exit Action
 
-    private void UnregisterExitAction()
-    {
-        if (LastExitPerformedAction != null)
-        {
-            global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= LastExitPerformedAction;
-            LastExitPerformedAction = null;
-        }
-        // If OnScreenExit is not already registered, this is a no-op
-        // Ensures OnScreenExit is never double-registered
-        global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= OnScreenExit;
-        global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed += OnScreenExit;
-    }
+	private Action<InputAction.CallbackContext>? LastExitPerformedAction;
 
-    #endregion
-    
-    #region Utils
+	private void RegisterExitAction(Action<InputAction.CallbackContext> action)
+	{
+		UnregisterExitAction();
+		LastExitPerformedAction = action;
+		global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= OnScreenExit;
+		global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed += action;
+	}
 
-    private static ItemData[] GetItems(bool applySortOrder)
-    {
-        var items = Inventory.Items;
+	private void UnregisterExitAction()
+	{
+		if (LastExitPerformedAction != null)
+		{
+			global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= LastExitPerformedAction;
+			LastExitPerformedAction = null;
+		}
+		// If OnScreenExit is not already registered, this is a no-op
+		// Ensures OnScreenExit is never double-registered
+		global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed -= OnScreenExit;
+		global::InteractiveTerminalAPI.Compat.InputUtils_Compat.CursorExitKey.performed += OnScreenExit;
+	}
 
-        if (!applySortOrder)
-            return items;
+	#endregion
 
-        var order = Configuration.Instance?.Terminal.InventorySortOrder.Value ?? TerminalConfig.SortOrder.NONE;
-        var defaultName = Localization.Get("application.answers.unknown");
+	#region Utils
 
-        IEnumerable<ItemData> orderedItems = order switch
-        {
-            TerminalConfig.SortOrder.NAME_ASC => items.OrderBy(i => i.GetItem()?.itemName ?? defaultName),
-            TerminalConfig.SortOrder.NAME_DESC => items.OrderByDescending(i => i.GetItem()?.itemName ?? defaultName),
-            TerminalConfig.SortOrder.VALUE_ASC => items.OrderBy(i => i.SCRAP_VALUE),
-            TerminalConfig.SortOrder.VALUE_DESC => items.OrderByDescending(i => i.SCRAP_VALUE),
-            _ => items
-        };
+	private static ItemData[] GetItems(bool applySortOrder)
+	{
+		var items = Inventory.Items;
 
-        return orderedItems.ToArray();
-    }
-    
-    private void CreateItemPages<T>(
-        T[] items,
-        int selectedIndex,
-        string text,
-        Func<T, (string, string, ItemData[])> render,
-        Action<int> action
-    ) {
-        var ENTRIES_PER_PAGE = GetEntriesPerPage<int>([]);
+		if (!applySortOrder)
+			return items;
 
-        int cursorCount = items.Length;
-        (T[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(items);
+		var order = Configuration.Instance?.Terminal.InventorySortOrder.Value ?? TerminalConfig.SortOrder.NONE;
+		var defaultName = Localization.Get("application.answers.unknown");
 
-        for (int i = 0; i < pageGroups.Length; i++)
-        {
-            var elements = new CursorElement[pageGroups[i].Length];
-            for (int j = 0; j < elements.Length; j++)
-            {
-                var data = pageGroups[i][j];
+		IEnumerable<ItemData> orderedItems = order switch
+		{
+			TerminalConfig.SortOrder.NAME_ASC   => items.OrderBy(i => i.GetItem()?.itemName ?? defaultName),
+			TerminalConfig.SortOrder.NAME_DESC  => items.OrderByDescending(i => i.GetItem()?.itemName ?? defaultName),
+			TerminalConfig.SortOrder.VALUE_ASC  => items.OrderBy(i => i.SCRAP_VALUE),
+			TerminalConfig.SortOrder.VALUE_DESC => items.OrderByDescending(i => i.SCRAP_VALUE),
+			_                                   => items
+		};
 
-                // It's normal to have default entries (the array is page-sized, but there may be fewer entries)
-                if (data == null || data.Equals(default(T)))
-                    continue;
+		return orderedItems.ToArray();
+	}
 
-                var result = render.Invoke(data);
-                var itemIndex = i * ENTRIES_PER_PAGE + j;
+	private void CreateItemPages<T>(
+		T[]                                   items,
+		int                                   selectedIndex,
+		string                                text,
+		Func<T, (string, string, ItemData[])> render,
+		Action<int>                           action
+	)
+	{
+		var ENTRIES_PER_PAGE = GetEntriesPerPage<int>([]);
 
-                elements[j] = new CursorElement
-                {
-                    Name = result.Item1,
-                    Action = () =>
-                    {
-                        ConfirmElement(result.Item2, () =>
-                        {
-                            Inventory.Remove(result.Item3);
+		var cursorCount = items.Length;
+		(T[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(items);
 
-                            if (cursorCount == 1)
-                                MainScreen();
-                            else
-                                action.Invoke(itemIndex);
-                        }, () => action.Invoke(itemIndex));
-                    }
-                };
-            }
+		for (var i = 0; i < pageGroups.Length; i++)
+		{
+			var elements = new CursorElement[pageGroups[i].Length];
 
-            cursorMenus[i] = new CursorMenu
-            {
-                cursorIndex = 0,
-                elements = elements
-            };
-            screens[i] = CreateScreen(Localization.Get("application.titles.selection"),
-                [
-                    TextElement.Create(text),
-                    TextElement.Create(" "),
-                    cursorMenus[i],
-                ]
-            );
-        }
+			for (var j = 0; j < elements.Length; j++)
+			{
+				var data = pageGroups[i][j];
 
-        selectedIndex = Math.Clamp(selectedIndex, 0, cursorCount - 1);
+				// It's normal to have default entries (the array is page-sized, but there may be fewer entries)
+				if (data == null || data.Equals(default(T)))
+					continue;
 
-        int currentPageIndex = selectedIndex / ENTRIES_PER_PAGE;
-        int currentCursorIndex = selectedIndex % ENTRIES_PER_PAGE;
+				var result = render.Invoke(data);
+				var itemIndex = i * ENTRIES_PER_PAGE + j;
 
-        // Set the current page's cursor
-        cursorMenus[currentPageIndex].cursorIndex = currentCursorIndex;
+				elements[j] = new CursorElement
+				{
+					Name = result.Item1,
+					Action = () =>
+					{
+						ConfirmElement(result.Item2,
+							() =>
+							{
+								Inventory.Remove(result.Item3);
 
-        currentPage = PageCursorElement.Create(currentPageIndex, screens, cursorMenus);
-        currentCursorMenu = currentPage.GetCurrentCursorMenu();
-        currentScreen = currentPage.GetCurrentScreen();
-        
-        RegisterExitAction(_ => MainScreen());
-    }
+								if (cursorCount == 1)
+									MainScreen();
+								else
+									action.Invoke(itemIndex);
+							},
+							() => action.Invoke(itemIndex));
+					}
+				};
+			}
 
-    #endregion
+			cursorMenus[i] = new CursorMenu
+			{
+				cursorIndex = 0,
+				elements = elements
+			};
 
-    #region Locked Screen
+			screens[i] = CreateScreen(Localization.Get("application.titles.selection"),
+				[
+					TextElement.Create(text),
+					TextElement.Create(" "),
+					cursorMenus[i]
+				]
+			);
+		}
 
-    private void LockedScreen()
-    {
-        var optionMenu = new CursorMenu {
-            cursorIndex = 0,
-            elements = [
-                new CursorElement
-                {
-                    Name = Localization.Get("application.answers.blocked"),
-                    Action = () => OnScreenExit(new InputAction.CallbackContext())
-                }
-            ]
-        };
-        
-        var screen = CreateScreen(Localization.Get("application.titles.locked"),
-            [
-                TextElement.Create(Localization.Get("application.screens.locked.message")),
-                TextElement.Create(" "),
-                TextElement.Create(Localization.Get("application.screens.locked.tip", new Dictionary<string, string> {
-                    ["command"] = Configuration.Instance?.Unlock.UnlockName.Value ?? ""
-                })),
-                TextElement.Create(" "),
-                TextElement.Create(" "),
-                TextElement.Create(Localization.Get("application.screens.locked.offer")),
-                TextElement.Create(" "),
-                optionMenu
-            ]
-        );
-        currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
-        SwitchScreen(screen, optionMenu, true);
-    }
+		selectedIndex = Math.Clamp(selectedIndex, 0, cursorCount - 1);
 
-    #endregion
-    
-    #region Main Screen
-    
-    private void MainScreen()
-    {
-        var player = StartOfRound.Instance.localPlayerController;
+		var currentPageIndex = selectedIndex / ENTRIES_PER_PAGE;
+		var currentCursorIndex = selectedIndex % ENTRIES_PER_PAGE;
 
-        var elements = new[]
-        {
-            RetrieveSingleElement(),
-            RetrieveTypeElement(),
-            RetrieveRandomElement(),
-            RetrieveAllElement(),
-            InfoCursorElement()
-        };
+		// Set the current page's cursor
+		cursorMenus[currentPageIndex].cursorIndex = currentCursorIndex;
 
-        var optionMenu = new CursorMenu {
-            cursorIndex = Inventory.Count > 0 ? default : elements.Length - 1,
-            elements = elements
-        };
+		currentPage = PageCursorElement.Create(currentPageIndex, screens, cursorMenus);
+		currentCursorMenu = currentPage.GetCurrentCursorMenu();
+		currentScreen = currentPage.GetCurrentScreen();
 
-        var screen = CreateScreen(Localization.Get("application.titles.main"),
-            [
-                TextElement.Create(Localization.Get("application.screens.main.welcome", new Dictionary<string, string>
-                {
-                    ["level"] = HUDManager.Instance.playerLevels[player.playerLevelNumber].levelName,
-                    ["username"] = player.playerUsername
-                })),
-                TextElement.Create(" "),
-                TextElement.Create(Localization.Get("application.screens.main.home")),
-                TextElement.Create(" "),
-                optionMenu,
-            ]
-        );
-        currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
-        SwitchScreen(screen, optionMenu, true);
-    }
+		RegisterExitAction(_ => MainScreen());
+	}
 
-    #endregion
+	#endregion
 
-    #region Confirm Screen
+	#region Locked Screen
 
-    private Action? ConfirmExitCallback;
-    
-    private void ConfirmElement(string message, Action? confirmCallback, Action? declineCallback = null)
-    {
-        var showConfirmation = Configuration.Instance?.Terminal.ShowConfirmation.Value ?? true;
+	private void LockedScreen()
+	{
+		var optionMenu = new CursorMenu
+		{
+			cursorIndex = 0,
+			elements =
+			[
+				new CursorElement
+				{
+					Name = Localization.Get("application.answers.blocked"),
+					Action = () => OnScreenExit(new InputAction.CallbackContext())
+				}
+			]
+		};
 
-        if (!showConfirmation)
-        {
-            confirmCallback?.Invoke();
-            return;
-        }
-        
-        ConfirmExitCallback = declineCallback;
+		var screen = CreateScreen(Localization.Get("application.titles.locked"),
+			[
+				TextElement.Create(Localization.Get("application.screens.locked.message")),
+				TextElement.Create(" "),
+				TextElement.Create(Localization.Get("application.screens.locked.tip",
+					new Dictionary<string, string>
+					{
+						["command"] = Configuration.Instance?.Unlock.UnlockName.Value ?? ""
+					})),
+				TextElement.Create(" "),
+				TextElement.Create(" "),
+				TextElement.Create(Localization.Get("application.screens.locked.offer")),
+				TextElement.Create(" "),
+				optionMenu
+			]
+		);
+		currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
+		SwitchScreen(screen, optionMenu, true);
+	}
 
-        // Elements
-        var automaticPositive = Configuration.Instance?.Terminal.AutomaticPositiveAnswer.Value ?? false;
-        var optionMenu = new CursorMenu
-        {
-            cursorIndex = automaticPositive ? 1 : 0,
-            elements = [
-                new CursorElement
-                {
-                    Name = Localization.Get("application.answers.negative"),
-                    Action = () =>
-                    {
-                        if (declineCallback != null)
-                            declineCallback.Invoke();
-                        else
-                            MainScreen();
-                    }
-                },
-                new CursorElement
-                {
-                    Name = Localization.Get("application.answers.positive"),
-                    Action = () => confirmCallback?.Invoke()
-                }
-            ]
-        };
+	#endregion
 
-        // Screen
-        var screen = CreateScreen(Localization.Get("application.titles.confirm"),
-            [
-                TextElement.Create(message),
-                TextElement.Create(" "),
-                TextElement.Create(Localization.Get("application.screens.confirm.message")),
-                TextElement.Create(" "),
-                TextElement.Create(Localization.Get("application.screens.confirm.warning")),
-                TextElement.Create(" "),
-                optionMenu
-            ]
-        );
-            
-        currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
-        SwitchScreen(screen, optionMenu, true);
+	#region Main Screen
 
-        RegisterExitAction(_ => ConfirmExitCallback?.Invoke());
-    }
+	private void MainScreen()
+	{
+		var player = StartOfRound.Instance.localPlayerController;
 
-    private BoxedScreen CreateScreen(string title, ITextElement[] elements)
-    {
-        UnregisterExitAction();
+		var elements = new[]
+		{
+			RetrieveSingleElement(),
+			RetrieveTypeElement(),
+			RetrieveRandomElement(),
+			RetrieveAllElement(),
+			InfoCursorElement()
+		};
 
-        var showTrademark = Configuration.Instance?.Terminal.ShowTrademark.Value ?? true;
+		var optionMenu = new CursorMenu
+		{
+			cursorIndex = Inventory.Count > 0 ? default : elements.Length - 1,
+			elements = elements
+		};
 
-        if (showTrademark)
-        {
-            var copyElements = new List<ITextElement>(elements)
-            {
-                TextElement.Create(" "),
-                TextElement.Create(Localization.Get("application.footers.trademark"))
-            };
+		var screen = CreateScreen(Localization.Get("application.titles.main"),
+			[
+				TextElement.Create(Localization.Get("application.screens.main.welcome",
+					new Dictionary<string, string>
+					{
+						["level"] = HUDManager.Instance.playerLevels[player.playerLevelNumber].levelName,
+						["username"] = player.playerUsername
+					})),
+				TextElement.Create(" "),
+				TextElement.Create(Localization.Get("application.screens.main.home")),
+				TextElement.Create(" "),
+				optionMenu
+			]
+		);
+		currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
+		SwitchScreen(screen, optionMenu, true);
+	}
 
-            elements = copyElements.ToArray();
-        }
+	#endregion
 
-        return new BoxedScreen
-        {
-            Title = title,
-            elements = elements
-        };
-    }
+	#region Confirm Screen
 
-    #endregion
-    
-    #region Retrieve Single Screen
+	private Action? ConfirmExitCallback;
 
-    private CursorElement RetrieveSingleElement() => new()
-    {
-        Name = Localization.Get("application.titles.single"),
-        Active = _ => Inventory.Count > 0,
-        SelectInactive = false,
-        Action = () => RetrieveSingle()
-    };
+	private void ConfirmElement(string message, Action? confirmCallback, Action? declineCallback = null)
+	{
+		var showConfirmation = Configuration.Instance?.Terminal.ShowConfirmation.Value ?? true;
 
-    private static (string, string, ItemData[]) RenderSingle(ItemData itemData)
-    {
-        string name = itemData.GetItem()?.itemName ?? Localization.Get("application.answers.unknown");
-        string itemFormat = Localization.Get("application.screens.single.item", new Dictionary<string, string>
-        {
-            ["name"] = name,
-            ["value"] = itemData.SCRAP_VALUE.ToString()
-        });
-        string message = Localization.Get("application.screens.single.confirm", new Dictionary<string, string>
-        {
-            ["name"] = name
-        });
+		if (!showConfirmation)
+		{
+			confirmCallback?.Invoke();
+			return;
+		}
 
-        return (itemFormat, message, [itemData]);
-    }
-    
-    private void RetrieveSingle(int selectedIndex = 0) => CreateItemPages(
-        GetItems(true), 
-        selectedIndex, 
-        Localization.Get("application.screens.single.message"),
-        RenderSingle,
-        RetrieveSingle
-    );
+		ConfirmExitCallback = declineCallback;
 
-    #endregion
-    
-    #region Retrieve Type Screen
+		// Elements
+		var automaticPositive = Configuration.Instance?.Terminal.AutomaticPositiveAnswer.Value ?? false;
 
-    private CursorElement RetrieveTypeElement() => new()
-    {
-        Name = Localization.Get("application.titles.type"),
-        Active = _ => Inventory.Count > 0,
-        SelectInactive = false,
-        Action = () => RetrieveType()
-    };
+		var optionMenu = new CursorMenu
+		{
+			cursorIndex = automaticPositive ? 1 : 0,
+			elements =
+			[
+				new CursorElement
+				{
+					Name = Localization.Get("application.answers.negative"),
+					Action = () =>
+					{
+						if (declineCallback != null)
+							declineCallback.Invoke();
+						else
+							MainScreen();
+					}
+				},
+				new CursorElement
+				{
+					Name = Localization.Get("application.answers.positive"),
+					Action = () => confirmCallback?.Invoke()
+				}
+			]
+		};
 
-    private static (string, string, ItemData[]) RenderType(IGrouping<string, ItemData> group)
-    {
-        var amount = group.Count().ToString();
-        
-        string name = group.First().GetItem()?.itemName ?? Localization.Get("application.answers.unknown");
+		// Screen
+		var screen = CreateScreen(Localization.Get("application.titles.confirm"),
+			[
+				TextElement.Create(message),
+				TextElement.Create(" "),
+				TextElement.Create(Localization.Get("application.screens.confirm.message")),
+				TextElement.Create(" "),
+				TextElement.Create(Localization.Get("application.screens.confirm.warning")),
+				TextElement.Create(" "),
+				optionMenu
+			]
+		);
 
-        string itemFormat = Localization.Get("application.screens.type.item", new Dictionary<string, string>
-        {
-            ["name"] = name,
-            ["amount"] = amount,
-            ["total"] = group.Sum(d => d.SCRAP_VALUE).ToString()
-        });
+		currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
+		SwitchScreen(screen, optionMenu, true);
 
-        string message = Localization.Get("application.screens.type.confirm", new Dictionary<string, string>
-        {
-            ["name"] = name,
-            ["amount"] = amount
-        });
-        
-        return (itemFormat, message, group.ToArray());
-    }
+		RegisterExitAction(_ => ConfirmExitCallback?.Invoke());
+	}
 
-    private void RetrieveType(int selectedIndex = 0) => CreateItemPages(
-        GetItems(true).GroupBy(i => i.ID.ToString()).ToArray(), 
-        selectedIndex, 
-        Localization.Get("application.screens.single.message"),
-        RenderType,
-        RetrieveType
-    );
+	private BoxedScreen CreateScreen(string title, ITextElement[] elements)
+	{
+		UnregisterExitAction();
 
-    #endregion
-    
-    #region Retrieve Random Screen
+		var showTrademark = Configuration.Instance?.Terminal.ShowTrademark.Value ?? true;
 
-    private CursorElement RetrieveRandomElement() => new()
-    {
-        Name = Localization.Get("application.titles.random"),
-        Active = _ => Inventory.Count > 0,
-        SelectInactive = false,
-        Action = RetrieveRandom
-    };
-    
-    private void RetrieveRandom()
-    {
-        // Random object
-        ItemData data = Inventory.Items[UnityEngine.Random.Range(0, Inventory.Count)];
-        
-        // Generate message
-        string message = Localization.Get("application.screens.random.message", new Dictionary<string, string>
-        {
-            ["name"] = data.GetItem()?.itemName ?? Localization.Get("application.answers.unknown")
-        });
-        
-        ConfirmElement(message, () =>
-        {
-            // Spawn random
-            Inventory.Remove([data]);
+		if (showTrademark)
+		{
+			var copyElements = new List<ITextElement>(elements)
+			{
+				TextElement.Create(" "),
+				TextElement.Create(Localization.Get("application.footers.trademark"))
+			};
 
-            MainScreen();
-        });
-        
-        RegisterExitAction(_ => MainScreen());
-    }
+			elements = copyElements.ToArray();
+		}
 
-    #endregion
-    
-    #region Retrieve All Screen
+		return new BoxedScreen
+		{
+			Title = title,
+			elements = elements
+		};
+	}
 
-    private CursorElement RetrieveAllElement() => new()
-    {
-        Name = Localization.Get("application.titles.all"),
-        Active = _ => Inventory.Count > 0,
-        SelectInactive = false,
-        Action = RetrieveAll
-    };
-    
-    private void RetrieveAll()
-    {
-        var items = GetItems(false);
-        
-        string message = Localization.Get("application.screens.all.message", new Dictionary<string, string>
-        {
-            ["amount"] = items.Length.ToString(),
-            ["total"] = items.Sum(i => i.SCRAP_VALUE).ToString()
-        });
-        
-        ConfirmElement(message, () =>
-        {
-            Inventory.Remove(items);
-            MainScreen();
-        });
-        
-        RegisterExitAction(_ => MainScreen());
-    }
+	#endregion
 
-    #endregion
-    
-    #region Info Screen
+	#region Retrieve Single Screen
 
-    private CursorElement InfoCursorElement() => new()
-    {
-        Name = Localization.Get("application.titles.information"),
-        Action = GetInfo
-    };
-    
-    private void GetInfo()
-    {
-        var items = Inventory.Items;
+	private CursorElement RetrieveSingleElement() => new()
+	{
+		Name = Localization.Get("application.titles.single"),
+		Active = _ => Inventory.Count > 0,
+		SelectInactive = false,
+		Action = () => RetrieveSingle()
+	};
 
-        var options = new CursorMenu
-        {
-            cursorIndex = 0,
-            elements = []
-        };
-        
-        var screen = CreateScreen(Localization.Get("application.titles.status"),
-            [
-                TextElement.Create(Localization.Get("application.screens.information.total", new Dictionary<string, string>
-                {
-                    ["total"] = items.Sum(i => i.SCRAP_VALUE).ToString()
-                })),
-                TextElement.Create(Localization.Get("application.screens.information.count", new Dictionary<string, string>
-                {
-                    ["count"] = items.Length.ToString()
-                }))
-            ]
-        );
-        
-        currentPage = PageCursorElement.Create(0, [screen], [options]);
-        SwitchScreen(screen, options, true);
+	private static (string, string, ItemData[]) RenderSingle(ItemData itemData)
+	{
+		var name = itemData.GetItem()?.itemName ?? Localization.Get("application.answers.unknown");
 
-        RegisterExitAction(_ => MainScreen());
-    }
+		var itemFormat = Localization.Get("application.screens.single.item",
+			new Dictionary<string, string>
+			{
+				["name"] = name,
+				["value"] = itemData.SCRAP_VALUE.ToString()
+			});
 
-    #endregion
+		var message = Localization.Get("application.screens.single.confirm",
+			new Dictionary<string, string>
+			{
+				["name"] = name
+			});
+
+		return (itemFormat, message, [itemData]);
+	}
+
+	private void RetrieveSingle(int selectedIndex = 0) => CreateItemPages(
+		GetItems(true),
+		selectedIndex,
+		Localization.Get("application.screens.single.message"),
+		RenderSingle,
+		RetrieveSingle
+	);
+
+	#endregion
+
+	#region Retrieve Type Screen
+
+	private CursorElement RetrieveTypeElement() => new()
+	{
+		Name = Localization.Get("application.titles.type"),
+		Active = _ => Inventory.Count > 0,
+		SelectInactive = false,
+		Action = () => RetrieveType()
+	};
+
+	private static (string, string, ItemData[]) RenderType(IGrouping<string, ItemData> group)
+	{
+		var amount = group.Count().ToString();
+
+		var name = group.First().GetItem()?.itemName ?? Localization.Get("application.answers.unknown");
+
+		var itemFormat = Localization.Get("application.screens.type.item",
+			new Dictionary<string, string>
+			{
+				["name"] = name,
+				["amount"] = amount,
+				["total"] = group.Sum(d => d.SCRAP_VALUE).ToString()
+			});
+
+		var message = Localization.Get("application.screens.type.confirm",
+			new Dictionary<string, string>
+			{
+				["name"] = name,
+				["amount"] = amount
+			});
+
+		return (itemFormat, message, group.ToArray());
+	}
+
+	private void RetrieveType(int selectedIndex = 0) => CreateItemPages(
+		GetItems(true).GroupBy(i => i.ID.ToString()).ToArray(),
+		selectedIndex,
+		Localization.Get("application.screens.single.message"),
+		RenderType,
+		RetrieveType
+	);
+
+	#endregion
+
+	#region Retrieve Random Screen
+
+	private CursorElement RetrieveRandomElement() => new()
+	{
+		Name = Localization.Get("application.titles.random"),
+		Active = _ => Inventory.Count > 0,
+		SelectInactive = false,
+		Action = RetrieveRandom
+	};
+
+	private void RetrieveRandom()
+	{
+		// Random object
+		var data = Inventory.Items[UnityEngine.Random.Range(0, Inventory.Count)];
+
+		// Generate message
+		var message = Localization.Get("application.screens.random.message",
+			new Dictionary<string, string>
+			{
+				["name"] = data.GetItem()?.itemName ?? Localization.Get("application.answers.unknown")
+			});
+
+		ConfirmElement(message,
+			() =>
+			{
+				// Spawn random
+				Inventory.Remove([data]);
+
+				MainScreen();
+			});
+
+		RegisterExitAction(_ => MainScreen());
+	}
+
+	#endregion
+
+	#region Retrieve All Screen
+
+	private CursorElement RetrieveAllElement() => new()
+	{
+		Name = Localization.Get("application.titles.all"),
+		Active = _ => Inventory.Count > 0,
+		SelectInactive = false,
+		Action = RetrieveAll
+	};
+
+	private void RetrieveAll()
+	{
+		var items = GetItems(false);
+
+		var message = Localization.Get("application.screens.all.message",
+			new Dictionary<string, string>
+			{
+				["amount"] = items.Length.ToString(),
+				["total"] = items.Sum(i => i.SCRAP_VALUE).ToString()
+			});
+
+		ConfirmElement(message,
+			() =>
+			{
+				Inventory.Remove(items);
+				MainScreen();
+			});
+
+		RegisterExitAction(_ => MainScreen());
+	}
+
+	#endregion
+
+	#region Info Screen
+
+	private CursorElement InfoCursorElement() => new()
+	{
+		Name = Localization.Get("application.titles.information"),
+		Action = GetInfo
+	};
+
+	private void GetInfo()
+	{
+		var items = Inventory.Items;
+
+		var options = new CursorMenu
+		{
+			cursorIndex = 0,
+			elements = []
+		};
+
+		var screen = CreateScreen(Localization.Get("application.titles.status"),
+			[
+				TextElement.Create(Localization.Get("application.screens.information.total",
+					new Dictionary<string, string>
+					{
+						["total"] = items.Sum(i => i.SCRAP_VALUE).ToString()
+					})),
+				TextElement.Create(Localization.Get("application.screens.information.count",
+					new Dictionary<string, string>
+					{
+						["count"] = items.Length.ToString()
+					}))
+			]
+		);
+
+		currentPage = PageCursorElement.Create(0, [screen], [options]);
+		SwitchScreen(screen, options, true);
+
+		RegisterExitAction(_ => MainScreen());
+	}
+
+	#endregion
 }

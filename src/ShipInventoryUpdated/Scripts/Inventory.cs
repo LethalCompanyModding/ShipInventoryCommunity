@@ -6,132 +6,132 @@ namespace ShipInventoryUpdated.Scripts;
 
 public class Inventory : NetworkBehaviour
 {
-    private static Inventory? Instance;
+	private static Inventory? Instance;
 
-    private readonly NetworkList<ItemData> storedItems = new(
-        null,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner
-    );
+	private readonly NetworkList<ItemData> storedItems = new(
+		null,
+		NetworkVariableReadPermission.Everyone,
+		NetworkVariableWritePermission.Owner
+	);
 
-    #region API
-    
-    public delegate void OnListChanged(ItemData[] value);
-    
-    public static OnListChanged? OnAdded;
-    public static OnListChanged? OnRemoved;
+	#region API
 
-    /// <summary>
-    /// Adds the given items to the inventory
-    /// </summary>
-    public static void Add(ItemData[] items)
-    {
-        if (Instance == null)
-        {
-            Logger.Warn("Tried to add an item to the inventory, but no instance was defined.");
-            return;
-        }
-        
-        Instance.AddServerRpc(items);
-    }
+	public delegate void OnListChanged(ItemData[] value);
 
-    /// <summary>
-    /// Removes the given items from the inventory
-    /// </summary>
-    /// <param name="items"></param>
-    public static void Remove(ItemData[] items)
-    {
-        if (Instance == null)
-        {
-            Logger.Warn("Tried to remove an item to the inventory, but no instance was defined.");
-            return;
-        }
+	public static OnListChanged? OnAdded;
+	public static OnListChanged? OnRemoved;
 
-        Instance.RemoveServerRpc(items);
-    }
+	/// <summary>
+	/// Adds the given items to the inventory
+	/// </summary>
+	public static void Add(ItemData[] items)
+	{
+		if (Instance == null)
+		{
+			Logger.Warn("Tried to add an item to the inventory, but no instance was defined.");
+			return;
+		}
 
-    /// <summary>
-    /// Clears the items stored in the inventory
-    /// </summary>
-    public static void Clear()
-    {
-        if (Instance == null)
-        {
-            Logger.Warn("Tried to remove an item to the inventory, but no instance was defined.");
-            return;
-        }
+		Instance.AddServerRpc(items);
+	}
 
-        Instance.ClearServerRpc();
-    }
+	/// <summary>
+	/// Removes the given items from the inventory
+	/// </summary>
+	/// <param name="items"></param>
+	public static void Remove(ItemData[] items)
+	{
+		if (Instance == null)
+		{
+			Logger.Warn("Tried to remove an item to the inventory, but no instance was defined.");
+			return;
+		}
 
-    /// <summary>
-    /// Gets the number of items stored in the inventory
-    /// </summary>
-    public static int Count => Instance?.storedItems.Count ?? 0;
+		Instance.RemoveServerRpc(items);
+	}
 
-    /// <summary>
-    /// Gets the items stored in the inventory
-    /// </summary>
-    public static ItemData[] Items
-    {
-        get
-        {
-            if (Instance == null)
-                return [];
+	/// <summary>
+	/// Clears the items stored in the inventory
+	/// </summary>
+	public static void Clear()
+	{
+		if (Instance == null)
+		{
+			Logger.Warn("Tried to remove an item to the inventory, but no instance was defined.");
+			return;
+		}
 
-            var items = new ItemData[Count];
+		Instance.ClearServerRpc();
+	}
 
-            for (int i = 0; i < items.Length; i++)
-                items[i] = Instance.storedItems[i];
-            
-            return items;
-        }
-    }
+	/// <summary>
+	/// Gets the number of items stored in the inventory
+	/// </summary>
+	public static int Count => Instance?.storedItems.Count ?? 0;
 
-    #endregion
+	/// <summary>
+	/// Gets the items stored in the inventory
+	/// </summary>
+	public static ItemData[] Items
+	{
+		get
+		{
+			if (Instance == null)
+				return [];
 
-    #region Unity
+			var items = new ItemData[Count];
 
-    /// <inheritdoc/>
-    public override void OnNetworkSpawn()
-    {
-        Instance = this;
-    }
+			for (var i = 0; i < items.Length; i++)
+				items[i] = Instance.storedItems[i];
 
-    /// <inheritdoc/>
-    public override void OnNetworkDespawn()
-    {
-        if (Instance == this)
-            Instance = null;
-    }
+			return items;
+		}
+	}
 
-    #endregion
-    
-    #region RPC
+	#endregion
 
-    [ServerRpc(RequireOwnership = false)]
-    private void AddServerRpc(params ItemData[] items)
-    {
-        foreach (var item in items)
-            storedItems.Add(item);
-        
-        OnAdded?.Invoke(items);
-    }
+	#region Unity
 
-    [ServerRpc(RequireOwnership = false)]
-    private void RemoveServerRpc(params ItemData[] items)
-    {
-        foreach (var item in items)
-            storedItems.Remove(item);
+	/// <inheritdoc/>
+	public override void OnNetworkSpawn()
+	{
+		Instance = this;
+	}
 
-        OnRemoved?.Invoke(items);
-    }
+	/// <inheritdoc/>
+	public override void OnNetworkDespawn()
+	{
+		if (Instance == this)
+			Instance = null;
+	}
 
-    [ServerRpc(RequireOwnership = false)]
-    private void ClearServerRpc()
-    {
-        storedItems.Clear();
-    }
-    
-    #endregion
+	#endregion
+
+	#region RPC
+
+	[ServerRpc(RequireOwnership = false)]
+	private void AddServerRpc(params ItemData[] items)
+	{
+		foreach (var item in items)
+			storedItems.Add(item);
+
+		OnAdded?.Invoke(items);
+	}
+
+	[ServerRpc(RequireOwnership = false)]
+	private void RemoveServerRpc(params ItemData[] items)
+	{
+		foreach (var item in items)
+			storedItems.Remove(item);
+
+		OnRemoved?.Invoke(items);
+	}
+
+	[ServerRpc(RequireOwnership = false)]
+	private void ClearServerRpc()
+	{
+		storedItems.Clear();
+	}
+
+	#endregion
 }
