@@ -11,7 +11,7 @@ namespace ShipInventoryUpdated.Scripts;
 /// <summary>
 /// Script that enables players to retrieve items in the chute
 /// </summary>
-public class ChuteRetrieve : MonoBehaviour
+public class ChuteRetrieve : NetworkBehaviour
 {
 	#region Fields
 
@@ -62,7 +62,7 @@ public class ChuteRetrieve : MonoBehaviour
 		trigger.gameObject.layer = amount > 0 ? LAYER_IGNORE : LAYER_INTERACTABLE;
 	}
 
-	private void OnDestroy()
+	public override void OnNetworkDespawn()
 	{
 		Inventory.OnRemoved -= RetrieveItemsServerRpc;
 	}
