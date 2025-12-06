@@ -30,6 +30,15 @@
           "HarmonyX": "2.7.0"
         }
       },
+      "Evaisa.LethalLib": {
+        "type": "Direct",
+        "requested": "[1.1.1, )",
+        "resolved": "1.1.1",
+        "contentHash": "ZHy0gSo79ImSE0SXOTG6Qy0YrSzzBHk93VajkQmH4cgM5um0LL0CAnVa4pAV4bK9bXTCgjJrsAg4hCLWfiYe4Q==",
+        "dependencies": {
+          "BepInEx.Core": "5.4.21"
+        }
+      },
       "LethalCompany.GameLibs.Steam": {
         "type": "Direct",
         "requested": "[*-*, )",
