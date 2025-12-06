@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace ShipInventoryUpdated;
 
-[BepInPlugin(LCMPluginInfo.PLUGIN_GUID, LCMPluginInfo.PLUGIN_NAME, LCMPluginInfo.PLUGIN_VERSION)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 // Hard
 [BepInDependency("WhiteSpike.InteractiveTerminalAPI", "1.2.0")]
 // Soft
@@ -35,7 +35,7 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 		InteractionHelper.LoadConditions();
 		ItemConverter.LoadConversions();
 
-		Helpers.Logger.Info($"{LCMPluginInfo.PLUGIN_GUID} v{LCMPluginInfo.PLUGIN_VERSION} has loaded!");
+		Helpers.Logger.Info($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
 	}
 
 	#region Constants
@@ -73,7 +73,7 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 
 	private void Patch()
 	{
-		Harmony = new Harmony(LCMPluginInfo.PLUGIN_GUID);
+		Harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
 		Harmony.PatchAll(typeof(Patches.GameNetworkManager_Patches));
 		Harmony.PatchAll(typeof(Patches.StartOfRound_Patches));
 		Harmony.PatchAll(typeof(Patches.Terminal_Patches));
