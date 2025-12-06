@@ -21,6 +21,6 @@ jobs:
 
       - name: Restore and Build
         run: |
-          dotnet restore --locked-mode
+          dotnet restore
           dotnet tool restore
           dotnet build -c Release
