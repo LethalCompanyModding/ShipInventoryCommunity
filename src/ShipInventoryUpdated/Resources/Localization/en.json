@@ -7,6 +7,10 @@
       "blacklist": {
         "name": "Blacklist",
         "description": "Determines the items that are not allowed in the chute.\n\nThe items' name should be separated by a comma (,).\nEach entry uses regular expressions."
+      },
+      "storeSpeed": {
+        "name": "Store Speed",
+        "description": "Determines the speed in seconds at which a player can store items."
       }
     },
     "inventory": {

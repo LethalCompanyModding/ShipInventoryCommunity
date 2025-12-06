@@ -11,6 +11,7 @@ internal class ChuteConfig
 	private const string SECTION = "Chute";
 
 	public readonly ConfigEntry<string> Blacklist;
+	public readonly ConfigEntry<float> StoreSpeed;
 
 	public ChuteConfig(ConfigFile cfg)
 	{
@@ -18,6 +19,12 @@ internal class ChuteConfig
 			new ConfigDefinition(SECTION, "ChuteBlacklist"),
 			"",
 			new ConfigDescription(Localization.Get("configuration.chute.blacklist.description"))
+		);
+
+		StoreSpeed = cfg.Bind(
+			new ConfigDefinition(SECTION, "TimeToStore"),
+			0.5f,
+			new ConfigDescription(Localization.Get("configuration.chute.storeSpeed.description"))
 		);
 	}
 }

@@ -80,6 +80,17 @@ internal static class Dependency
 				RequiresRestart = false
 			}
 		));
+		
+		LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(
+			config.StoreSpeed,
+			new FloatInputFieldOptions
+			{
+				Name = Localization.Get("configuration.chute.storeSpeed.name"),
+				Min = 0,
+				Max = float.MaxValue,
+				RequiresRestart = false
+			}
+		));
 	}
 
 	/// <summary>
