@@ -1,6 +1,14 @@
 # Changelog
 
 <details>
+<summary>2.0.4</summary>
+
+## Changes
+The mod was written from the grounds up. It **does remove features**, but they will be added gradually as the mod continues to get updated
+
+</details>
+
+<details>
 <summary>1.2.13</summary>
 
 ## Additions
@@ -71,7 +79,7 @@ This update should hopefully fix everything that was wrong with versions 1.2.9-1
 * Fixed the chute clearing itself even when 'PersistentThroughFire' was set to true
 
 ## Additions
-* Added the config 'InventorySortOrder', which allows to show the inventory in four different orders 
+* Added the config 'InventorySortOrder', which allows to show the inventory in four different orders
 * Added the config 'KeepRemovalAll', which allows to enable/disable the 'retrieve all' option for all players
 * Added compatibility with OpenMonitors, now adding the total in the chute to the Loot monitor
 * Added a support link in the README.md
@@ -212,8 +220,8 @@ Not sure what changed, since dates are messed up.
 * Added a new config (YesPlease)
 
 ### Changes:
-* Replaced the Steam ID by the username 
-* Removed the ability to change the language used through LethalConfig 
+* Replaced the Steam ID by the username
+* Removed the ability to change the language used through LethalConfig
 * Removed the VentProp.cs component from the chute, making it not a grabbable
 
 ### Fixes:
@@ -241,7 +249,7 @@ Not sure what changed, since dates are messed up.
 ### Changes:
 * Organized the configs by sections
 
-## Fixes:  
+## Fixes:
 * Fixed the unlockable bug(?)
 * Fixed a bug with the blacklist not updating upon joining
 </details>
@@ -268,18 +276,18 @@ Not sure what changed, since dates are messed up.
 * Added a blacklist for the items allowed inside
 
 ### Changes:
-* The chute removes the radar icon of the items put inside it 
-* The chute removes its own radar icon 
-* How the terminal displays the different texts 
+* The chute removes the radar icon of the items put inside it
+* The chute removes its own radar icon
+* How the terminal displays the different texts
 * Removed the command 'retrieve [amount]'
-* Cleaned the class ItemData 
+* Cleaned the class ItemData
 * Cleaned the methods in Terminal_Patches
 
 ### Fixes:
-* The chute doesn't save when the other items save 
+* The chute doesn't save when the other items save
 * Fixed the random clearing of the chute (only clears when all players died)
-* Fixed an error inside the player request 
-* The chute now doesn't count towards the day quota 
+* Fixed an error inside the player request
+* The chute now doesn't count towards the day quota
 * The chute loads empty when no items were saved in the save file
 
 </details>
@@ -292,15 +300,15 @@ Not sure what changed, since dates are messed up.
 * License to the mod (oops)
 
 ### Changes:
-* Now compatible with other scanning mods 
-* When the ship's inventory gets cleared 
-* Removed redundant code 
+* Now compatible with other scanning mods
+* When the ship's inventory gets cleared
+* Removed redundant code
 * Removed the target check for an item request
 
 ### Fixes:
-* Fixed typos 
-* Fixed problems related to the object Chute 
-* Fixed the spawn of items from the chute 
+* Fixed typos
+* Fixed problems related to the object Chute
+* Fixed the spawn of items from the chute
 * Fixed the scan node for the chute
 </details>
 
