@@ -4,6 +4,7 @@ using ShipInventoryUpdated.Scripts;
 using Unity.Netcode;
 using Logger = ShipInventoryUpdated.Helpers.Logger;
 using Object = UnityEngine.Object;
+// ReSharper disable InconsistentNaming
 
 namespace ShipInventoryUpdated.Patches;
 

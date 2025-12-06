@@ -2,6 +2,7 @@
 using Unity.Netcode;
 using ShipInventoryUpdated.Helpers;
 using ShipInventoryUpdated.Scripts;
+// ReSharper disable InconsistentNaming
 
 namespace ShipInventoryUpdated.Patches;
 
