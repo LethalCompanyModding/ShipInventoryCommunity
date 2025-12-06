@@ -6,9 +6,9 @@ namespace ShipInventoryUpdated.Scripts;
 
 public class Inventory : NetworkBehaviour
 {
-	private static Inventory? Instance;
+	private static Inventory? _instance;
 
-	private readonly NetworkList<ItemData> storedItems = new(
+	private readonly NetworkList<ItemData> _storedItems = new(
 		null,
 		NetworkVariableReadPermission.Everyone,
 		NetworkVariableWritePermission.Owner
@@ -26,13 +26,13 @@ public class Inventory : NetworkBehaviour
 	/// </summary>
 	public static void Add(ItemData[] items)
 	{
-		if (Instance == null)
+		if (_instance == null)
 		{
 			Logger.Warn("Tried to add an item to the inventory, but no instance was defined.");
 			return;
 		}
 
-		Instance.AddServerRpc(items);
+		_instance.AddServerRpc(items);
 	}
 
 	/// <summary>
@@ -41,13 +41,13 @@ public class Inventory : NetworkBehaviour
 	/// <param name="items"></param>
 	public static void Remove(ItemData[] items)
 	{
-		if (Instance == null)
+		if (_instance == null)
 		{
 			Logger.Warn("Tried to remove an item to the inventory, but no instance was defined.");
 			return;
 		}
 
-		Instance.RemoveServerRpc(items);
+		_instance.RemoveServerRpc(items);
 	}
 
 	/// <summary>
@@ -55,19 +55,19 @@ public class Inventory : NetworkBehaviour
 	/// </summary>
 	public static void Clear()
 	{
-		if (Instance == null)
+		if (_instance == null)
 		{
 			Logger.Warn("Tried to remove an item to the inventory, but no instance was defined.");
 			return;
 		}
 
-		Instance.ClearServerRpc();
+		_instance.ClearServerRpc();
 	}
 
 	/// <summary>
 	/// Gets the number of items stored in the inventory
 	/// </summary>
-	public static int Count => Instance?.storedItems.Count ?? 0;
+	public static int Count => _instance?._storedItems.Count ?? 0;
 
 	/// <summary>
 	/// Gets the items stored in the inventory
@@ -76,13 +76,13 @@ public class Inventory : NetworkBehaviour
 	{
 		get
 		{
-			if (Instance == null)
+			if (_instance == null)
 				return [];
 
 			var items = new ItemData[Count];
 
 			for (var i = 0; i < items.Length; i++)
-				items[i] = Instance.storedItems[i];
+				items[i] = _instance._storedItems[i];
 
 			return items;
 		}
@@ -95,14 +95,14 @@ public class Inventory : NetworkBehaviour
 	/// <inheritdoc/>
 	public override void OnNetworkSpawn()
 	{
-		Instance = this;
+		_instance = this;
 	}
 
 	/// <inheritdoc/>
 	public override void OnNetworkDespawn()
 	{
-		if (Instance == this)
-			Instance = null;
+		if (_instance == this)
+			_instance = null;
 	}
 
 	#endregion
@@ -113,7 +113,7 @@ public class Inventory : NetworkBehaviour
 	private void AddServerRpc(params ItemData[] items)
 	{
 		foreach (var item in items)
-			storedItems.Add(item);
+			_storedItems.Add(item);
 
 		OnAdded?.Invoke(items);
 	}
@@ -122,7 +122,7 @@ public class Inventory : NetworkBehaviour
 	private void RemoveServerRpc(params ItemData[] items)
 	{
 		foreach (var item in items)
-			storedItems.Remove(item);
+			_storedItems.Remove(item);
 
 		OnRemoved?.Invoke(items);
 	}
@@ -130,7 +130,7 @@ public class Inventory : NetworkBehaviour
 	[ServerRpc(RequireOwnership = false)]
 	private void ClearServerRpc()
 	{
-		storedItems.Clear();
+		_storedItems.Clear();
 	}
 
 	#endregion
