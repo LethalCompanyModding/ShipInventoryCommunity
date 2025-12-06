@@ -26,6 +26,15 @@
         <PackageReference Include="MinVer" Version="6.*" PrivateAssets="all"/>
     </ItemGroup>
 
+    <!-- Dependencies -->
+    <ItemGroup>
+        <!-- Hard -->
+        <PackageReference Include="WhiteSpike-Interactive_Terminal_API" Version="1.2.0" PrivateAssets="all"/>
+        <PackageReference Include="Evaisa.LethalLib" Version="1.1.1" PrivateAssets="all"/>
+        <!-- Soft -->
+        <PackageReference Include="AinaVT-LethalConfig" Version="1.4.6" PrivateAssets="all"/>
+    </ItemGroup>
+
     <!-- Targets -->
     <PropertyGroup>
         <Profile>Ship Inventory</Profile>
@@ -34,6 +43,9 @@
     <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
         <Exec
             Command="dotnet tool run netcode-patch -uv 2022.3.62 -nv 1.12.0 -tv 1.0.0 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')"/>
+
+        <Delete Files="$(TargetDir)$(AssemblyName)_original.dll" />
+        <Delete Files="$(TargetDir)$(AssemblyName).deps.json" />
     </Target>
 
     <ItemGroup>
