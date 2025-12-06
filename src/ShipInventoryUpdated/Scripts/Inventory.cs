@@ -130,6 +130,12 @@ public class Inventory : NetworkBehaviour
 	[ServerRpc(RequireOwnership = false)]
 	private void ClearServerRpc()
 	{
+		ClearClientRpc();
+	}
+
+	[ClientRPC]
+	private void ClearClientRpc()
+	{
 		storedItems.Clear();
 	}
 
