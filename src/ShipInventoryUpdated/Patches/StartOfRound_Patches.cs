@@ -81,4 +81,14 @@ internal class StartOfRound_Patches
 	{
 		Inventory.Clear();
 	}
+
+	[HarmonyPatch(nameof(StartOfRound.ReviveDeadPlayers))]
+	[HarmonyPrefix]
+	public static void ReviveDeadPlayers_Prefix(StartOfRound __instance)
+	{
+		if (!__instance.allPlayersDead)
+			return;
+
+		Inventory.Clear();
+	}
 }
