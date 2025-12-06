@@ -13,6 +13,10 @@
       "maxItemCount": {
         "name": "Maximum Item Count",
         "description": "Determines the maximum amount of items that can be stored inside the inventory."
+      },
+      "clearOnWipe": {
+        "name": "Clear on Wipe",
+        "description": "Determines if the inventory clears upon a team wipe."
       }
     },
     "unlock": {

@@ -97,6 +97,15 @@ internal static class Dependency
 				RequiresRestart = false
 			}
 		));
+		
+		LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
+			config.ClearOnWipe,
+			new BoolCheckBoxOptions
+			{
+				Name = Localization.Get("configuration.inventory.clearOnWipe.name"),
+				RequiresRestart = false
+			}
+		));
 	}
 
 	/// <summary>
