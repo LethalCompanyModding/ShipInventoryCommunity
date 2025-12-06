@@ -6,7 +6,7 @@
         "type": "Direct",
         "requested": "[1.4.6, )",
         "resolved": "1.4.6",
-        "contentHash": "8eb+ZrEQs4K1PTh0CyEWrfCfvXGvrjhLq3Ej4h1VpqeidUsrpKyV4nPG2G64Mjl9w91uy+dY0vB1w24yzoNRgA=="
+        "contentHash": "1Xxsa43VjNTPh4Bye70BicN2dFvHeuwBogru3ru4C5+VZ6a7RxTsvWKJSdm+tJDa44d8gzkmVRjhg6iR6CHeeA=="
       },
       "BepInEx.Analyzers": {
         "type": "Direct",
@@ -71,7 +71,7 @@
         "type": "Direct",
         "requested": "[1.2.0, )",
         "resolved": "1.2.0",
-        "contentHash": "Ux5GxTSzozOvgypVKMKFYV3QQgaHKc0Hw5NJpuSMCmfadqaGvYsBqILRGAnMws+ZLIQcCtX9S38r1vBZIKAhXg=="
+        "contentHash": "0CeI0RvQmhciHCTQ5QyhwFJegByE7I2boVglIFPdRFll+zl3HIDBQ0WZuZn7Ft48eMfuDE0heJx3hVmVDFoHeQ=="
       },
       "BepInEx.BaseLib": {
         "type": "Transitive",
