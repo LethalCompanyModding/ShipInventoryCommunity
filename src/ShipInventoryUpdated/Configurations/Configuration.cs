@@ -10,7 +10,7 @@ internal class Configuration
 	public readonly UnlockConfig Unlock;
 	public readonly TerminalConfig Terminal;
 
-	public Configuration(ConfigFile cfg)
+	private Configuration(ConfigFile cfg)
 	{
 		Unlock = new UnlockConfig(cfg);
 		Terminal = new TerminalConfig(cfg);
