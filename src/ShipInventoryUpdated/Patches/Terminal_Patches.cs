@@ -165,4 +165,9 @@ internal class Terminal_Patches
 	/// Checks if the chute is unlocked
 	/// </summary>
 	public static bool IsChuteUnlocked() => registeredUnlockable?.hasBeenUnlockedByPlayer ?? false;
+
+	/// <summary>
+	/// Checks if the given item is the chute
+	/// </summary>
+	public static bool IsChute(UnlockableItem item) => registeredUnlockable == item;
 }

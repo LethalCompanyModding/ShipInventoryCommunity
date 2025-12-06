@@ -110,7 +110,7 @@ internal static class Dependency
 		));
 
 		LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
-			config.IsUnlockable,
+			config.IsChuteUnlocked,
 			new BoolCheckBoxOptions
 			{
 				Name = Localization.Get("configuration.unlock.isUnlockable.name"),

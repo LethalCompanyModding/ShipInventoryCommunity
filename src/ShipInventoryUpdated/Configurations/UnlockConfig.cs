@@ -12,7 +12,7 @@ internal class UnlockConfig
 
 	public readonly ConfigEntry<string> UnlockName;
 	public readonly ConfigEntry<int> UnlockCost;
-	public readonly ConfigEntry<bool> IsUnlockable;
+	public readonly ConfigEntry<bool> IsChuteUnlocked;
 
 	public UnlockConfig(ConfigFile cfg)
 	{
@@ -28,7 +28,7 @@ internal class UnlockConfig
 			new ConfigDescription(Localization.Get("configuration.unlock.unlockCost.description"))
 		);
 
-		IsUnlockable = cfg.Bind(
+		IsChuteUnlocked = cfg.Bind(
 			new ConfigDefinition(SECTION, "ChuteIsUnlock"),
 			true,
 			new ConfigDescription(Localization.Get("configuration.unlock.isUnlockable.description"))

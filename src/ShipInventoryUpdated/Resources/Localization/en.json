@@ -19,8 +19,8 @@
         "description": "Determines how expensive it is to unlock the chute."
       },
       "isUnlockable": {
-        "name": "Is Unlockable",
-        "description": "Determines if the chute is an unlockable item or if it is always available."
+        "name": "Is Unlocked",
+        "description": "Determines if the chute is unlocked at the start of the game."
       }
     },
     "terminal": {

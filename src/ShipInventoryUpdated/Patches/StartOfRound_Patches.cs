@@ -30,6 +30,38 @@ internal class StartOfRound_Patches
 		if (inventory.TryGetComponent(out NetworkObject networkObject))
 			networkObject.Spawn();
 	}
+	
+	[HarmonyPatch(nameof(StartOfRound.LoadUnlockables))]
+	[HarmonyPostfix]
+	private static void LoadUnlockables_Postfix(StartOfRound __instance)
+	{
+		var config = Configurations.Configuration.Instance;
+		
+		if (config == null)
+			return;
+		
+		if (!config.Unlock.IsChuteUnlocked.Value)
+			return;
+        
+		var index = -1;
+
+		for (var i = 0; i < __instance.unlockablesList.unlockables.Count; i++)
+		{
+			if (!Terminal_Patches.IsChute(__instance.unlockablesList.unlockables[i]))
+				continue;
+
+			index = i;
+			break;
+		}
+
+		if (index == -1)
+		{
+			Logger.Error("Could not find the chute as an unlockable.");
+			return;
+		}
+
+		__instance.UnlockShipObject(index);
+	}
 
 	[HarmonyPatch(nameof(StartOfRound.LoadShipGrabbableItems))]
 	[HarmonyPrefix]
