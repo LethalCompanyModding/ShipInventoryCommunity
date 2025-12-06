@@ -9,21 +9,21 @@ public static class InteractionHelper
 {
 	#region API
 
-	private static readonly List<(Func<PlayerControllerB, bool>, string)> triggerConditions = [];
+	private static readonly List<(Func<PlayerControllerB, bool>, string)> TriggerConditions = [];
 
 	/// <summary>
 	/// Adds a condition that defines if the chute is opened or not
 	/// </summary>
 	/// <param name="condition">Returns true if the condition allows the item</param>
 	/// <param name="error">Error message to display</param>
-	public static void AddCondition(Func<PlayerControllerB, bool> condition, string error) => triggerConditions.Add((condition, error));
+	public static void AddCondition(Func<PlayerControllerB, bool> condition, string error) => TriggerConditions.Add((condition, error));
 
 	/// <summary>
 	/// Sets the status of the given trigger depending on if it meets certain criteria or not
 	/// </summary>
 	internal static void SetTriggerStatus(InteractTrigger trigger, PlayerControllerB player)
 	{
-		foreach ((var condition, var error) in triggerConditions)
+		foreach ((var condition, var error) in TriggerConditions)
 		{
 			if (condition.Invoke(player))
 				continue;
