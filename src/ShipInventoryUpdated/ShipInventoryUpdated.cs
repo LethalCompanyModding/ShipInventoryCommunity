@@ -26,10 +26,12 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 		if (!PrepareRPCs())
 			return;
 
-		var language = Helpers.Localization.LoadLanguage(DEFAULT_LANG);
+		Configuration.Load(Config);
+
+		var languageCode = Configuration.Instance?.Mod.Language.Value ?? "en";
+		var language = Helpers.Localization.LoadLanguage(languageCode);
 		Helpers.Localization.SetAsDefault(language);
 
-		Configuration.Load(Config);
 		Helpers.Dependencies.LoadDependencies(Configuration.Instance);
 		Patch();
 
@@ -41,7 +43,6 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 
 	#region Constants
 
-	public const string DEFAULT_LANG = "en";
 	public const string SAVE_KEY = "shipInventoryItems";
 
 	#endregion

@@ -30,6 +30,7 @@ internal static class Dependency
 		ApplyChuteConfiguration(configuration.Chute);
 		ApplyTerminalConfiguration(configuration.Terminal);
 		ApplyInventoryConfiguration(configuration.Inventory);
+		ApplyModConfiguration(configuration.Mod);
 
 		#if DEBUG
 		LethalConfigManager.AddConfigItem(new GenericButtonConfigItem(
@@ -125,6 +126,24 @@ internal static class Dependency
 				Name = Localization.Get("configuration.inventory.retrieveSpeed.name"),
 				Min = 0,
 				Max = float.MaxValue,
+				RequiresRestart = true
+			}
+		));
+	}
+
+	/// <summary>
+	/// Applies all the configurations for <see cref="ModConfig"/>
+	/// </summary>
+	private static void ApplyModConfiguration(ModConfig config)
+	{
+		LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(
+			config.Language,
+			new TextInputFieldOptions
+			{
+				Name = Localization.Get("configuration.mod.language.name"),
+				NumberOfLines = 1,
+				CharacterLimit = 16,
+				TrimText = true,
 				RequiresRestart = true
 			}
 		));
