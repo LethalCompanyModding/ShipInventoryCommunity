@@ -14,14 +14,10 @@ internal sealed class LanguagePackage
 
 	private readonly Dictionary<string, string> _loadedData;
 
-	internal LanguagePackage(string language)
+	internal LanguagePackage(string language, JObject node)
 	{
 		Language = language;
 		_loadedData = [];
-	}
-
-	internal LanguagePackage(string language, JObject node) : this(language)
-	{
 		ParseTree(node);
 	}
 

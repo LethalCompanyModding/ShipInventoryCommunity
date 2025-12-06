@@ -11,21 +11,21 @@ namespace ShipInventoryUpdated.Helpers;
 /// </summary>
 internal static class Localization
 {
-	private static string? LocalDirectory
+	/// <summary>
+	/// Fetches the path to the directory where this assembly is stored
+	/// </summary>
+	private static string? GetDirectory()
 	{
-		get
+		var codeBase = Assembly.GetExecutingAssembly().CodeBase;
+		var localDir = Path.GetDirectoryName(new Uri(codeBase).LocalPath);
+
+		if (localDir == null)
 		{
-			var codeBase = Assembly.GetExecutingAssembly().CodeBase;
-			var localDir = Path.GetDirectoryName(new Uri(codeBase).LocalPath);
-
-			if (localDir == null)
-			{
-				Logger.Error("Tried to find the location of the assembly, but it was not found.");
-				return null;
-			}
-
-			return localDir;
+			Logger.Error("Tried to find the location of the assembly, but it was not found.");
+			return null;
 		}
+
+		return localDir;
 	}
 
 	private static LanguagePackage? _defaultLanguage;
@@ -35,7 +35,7 @@ internal static class Localization
 	/// </summary>
 	public static LanguagePackage? LoadLanguage(string languageCode)
 	{
-		var localDir = LocalDirectory;
+		var localDir = GetDirectory();
 
 		if (localDir == null)
 			return null;
