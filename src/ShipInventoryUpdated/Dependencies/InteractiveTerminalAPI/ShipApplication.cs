@@ -495,6 +495,8 @@ public class ShipApplication : PageApplication
 
 	private void GetInfo()
 	{
+		var maxCount = Configuration.Instance?.Inventory.MaxItemCount.Value ?? 1;
+
 		var items = Inventory.Items;
 
 		var options = new CursorMenu
@@ -513,7 +515,8 @@ public class ShipApplication : PageApplication
 				TextElement.Create(Localization.Get("application.screens.information.count",
 					new Dictionary<string, string>
 					{
-						["count"] = items.Length.ToString()
+						["count"] = items.Length.ToString(),
+						["maxCount"] = maxCount.ToString()
 					}))
 			]
 		);

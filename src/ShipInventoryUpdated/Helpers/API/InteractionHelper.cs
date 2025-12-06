@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using GameNetcodeStuff;
+using ShipInventoryUpdated.Scripts;
 
 namespace ShipInventoryUpdated.Helpers.API;
 
@@ -45,12 +46,30 @@ public static class InteractionHelper
 	internal static void LoadConditions()
 	{
 		AddCondition(IsHoldingObject, Localization.Get("tooltip.trigger.emptyHand"));
+		AddCondition(HasEnoughSpace, Localization.Get("tooltip.trigger.notEnoughSpace"));
 		AddCondition(IsAllowed, Localization.Get("tooltip.trigger.itemBlacklisted"));
 		AddCondition(IsValid, Localization.Get("tooltip.trigger.invalidItem"));
 	}
 
 	private static bool IsHoldingObject(PlayerControllerB p) => p.isHoldingObject && p.currentlyHeldObjectServer != null;
 
+	private static bool HasEnoughSpace(PlayerControllerB p)
+	{
+		var config = Configurations.Configuration.Instance;
+
+		if (config == null)
+			return true;
+
+		var item = p.currentlyHeldObjectServer;
+
+		if (item == null)
+			return true;
+
+		var items = ItemConverter.Convert(item);
+
+		return items.Length + Inventory.Count <= config.Inventory.MaxItemCount.Value;
+	}
+	
 	private static bool IsAllowed(PlayerControllerB p)
 	{
 		var config = Configurations.Configuration.Instance;

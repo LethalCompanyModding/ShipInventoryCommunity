@@ -63,7 +63,8 @@
       "hover": "Store item: [{key}]",
       "emptyHand": "[Nothing to store]",
       "invalidItem": "[Item not allowed]",
-      "itemBlacklisted": "[Item blacklisted]"
+      "itemBlacklisted": "[Item blacklisted]",
+      "notEnoughSpace": "[Inventory full]"
     }
   },
   "application": {
@@ -116,7 +117,7 @@
       },
       "information": {
         "total": "Total value: ${total}",
-        "count": "Number of items: {count}"
+        "count": "Number of items: {count} / {maxCount}"
       }
     },
     "footers": {
