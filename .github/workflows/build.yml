@@ -1,0 +1,26 @@
+name: Build on Push
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      # Use checkout to publish the files in your repo
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "9.x"
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+
+      - name: Restore and Build
+        run: |
+          dotnet restore --locked-mode
+          dotnet tool restore
+          dotnet build -c Release
