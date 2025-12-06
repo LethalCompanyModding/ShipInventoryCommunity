@@ -121,6 +121,14 @@ internal class StartOfRound_Patches
 		if (!__instance.allPlayersDead)
 			return;
 
+		var config = Configurations.Configuration.Instance;
+
+		if (config == null)
+			return;
+
+		if (!config.Inventory.ClearOnWipe.Value)
+			return;
+
 		Inventory.Clear();
 	}
 }
