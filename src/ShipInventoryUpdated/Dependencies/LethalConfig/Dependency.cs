@@ -88,7 +88,7 @@ internal static class Dependency
 				Name = Localization.Get("configuration.chute.storeSpeed.name"),
 				Min = 0,
 				Max = float.MaxValue,
-				RequiresRestart = false
+				RequiresRestart = true
 			}
 		));
 	}

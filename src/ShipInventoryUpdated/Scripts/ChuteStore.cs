@@ -15,10 +15,12 @@ public class ChuteStore : MonoBehaviour
 
 	private void Start()
 	{
+		var holdDelay = Configurations.Configuration.Instance?.Chute.StoreSpeed.Value ?? 0.5f;
+
 		if (trigger != null)
 		{
 			trigger.onInteract.AddListener(StoreHeldItem);
-			trigger.timeToHold = 0.5f;
+			trigger.timeToHold = holdDelay;
 		}
 	}
 
