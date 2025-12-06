@@ -1,0 +1,39 @@
+﻿using ShipInventoryUpdated.Helpers;
+using ShipInventoryUpdated.Helpers.API;
+using UnityEngine;
+
+namespace ShipInventoryUpdated.Scripts;
+
+/// <summary>
+/// Script that handles the interactions with the chute
+/// </summary>
+[RequireComponent(typeof(Collider))]
+public class ChuteTrigger : InteractTrigger
+{
+	#region Unity
+
+	private new void Start()
+	{
+		base.Start();
+
+		hoverTip = Localization.Get("tooltip.trigger.hover",
+			new Dictionary<string, string>
+			{
+				["key"] = "LMB"
+			});
+	}
+
+	private new void Update()
+	{
+		base.Update();
+
+		var player = GameNetworkManager.Instance?.localPlayerController;
+
+		if (player is null || !player.isInHangarShipRoom)
+			return;
+
+		InteractionHelper.SetTriggerStatus(this, player);
+	}
+
+	#endregion
+}

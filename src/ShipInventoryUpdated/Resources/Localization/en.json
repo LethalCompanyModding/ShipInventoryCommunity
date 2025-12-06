@@ -1,0 +1,116 @@
+﻿{
+  "mod": {
+    "description": "Adds an inventory to the ship, allowing it to store items and retrieve them."
+  },
+  "configuration": {
+    "chute": {
+      "blacklist": {
+        "name": "Blacklist",
+        "description": "Determines the items that are not allowed in the chute.\n\nThe items' name should be separated by a comma (,).\nEach entry uses regular expressions."
+      }
+    },
+    "unlock": {
+      "unlockName": {
+        "name": "Unlock Name",
+        "description": "Determines the text to type in order to unlock the chute.\n\nNote that some texts like 'inventory' can already been taken by other unlockables."
+      },
+      "unlockCost": {
+        "name": "Unlock Cost",
+        "description": "Determines how expensive it is to unlock the chute."
+      }
+    },
+    "terminal": {
+      "command": {
+        "name": "Inventory Command",
+        "description": "Determines the command to type to access the ship's inventory."
+      },
+      "inventorySortOrder": {
+        "name": "Inventory Sort Order",
+        "description": "Determines in what order the items are displayed in the inventory."
+      },
+      "automaticPositive": {
+        "name": "Pre-Select '{positiveAnswer}'",
+        "description": "Determines if the cursor is automatically places on the '{positiveAnswer}' option when retrieving an item."
+      },
+      "showConfirmation": {
+        "name": "Show Confirmation",
+        "description": "Determines if a confirmation is shown when retrieving an item."
+      },
+      "showTrademark": {
+        "name": "Show Trademark",
+        "description": "Determines if the Company's trademark is shown in the terminal."
+      }
+    }
+  },
+  "terminal": {
+    "buy": {
+      "main": "You have requested to order the ship's inventory.\nTotal cost of item: [totalCost].\n\nPlease CONFIRM or DENY.\n\n",
+      "confirm": "<b>The Company congratulates you on successfully acquiring the ship’s inventory.</b>\n\nYou can access it by entering <b>{command}</b> into the terminal.\n\n\n<color=yellow><align=center><b>- Important Safety Notice -</b></align></color>\n\n<align=justified>For the safety of all personnel, placing fellow employees inside the inventory is strictly prohibited. Violations will result in salary deductions or immediate termination of employment.</align>\n"
+    }
+  },
+  "tooltip": {
+    "trigger": {
+      "hover": "Store item: [{key}]",
+      "emptyHand": "[Nothing to store]",
+      "invalidItem": "[Item not allowed]",
+      "itemBlacklisted": "[Item blacklisted]"
+    }
+  },
+  "application": {
+    "titles": {
+      "locked": "UNAUTHORIZED ACCESS",
+      "main": "Inventory",
+      "confirm": "Confirmation",
+      "selection": "Selection",
+      "single": "Retrieve single",
+      "type": "Retrieve type",
+      "random": "Retrieve random",
+      "all": "Retrieve all",
+      "information": "Print status",
+      "status": "Status"
+    },
+    "answers": {
+      "positive": "Yes",
+      "negative": "No",
+      "blocked": "Understood",
+      "unknown": "???"
+    },
+    "screens": {
+      "locked": {
+        "message": "We are sorry to inform you that you <color=red>do not</color> possess the required equipment on board to utilize this function.",
+        "tip": "Please consider buying or restoring the inventory by typing '{command}'.",
+        "offer": "If funds are hard to gather, the Company can suggest a therapist to help you or offer you a loan that will span on several generations."
+      },
+      "main": {
+        "welcome": "Welcome aboard, {level} {username}",
+        "home": "Select the desired action to execute from the provided list:"
+      },
+      "confirm": {
+        "message": "Do you really want to proceed?",
+        "warning": "The Company and its Partners <color=red>will not</color> be responsible for your poor decisions."
+      },
+      "single": {
+        "message": "From the list below, please select the item you would like to retrieve:",
+        "item": "{name} (${value})",
+        "confirm": "You are about to retrieve '{name}'."
+      },
+      "type": {
+        "item": "{name} x{amount} (${total})",
+        "confirm": "You are about to retrieve {amount} instances of '{name}'."
+      },
+      "random": {
+        "message": "You are about to retrieve '{name}'."
+      },
+      "all": {
+        "message": "You are about to retrieve {amount} items, for a total of ${total}."
+      },
+      "information": {
+        "total": "Total value: ${total}",
+        "count": "Number of items: {count}"
+      }
+    },
+    "footers": {
+      "trademark": "<color=#666666>     [ PROPERTY OF Halden Eletronics © ]</color>"
+    }
+  }
+}

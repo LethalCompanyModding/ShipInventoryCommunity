@@ -1,0 +1,104 @@
+﻿using ShipInventoryUpdated.Objects;
+using System.Reflection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using File = System.IO.File;
+
+namespace ShipInventoryUpdated.Helpers;
+
+/// <summary>
+/// Helper to handle the localization of the mod
+/// </summary>
+internal static class Localization
+{
+	private static string? LocalDirectory
+	{
+		get
+		{
+			var codeBase = Assembly.GetExecutingAssembly().CodeBase;
+			var localDir = Path.GetDirectoryName(new Uri(codeBase).LocalPath);
+
+			if (localDir == null)
+			{
+				Logger.Error("Tried to find the location of the assembly, but it was not found.");
+				return null;
+			}
+
+			return localDir;
+		}
+	}
+
+	private static LanguagePackage? _defaultLanguage;
+
+	/// <summary>
+	/// Loads the language package with the given language code
+	/// </summary>
+	public static LanguagePackage? LoadLanguage(string languageCode)
+	{
+		var localDir = LocalDirectory;
+
+		if (localDir == null)
+			return null;
+
+		var file = Path.Combine(localDir, $"{languageCode}.json");
+
+		if (!File.Exists(file))
+		{
+			Logger.Error($"Tried to load the language package for '{languageCode}', but it was not found.");
+			return null;
+		}
+
+		var json = File.ReadAllText(file);
+		var rawData = JsonConvert.DeserializeObject<JObject>(json);
+
+		if (rawData == null)
+		{
+			Logger.Error($"Tried to load the language package for '{languageCode}', but it could not be parsed.");
+			return null;
+		}
+
+		return new LanguagePackage(languageCode, rawData);
+	}
+
+	/// <summary>
+	/// Sets the given language package as the default language
+	/// </summary>
+	public static void SetAsDefault(LanguagePackage? languagePackage) => _defaultLanguage = languagePackage;
+
+	/// <summary>
+	/// Fetches the localized value at the given key, parsing the parameters in it
+	/// </summary>
+	public static string Get(string key, Dictionary<string, string>? parameters = null)
+	{
+		var value = _defaultLanguage?.Get(key);
+
+		if (value == null)
+			return key;
+
+		if (parameters != null)
+		{
+			foreach ((var paramKey, var paramValue) in parameters)
+				value = value.Replace($"{{{paramKey}}}", paramValue);
+		}
+
+		return value;
+	}
+
+	#if DEBUG
+	/// <summary>
+	/// Reloads the default language package
+	/// </summary>
+	public static void ReloadDefault()
+	{
+		var code = _defaultLanguage?.Language;
+
+		SetAsDefault(null);
+
+		if (code != null)
+		{
+			var package = LoadLanguage(code);
+			SetAsDefault(package);
+		}
+	}
+	#endif
+}
