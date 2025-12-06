@@ -74,4 +74,11 @@ internal class StartOfRound_Patches
 			__result += data.SCRAP_VALUE;
 		}
 	}
+	
+	[HarmonyPatch(nameof(StartOfRound.ResetShip))]
+	[HarmonyPrefix]
+	public static void ResetShip_Prefix()
+	{
+		Inventory.Clear();
+	}
 }
