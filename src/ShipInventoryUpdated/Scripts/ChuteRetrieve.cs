@@ -91,6 +91,8 @@ public class ChuteRetrieve : NetworkBehaviour
 	/// </summary>
 	private IEnumerator SpawnCoroutine()
 	{
+		var spawnDelay = Configurations.Configuration.Instance?.Inventory.RetrieveSpeed.Value ?? 0.5f;
+
 		while (_spawnQueue.Count > 0)
 		{
 			var data = _spawnQueue.Dequeue();
@@ -99,7 +101,7 @@ public class ChuteRetrieve : NetworkBehaviour
 			if (obj is not null)
 				SpawnItemClientRpc(obj, data);
 
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(spawnDelay);
 		}
 
 		// Mark as completed

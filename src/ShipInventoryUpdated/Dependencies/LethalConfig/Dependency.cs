@@ -122,7 +122,7 @@ internal static class Dependency
 			config.RetrieveSpeed,
 			new FloatInputFieldOptions
 			{
-				Name = Localization.Get("configuration.chute.retrieveSpeed.name"),
+				Name = Localization.Get("configuration.inventory.retrieveSpeed.name"),
 				Min = 0,
 				Max = float.MaxValue,
 				RequiresRestart = true
