@@ -140,7 +140,7 @@ internal static class Dependency
 			config.Language,
 			new TextInputFieldOptions
 			{
-				Name = Localization.Get("configuration.mod.language.name"),
+				Name = "Language",
 				NumberOfLines = 1,
 				CharacterLimit = 16,
 				TrimText = true,

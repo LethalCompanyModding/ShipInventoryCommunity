@@ -27,12 +27,6 @@
         "description": "Determines the speed in seconds at which a player can retrieve items."
       }
     },
-    "mod": {
-      "language": {
-        "name": "Language",
-        "description": "Determines the language package to use."
-      }
-    },
     "unlock": {
       "unlockName": {
         "name": "Unlock Name",
