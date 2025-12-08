@@ -30,7 +30,7 @@ internal class UnlockConfig
 
 		IsChuteUnlocked = cfg.Bind(
 			new ConfigDefinition(SECTION, "ChuteIsUnlock"),
-			true,
+			false,
 			new ConfigDescription(Localization.Get("configuration.unlock.isUnlockable.description"))
 		);
 
