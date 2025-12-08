@@ -27,10 +27,6 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 
 		Configuration.Load(Config);
 
-		var languageCode = Configuration.Instance?.Mod.Language.Value ?? "en";
-		var language = Helpers.Localization.LoadLanguage(languageCode);
-		Helpers.Localization.SetAsDefault(language);
-
 		Helpers.Dependencies.LoadDependencies(Configuration.Instance);
 		Patch();
 

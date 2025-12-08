@@ -17,7 +17,7 @@ internal class ModConfig
 		Language = cfg.Bind(
 			new ConfigDefinition(SECTION, "Language"),
 			"en",
-			new ConfigDescription(Localization.Get("configuration.mod.language.description"))
+			new ConfigDescription("Determines the language package to use.")
 		);
 	}
 }

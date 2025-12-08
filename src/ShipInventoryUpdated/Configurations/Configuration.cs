@@ -15,11 +15,16 @@ internal class Configuration
 
 	private Configuration(ConfigFile cfg)
 	{
+		Mod = new ModConfig(cfg);
+
+		var languageCode = Mod.Language.Value;
+		var language = Helpers.Localization.LoadLanguage(languageCode);
+		Helpers.Localization.SetAsDefault(language);
+
 		Chute = new ChuteConfig(cfg);
 		Unlock = new UnlockConfig(cfg);
 		Terminal = new TerminalConfig(cfg);
 		Inventory = new InventoryConfig(cfg);
-		Mod = new ModConfig(cfg);
 	}
 
 	/// <summary>
