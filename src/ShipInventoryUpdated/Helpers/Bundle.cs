@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+using System.Reflection;
+using MonoMod.RuntimeDetour;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -10,6 +11,7 @@ namespace ShipInventoryUpdated.Helpers;
 internal static class Bundle
 {
 	private static AssetBundle? _loadedBundle;
+	private static AssetBundle? _loadedItemBundle;
 
 	/// <summary>
 	/// Tries to load the bundle with the given name
@@ -45,6 +47,39 @@ internal static class Bundle
 		}
 
 		var asset = _loadedBundle.LoadAsset<T>(name);
+
+		if (asset == null)
+			Logger.Error($"No asset named '{name}' was found.");
+
+		return asset;
+	}
+
+	internal static bool LoadBundleItems(string name)
+	{
+		var path = Assembly.GetExecutingAssembly().Location;
+		path = Path.GetDirectoryName(path) ?? "";
+		path = Path.Combine(path, name);
+
+		_loadedItemBundle = AssetBundle.LoadFromFile(path);
+
+		if (_loadedItemBundle == null)
+		{
+			Logger.Error($"Failed to load the bundle '{name}'.");
+			return false;
+		}
+
+		return true;
+	}
+
+	public static T? LoadItemAsset<T>(string name) where T : Object
+	{
+		if (_loadedItemBundle == null)
+		{
+			Logger.Error($"Tried to load '{name}', but the bundle was not loaded.");
+			return null;
+		}
+
+		var asset = _loadedItemBundle.LoadAsset<T>(name);
 
 		if (asset == null)
 			Logger.Error($"No asset named '{name}' was found.");

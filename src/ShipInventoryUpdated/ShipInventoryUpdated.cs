@@ -22,6 +22,9 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 		if (!LoadAssets("si-bundle"))
 			return;
 
+		if (!LoadAssetsItems("si-items"))
+			return;
+
 		if (!PrepareRPCs())
 			return;
 
@@ -49,6 +52,10 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 	internal static GameObject? CHUTE_PREFAB;
 	internal static TerminalNode? CHUTE_BUY_NODE;
 	internal static TerminalNode? CHUTE_CONFIRM_NODE;
+
+	internal static GameObject? ITEM_ERROR_PREFAB;
+	internal static GameObject? ITEM_PORTABLE_PREFAB;
+	internal static TerminalNode? ITEM_PORTABLE_BUY_NODE;
 	// ReSharper restore InconsistentNaming
 
 	private static bool LoadAssets(string name)
@@ -60,6 +67,18 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 		CHUTE_PREFAB = Helpers.Bundle.LoadAsset<GameObject>("ChutePrefab");
 		CHUTE_BUY_NODE = Helpers.Bundle.LoadAsset<TerminalNode>("ChuteBuy");
 		CHUTE_CONFIRM_NODE = Helpers.Bundle.LoadAsset<TerminalNode>("ChuteConfirm");
+
+		return true;
+	}
+
+	private static bool LoadAssetsItems(string name)
+	{
+		if (!Helpers.Bundle.LoadBundleItems(name))
+			return false;
+
+		ITEM_ERROR_PREFAB = Helpers.Bundle.LoadItemAsset<GameObject>("Error");
+		ITEM_PORTABLE_PREFAB = Helpers.Bundle.LoadItemAsset<GameObject>("PortablePrefab");
+		ITEM_PORTABLE_BUY_NODE = Helpers.Bundle.LoadItemAsset<TerminalNode>("shipInvbuy");
 
 		return true;
 	}
