@@ -221,5 +221,3 @@ node_modules/
 *.sln.iml
 
 # End of https://www.toptal.com/developers/gitignore/api/csharp
-artifacts/*/dist/**/*
-artifacts/**/*.zip
