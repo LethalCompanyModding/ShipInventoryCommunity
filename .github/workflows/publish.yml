@@ -50,7 +50,6 @@ jobs:
                 echo "WEBSITE=$(get-dotnet-property 'PackageProjectUrl' 'RepositoryUrl')" >> $GITHUB_OUTPUT
                 
             - uses: WarperSan/upload-thunderstore-package@v0.1.0-beta
-              if: failure()
               with:
                   community: 'lethal-company'
                   team: ${{ steps.get-properties.outputs.TEAM }}
