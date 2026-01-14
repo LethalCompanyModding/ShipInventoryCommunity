@@ -7,19 +7,14 @@ namespace ShipInventoryUpdated.Helpers.API;
 
 internal static class ItemIdentifier
 {
-	// TODO: Check if the INVALID_ITEM is something necessary
-	private const string INVALID_ITEM_ID = "InvalidItem";
 	private static readonly Dictionary<Item, string> ItemToHash = new();
 	private static readonly Dictionary<string, Item> HashToItem = new();
 
 	/// <summary>
 	/// Fetches the hashed ID of the given item
 	/// </summary>
-	public static string GetID(Item? item)
+	public static string GetID(Item item)
 	{
-		if (item == null)
-			return INVALID_ITEM_ID;
-
 		if (ItemToHash.TryGetValue(item, out var hashedId))
 			return hashedId;
 
@@ -43,9 +38,6 @@ internal static class ItemIdentifier
 	/// </summary>
 	public static Item? GetItem(string id)
 	{
-		if (id == INVALID_ITEM_ID)
-			return null;
-
 		if (HashToItem.TryGetValue(id, out var item))
 			return item;
 
