@@ -7,6 +7,7 @@ namespace ShipInventoryUpdated.Helpers.API;
 
 internal static class ItemIdentifier
 {
+	// TODO: Check if the INVALID_ITEM is something necessary
 	private const string INVALID_ITEM_ID = "InvalidItem";
 	private static readonly Dictionary<Item, string> ItemToHash = new();
 	private static readonly Dictionary<string, Item> HashToItem = new();
@@ -22,12 +23,7 @@ internal static class ItemIdentifier
 		if (ItemToHash.TryGetValue(item, out var hashedId))
 			return hashedId;
 
-		string? id = null;
-
-		if (Dependency.Enabled)
-			id = Dependency.GetID(item);
-
-		id ??= item.itemName;
+		var id = GetGenericID(item);
 
 		using var sha256Hash = SHA256.Create();
 
@@ -53,6 +49,37 @@ internal static class ItemIdentifier
 		if (HashToItem.TryGetValue(id, out var item))
 			return item;
 
+		item = GetItemFromHashedID(id);
+
+		if (item == null)
+			return null;
+
+		HashToItem.TryAdd(id, item);
+		ItemToHash.TryAdd(item, id);
+
+		return item;
+	}
+
+	/// <summary>
+	/// Fetches the generic ID of the given item
+	/// </summary>
+	private static string GetGenericID(Item item)
+	{
+		string? id = null;
+
+		if (Dependency.Enabled)
+			id = Dependency.GetID(item);
+
+		return id ?? item.itemName;
+	}
+
+	/// <summary>
+	/// Fetches the item associated with the given hashed ID
+	/// </summary>
+	private static Item? GetItemFromHashedID(string id)
+	{
+		Item? item = null;
+
 		if (Dependency.Enabled)
 			item = Dependency.GetItem(id);
 
@@ -61,12 +88,6 @@ internal static class ItemIdentifier
 			var itemList = StartOfRound.Instance?.allItemsList?.itemsList ?? [];
 			item = itemList.FirstOrDefault(i => GetID(i) == id);
 		}
-
-		if (item == null)
-			return null;
-
-		HashToItem.TryAdd(id, item);
-		ItemToHash.TryAdd(item, id);
 
 		return item;
 	}
