@@ -12,7 +12,7 @@ internal static class ItemIdentifier
 	private static readonly Dictionary<string, Item> HashToItem = new();
 
 	/// <summary>
-	/// Fetches the generic ID of the given item
+	/// Fetches the hashed ID of the given item
 	/// </summary>
 	public static string GetID(Item? item)
 	{
