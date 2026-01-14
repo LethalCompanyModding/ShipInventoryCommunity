@@ -88,6 +88,20 @@ public class Inventory : NetworkBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Marks the items as they persisted through rounds
+	/// </summary>
+	public static void MarkPersisted(ItemData[] items)
+	{
+		if (_instance == null)
+		{
+			Logger.Warn("Tried to modify items in the inventory, but no instance was defined.");
+			return;
+		}
+
+		_instance.MarkPersistedServerRpc(items);
+	}
+
 	#endregion
 
 	#region Unity
@@ -131,6 +145,23 @@ public class Inventory : NetworkBehaviour
 	private void ClearServerRpc()
 	{
 		_storedItems.Clear();
+	}
+
+	[ServerRpc(RequireOwnership = false)]
+	private void MarkPersistedServerRpc(params ItemData[] items)
+	{
+		var newItems = new HashSet<ItemData>(items);
+
+		for (var i = 0; i < _storedItems.Count; i++)
+		{
+			var item = _storedItems[i];
+			
+			if (!newItems.Contains(item))
+				continue;
+
+			item.PERSISTED_THROUGH_ROUNDS = true;
+			_storedItems[i] = item;
+		}
 	}
 
 	#endregion
