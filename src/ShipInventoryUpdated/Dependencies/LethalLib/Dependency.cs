@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using ShipInventoryUpdated.Helpers.API;
 
 namespace ShipInventoryUpdated.Dependencies.LethalLib;
 
@@ -47,13 +48,24 @@ internal abstract class Dependency
 	}
 
 	/// <summary>
-	/// Fetches the modded item associated with the given ID
+	/// Fetches the modded item associated with the given hashed ID
 	/// </summary>
 	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 	public static Item? GetItem(string id)
 	{
 		LoadModdedItems();
 
-		return _cachedModdedItems?.GetValueOrDefault(id);
+		if (_cachedModdedItems == null)
+			return null;
+
+		foreach ((_, var moddedItem) in _cachedModdedItems)
+		{
+			var hashedId = ItemIdentifier.GetID(moddedItem);
+			
+			if (hashedId == id)
+				return moddedItem;
+		}
+
+		return null;
 	}
 }
