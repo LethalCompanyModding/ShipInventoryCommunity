@@ -8,7 +8,7 @@ namespace ShipInventoryUpdated.Helpers.API;
 internal static class ItemIdentifier
 {
 	private const string INVALID_ITEM_ID = "InvalidItem";
-	private static readonly Dictionary<Item?, string> ItemToHash = new();
+	private static readonly Dictionary<Item, string> ItemToHash = new();
 	private static readonly Dictionary<string, Item> HashToItem = new();
 
 	/// <summary>
