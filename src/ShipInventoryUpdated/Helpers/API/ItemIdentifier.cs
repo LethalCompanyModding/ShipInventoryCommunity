@@ -36,7 +36,7 @@ internal static class ItemIdentifier
 		hashedId = Encoding.Default.GetString(hashedData);
 		hashedId = new FixedString32Bytes(hashedId).ToString();
 
-		ItemToHash.Add(item, hashedId);
+		ItemToHash.TryAdd(item, hashedId);
 		HashToItem.TryAdd(hashedId, item);
 
 		return hashedId;
@@ -65,7 +65,7 @@ internal static class ItemIdentifier
 		if (item == null)
 			return null;
 
-		HashToItem.Add(id, item);
+		HashToItem.TryAdd(id, item);
 		ItemToHash.TryAdd(item, id);
 
 		return item;
