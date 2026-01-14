@@ -1,0 +1,139 @@
+{
+  "mod": {
+    "description": "为飞船添加一个储藏箱，使其能够存储和取出物品。"
+  },
+  "configuration": {
+    "chute": {
+      "blacklist": {
+        "name": "黑名单",
+        "description": "定义不允许放入储物槽的物品。\n\n物品名称应以逗号分隔(,)。\n每个条目都使用正则表达式。"
+      },
+      "storeSpeed": {
+        "name": "存储速度",
+        "description": "定义玩家存放物品的速度（以秒为单位）。"
+      }
+    },
+    "inventory": {
+      "maxItemCount": {
+        "name": "最大物品数量",
+        "description": "定义储物箱中可以存放的最大物品数量。"
+      },
+      "clearOnWipe": {
+        "name": "一存即保",
+        "description": "定义团队全灭时是否清空储藏箱。"
+      },
+      "retrieveSpeed": {
+        "name": "取出速度",
+        "description": "定义玩家取出物品的速度（以秒为单位）。"
+      }
+    },
+    "unlock": {
+      "unlockName": {
+        "name": "解锁项名称",
+        "description": "定义解锁储物槽所需输入的文本。\n\n请注意，一些文本例如 'inventory' 已经被其他解锁项占用。"
+      },
+      "unlockCost": {
+        "name": "解锁价格",
+        "description": "定义解锁储物槽的成本。"
+      },
+      "isUnlockable": {
+        "name": "是个解锁项",
+        "description": "定义游戏开始时储物槽是否已解锁。"
+      }
+    },
+    "terminal": {
+      "command": {
+        "name": "储物箱命令",
+        "description": "定义访问储物箱所输入的命令。"
+      },
+      "inventorySortOrder": {
+        "name": "储物箱排序",
+        "description": "定义物品在储物箱中显示的顺序。"
+      },
+      "automaticPositive": {
+        "name": "预选 '{positiveAnswer}'",
+        "description": "定义取出物品时光标是否自动放置在 '{positiveAnswer}' 选项上"
+      },
+      "showConfirmation": {
+        "name": "显示确认",
+        "description": "定义在取出物品时是否显示确认提示。"
+      },
+      "showTrademark": {
+        "name": "显示商标",
+        "description": "定义公司商标是否显示在终端上。"
+      }
+    }
+  },
+  "terminal": {
+    "buy": {
+      "main": "您已请求订购飞船储藏箱。\n物品总成本: [totalCost]。\n\n请 确认 (CONFIRM) 或 拒绝 (DENY)。\n\n",
+      "confirm": "<b>公司祝贺你成功得到了飞船储藏箱。</b>\n\n你可以通过在终端输入 <b>{command}</b> 来访问它。\n\n\n<color=yellow><align=center><b>- 重要安全通知 -</b></align></color>\n\n<align=justified>为了所有员工的安全，严禁将同事放入储物箱中。违者将被扣发工资或立即解雇。</align>\n"
+    }
+  },
+  "tooltip": {
+    "trigger": {
+      "hover": "存储物品: [{key}]",
+      "emptyHand": "[没什么可储存的]",
+      "invalidItem": "[物品不被允许]",
+      "itemBlacklisted": "[物品在黑名单]",
+      "notEnoughSpace": "[储物箱已满]"
+    }
+  },
+  "application": {
+    "titles": {
+      "locked": "UNAUTHORIZED ACCESS",
+      "main": "Inventory",
+      "confirm": "Confirmation",
+      "selection": "Selection",
+      "single": "以单项取出",
+      "type": "以类型取出",
+      "random": "随机取出",
+      "all": "全部取出",
+      "information": "列印状态",
+      "status": "Status"
+    },
+    "answers": {
+      "positive": "是",
+      "negative": "否",
+      "blocked": "了解",
+      "unknown": "???"
+    },
+    "screens": {
+      "locked": {
+        "message": "很抱歉通知您，您<color=red>没有</color>在船上配备使用此功能所需的设备。",
+        "tip": "请考虑通过输入 '{command}' 来购买或恢复储物箱。",
+        "offer": "如果资金难以筹集，公司可以为您推荐一位治疗师提供帮助，或者为您提供一笔可以延续几代的贷款。"
+      },
+      "main": {
+        "welcome": "欢迎上船，{level} {username}",
+        "home": "从提供的列表中选择要执行的操作："
+      },
+      "confirm": {
+        "message": "你真的想继续吗？",
+        "warning": "公司及其合作伙伴<color=red>不会</color>对你的错误决定负责。"
+      },
+      "single": {
+        "message": "请从以下列表中选择您想要取出的项目：",
+        "item": "{name} (${value})",
+        "confirm": "您将要取出 '{name}'。"
+      },
+      "type": {
+        "item": "{name} x{amount} (${total})",
+        "confirm": "您将要取出 {amount} 个 '{name}'。"
+      },
+      "random": {
+        "message": "您将要取出 '{name}'。"
+      },
+      "all": {
+        "message": "您将要取出 {amount} 个物品，总共 ${total}。"
+      },
+      "information": {
+        "total": "总价值: ${total}",
+        "count": "物品数量: {count} / {maxCount}"
+      }
+    },
+    "footers": {
+      "trademark": "<color=#666666>     [ PROPERTY OF Halden Eletronics © ]</color>"
+    }
+  }
+}
