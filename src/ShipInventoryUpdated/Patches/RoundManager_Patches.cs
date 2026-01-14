@@ -1,5 +1,4 @@
 using HarmonyLib;
-using ShipInventoryUpdated.Helpers;
 using ShipInventoryUpdated.Scripts;
 
 // ReSharper disable InconsistentNaming
