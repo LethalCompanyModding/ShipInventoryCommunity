@@ -74,6 +74,7 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 	{
 		_harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
 		_harmony.PatchAll(typeof(Patches.GameNetworkManager_Patches));
+		_harmony.PatchAll(typeof(Patches.RoundManager_Patches));
 		_harmony.PatchAll(typeof(Patches.StartOfRound_Patches));
 		_harmony.PatchAll(typeof(Patches.Terminal_Patches));
 	}
