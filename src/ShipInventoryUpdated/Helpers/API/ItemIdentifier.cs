@@ -43,7 +43,7 @@ internal static class ItemIdentifier
 	}
 
 	/// <summary>
-	/// Fetches the item associated with the given ID
+	/// Fetches the item associated with the given hashed ID
 	/// </summary>
 	public static Item? GetItem(string id)
 	{
