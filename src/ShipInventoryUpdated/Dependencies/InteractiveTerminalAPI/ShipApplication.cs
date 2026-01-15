@@ -12,7 +12,7 @@ using UnityEngine.InputSystem;
 
 namespace ShipInventoryUpdated.Dependencies.InteractiveTerminalAPI;
 
-public class ShipApplication : PageApplication
+public class ShipApplication : PageApplication<CursorElement>
 {
 	#region Application
 
@@ -95,7 +95,7 @@ public class ShipApplication : PageApplication
 		var entriesPerPage = GetEntriesPerPage<int>([]);
 
 		var cursorCount = items.Length;
-		(T[][] pageGroups, CursorMenu[] cursorMenus, IScreen[] screens) = GetPageEntries(items);
+		(T[][] pageGroups, BaseCursorMenu<CursorElement>[] cursorMenus, IScreen[] screens) = GetPageEntries(items);
 
 		for (var i = 0; i < pageGroups.Length; i++)
 		{
@@ -132,7 +132,7 @@ public class ShipApplication : PageApplication
 				};
 			}
 
-			cursorMenus[i] = new CursorMenu
+			cursorMenus[i] = new CursorMenu<CursorElement>
 			{
 				cursorIndex = 0,
 				elements = elements
@@ -155,7 +155,7 @@ public class ShipApplication : PageApplication
 		// Set the current page's cursor
 		cursorMenus[currentPageIndex].cursorIndex = currentCursorIndex;
 
-		currentPage = PageCursorElement.Create(currentPageIndex, screens, cursorMenus);
+		currentPage = PageCursorElement<CursorElement>.Create(currentPageIndex, screens, cursorMenus);
 		currentCursorMenu = currentPage.GetCurrentCursorMenu();
 		currentScreen = currentPage.GetCurrentScreen();
 
@@ -168,7 +168,7 @@ public class ShipApplication : PageApplication
 
 	private void LockedScreen()
 	{
-		var optionMenu = new CursorMenu
+		var optionMenu = new CursorMenu<CursorElement>
 		{
 			cursorIndex = 0,
 			elements =
@@ -197,7 +197,7 @@ public class ShipApplication : PageApplication
 				optionMenu
 			]
 		);
-		currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
+		currentPage = PageCursorElement<CursorElement>.Create(0, [screen], [optionMenu]);
 		SwitchScreen(screen, optionMenu, true);
 	}
 
@@ -218,7 +218,7 @@ public class ShipApplication : PageApplication
 			InfoCursorElement()
 		};
 
-		var optionMenu = new CursorMenu
+		var optionMenu = new CursorMenu<CursorElement>
 		{
 			cursorIndex = Inventory.Count > 0 ? 0 : elements.Length - 1,
 			elements = elements
@@ -238,7 +238,7 @@ public class ShipApplication : PageApplication
 				optionMenu
 			]
 		);
-		currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
+		currentPage = PageCursorElement<CursorElement>.Create(0, [screen], [optionMenu]);
 		SwitchScreen(screen, optionMenu, true);
 	}
 
@@ -263,7 +263,7 @@ public class ShipApplication : PageApplication
 		// Elements
 		var automaticPositive = Configuration.Instance?.Terminal.AutomaticPositiveAnswer.Value ?? false;
 
-		var optionMenu = new CursorMenu
+		var optionMenu = new CursorMenu<CursorElement>
 		{
 			cursorIndex = automaticPositive ? 1 : 0,
 			elements =
@@ -300,7 +300,7 @@ public class ShipApplication : PageApplication
 			]
 		);
 
-		currentPage = PageCursorElement.Create(0, [screen], [optionMenu]);
+		currentPage = PageCursorElement<CursorElement>.Create(0, [screen], [optionMenu]);
 		SwitchScreen(screen, optionMenu, true);
 
 		RegisterExitAction(_ => _confirmExitCallback?.Invoke());
@@ -499,7 +499,7 @@ public class ShipApplication : PageApplication
 
 		var items = Inventory.Items;
 
-		var options = new CursorMenu
+		var options = new CursorMenu<CursorElement>
 		{
 			cursorIndex = 0,
 			elements = []
@@ -521,7 +521,7 @@ public class ShipApplication : PageApplication
 			]
 		);
 
-		currentPage = PageCursorElement.Create(0, [screen], [options]);
+		currentPage = PageCursorElement<CursorElement>.Create(0, [screen], [options]);
 		SwitchScreen(screen, options, true);
 
 		RegisterExitAction(_ => MainScreen());

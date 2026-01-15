@@ -31,7 +31,7 @@
     <!-- Hard -->
     <PackageReference
       Include="WhiteSpike-Interactive_Terminal_API"
-      Version="1.2.0"
+      Version="1.3.0"
       PrivateAssets="all"
     />
     <PackageReference
