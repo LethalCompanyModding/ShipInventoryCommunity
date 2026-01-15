@@ -5,6 +5,7 @@
     <Product>ShipInventoryUpdated</Product>
     <Authors>LethalCompanyModding</Authors>
     <Description>Adds an inventory to the ship, allowing it to store items and retrieve them.</Description>
+    <PackageProjectUrl>https://github.com/LethalCompanyModding/ShipInventoryCommunity</PackageProjectUrl>
   </PropertyGroup>
 
   <!-- Project Properties -->

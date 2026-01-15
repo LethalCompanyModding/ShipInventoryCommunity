@@ -1,30 +1,78 @@
-name: Publish Mod To TS
+name: 'Publish Package'
 
 on:
-  push:
-    tags: "*"
+    push:
+        tags:
+            - '*'
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      # Use checkout to publish the files in your repo
-      - name: Checkout
-        uses: actions/checkout@v4
+    publish:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-dotnet@v5
+              with:
+                  dotnet-version: |
+                    8.x
+                    9.x
 
-      - name: Setup Dotnet
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: "9.x"
-
-      - name: Restore and Build
-        run: |
-          dotnet restore
-          dotnet tool restore
-
-      - name: Publish to TS
-        env:
-          TCLI_AUTH_TOKEN: ${{ secrets.TCLI_AUTH_TOKEN }}
-          PACKAGE_VERSION: ${{ github.ref_name }}
-        run: |
-          dotnet publish -c Release
+            - name: Restore Dependencies
+              shell: bash
+              run: dotnet restore
+            
+            - name: Restore Tools
+              shell: bash
+              run: dotnet tool restore
+            
+            - name: Get Properties
+              id: get-properties
+              shell: bash
+              run: |
+                get-dotnet-property() {
+                  local CSPROJ="./src/ShipInventoryUpdated/ShipInventoryUpdated.csproj"
+                  
+                  for propertyName in "$@"
+                  do
+                    local VALUE=$(dotnet msbuild "$CSPROJ" --getProperty:"$propertyName")
+                    
+                    if [ -n "$VALUE" ]; then
+                        echo "$VALUE"
+                        return 0
+                    fi
+                  done
+                  
+                  echo ""
+                }
+                
+                echo "NAME=$(get-dotnet-property 'Product')" >> $GITHUB_OUTPUT
+                echo "TEAM=$(get-dotnet-property 'Authors')" >> $GITHUB_OUTPUT
+                echo "DESCRIPTION=$(get-dotnet-property 'Description')" >> $GITHUB_OUTPUT
+                echo "WEBSITE=$(get-dotnet-property 'PackageProjectUrl' 'RepositoryUrl')" >> $GITHUB_OUTPUT
+                
+            - uses: WarperSan/upload-thunderstore-package@v0.1.1-beta
+              with:
+                  community: 'lethal-company'
+                  team: ${{ steps.get-properties.outputs.TEAM }}
+                  categories: |
+                      mods
+                      tweaks-and-quality-of-life
+                      performance
+                      furniture
+                  name: ${{ steps.get-properties.outputs.NAME }}
+                  description: ${{ steps.get-properties.outputs.DESCRIPTION }}
+                  version: ${{ github.ref_name }}
+                  dependencies: |
+                      BepInEx-BepInExPack-5.4.2100
+                      Evaisa-LethalLib-1.1.1
+                      WhiteSpike-Interactive_Terminal_API-1.3.0
+                  website: ${{ steps.get-properties.outputs.WEBSITE }}
+                  files: |
+                      ./src/ShipInventoryUpdated/bin/Release/ShipInventoryUpdated.dll
+                      ./src/ShipInventoryUpdated/Resources/Localization/*.json
+                      ./src/ShipInventoryUpdated/Resources/Bundles/si-bundle
+                  token: ${{ secrets.TCLI_AUTH_TOKEN }}
+                  package-files: |
+                    ./icon.png
+                    ./README.md
+                    ./LICENSE
+                    ./CHANGELOG.md
