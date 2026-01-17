@@ -1,6 +1,16 @@
 # Changelog
 
 <details>
+<summary>2.0.9</summary>
+
+## Changes
+- The config `ChuteSafe` has been renamed to `ClearOnWipe`
+
+</details>
+
+something happened between 2.0.4 and 2.0.8 but idk
+
+<details>
 <summary>2.0.4</summary>
 
 ## Changes

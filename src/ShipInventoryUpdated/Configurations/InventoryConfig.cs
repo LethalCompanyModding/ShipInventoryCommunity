@@ -23,7 +23,7 @@ internal class InventoryConfig
 		);
 		
 		ClearOnWipe = cfg.Bind(
-			new ConfigDefinition(SECTION, "ChuteSafe"),
+			new ConfigDefinition(SECTION, "ClearOnWipe"),
 			true,
 			new ConfigDescription(Localization.Get("configuration.inventory.clearOnWipe.description"))
 		);
