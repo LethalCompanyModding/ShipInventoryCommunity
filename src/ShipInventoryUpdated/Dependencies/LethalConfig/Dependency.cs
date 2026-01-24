@@ -83,7 +83,7 @@ internal static class Dependency
 		));
 		
 		LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(
-			config.StoreSpeed.Entry,
+			config.StoreSpeed,
 			new FloatInputFieldOptions
 			{
 				Name = Localization.Get("configuration.chute.storeSpeed.name"),

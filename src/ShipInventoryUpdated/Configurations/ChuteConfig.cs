@@ -14,7 +14,7 @@ internal class ChuteConfig : SyncedConfig2<ChuteConfig>
 	private const string SECTION = "Chute";
 
 	[SyncedEntryField] public readonly SyncedEntry<string> Blacklist;
-	[SyncedEntryField] public readonly SyncedEntry<float> StoreSpeed;
+	public readonly ConfigEntry<float> StoreSpeed;
 
 	public ChuteConfig(ConfigFile cfg) : base(GUID_)
 	{
@@ -24,7 +24,7 @@ internal class ChuteConfig : SyncedConfig2<ChuteConfig>
 			new ConfigDescription(Localization.Get("configuration.chute.blacklist.description"))
 		);
 
-		StoreSpeed = cfg.BindSyncedEntry(
+		StoreSpeed = cfg.Bind(
 			new ConfigDefinition(SECTION, "TimeToStore"),
 			0.5f,
 			new ConfigDescription(Localization.Get("configuration.chute.storeSpeed.description"))
