@@ -5,6 +5,12 @@
 
 ## Changes
 - The config `ChuteSafe` has been renamed to `ClearOnWipe`
+- Added `CSync` as a dependency, making certain configurations sync between clients:
+  - `ChuteBlacklist`
+  - `MaxItemCount`
+  - `ClearOnWipe`
+  - `ChuteUnlockCost`
+  - `ChuteIsUnlock`
 
 </details>
 
