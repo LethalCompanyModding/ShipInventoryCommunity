@@ -6,15 +6,16 @@ namespace ShipInventoryUpdated.Configurations;
 /// <summary>
 /// Class that holds the configurations related to the inventory itself
 /// </summary>
-internal class InventoryConfig
+internal class InventoryConfig : SyncedConfig2<InventoryConfig>
 {
+	private const string GUID_ = MyPluginInfo.PLUGIN_GUID + "." + nameof(InventoryConfig);
 	private const string SECTION = "Inventory";
 
 	public readonly ConfigEntry<int> MaxItemCount;
 	public readonly ConfigEntry<bool> ClearOnWipe;
 	public readonly ConfigEntry<float> RetrieveSpeed;
 
-	public InventoryConfig(ConfigFile cfg)
+	public InventoryConfig(ConfigFile cfg) : base(GUID_)
 	{
 		MaxItemCount = cfg.Bind(
 			new ConfigDefinition(SECTION, "MaxItemCount"),
