@@ -120,7 +120,7 @@ internal static class Dependency
 		));
 		
 		LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(
-			config.RetrieveSpeed.Entry,
+			config.RetrieveSpeed,
 			new FloatInputFieldOptions
 			{
 				Name = Localization.Get("configuration.inventory.retrieveSpeed.name"),

@@ -15,7 +15,7 @@ internal class InventoryConfig : SyncedConfig2<InventoryConfig>
 
 	[SyncedEntryField] public readonly SyncedEntry<int> MaxItemCount;
 	[SyncedEntryField] public readonly SyncedEntry<bool> ClearOnWipe;
-	[SyncedEntryField] public readonly SyncedEntry<float> RetrieveSpeed;
+	public readonly ConfigEntry<float> RetrieveSpeed;
 
 	public InventoryConfig(ConfigFile cfg) : base(GUID_)
 	{
@@ -31,7 +31,7 @@ internal class InventoryConfig : SyncedConfig2<InventoryConfig>
 			new ConfigDescription(Localization.Get("configuration.inventory.clearOnWipe.description"))
 		);
 
-		RetrieveSpeed = cfg.BindSyncedEntry(
+		RetrieveSpeed = cfg.Bind(
 			new ConfigDefinition(SECTION, "ChuteDelay"),
 			0.5f,
 			new ConfigDescription(Localization.Get("configuration.inventory.retrieveSpeed.description"))
