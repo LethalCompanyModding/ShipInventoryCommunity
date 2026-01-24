@@ -6,15 +6,16 @@ namespace ShipInventoryUpdated.Configurations;
 /// <summary>
 /// Class that holds the configurations related to the unlocking of the inventory
 /// </summary>
-internal class UnlockConfig
+internal class UnlockConfig : SyncedConfig2<UnlockConfig>
 {
+	private const string GUID_ = MyPluginInfo.PLUGIN_GUID + "." + nameof(UnlockConfig);
 	private const string SECTION = "Unlock";
 
 	public readonly ConfigEntry<string> UnlockName;
 	public readonly ConfigEntry<int> UnlockCost;
 	public readonly ConfigEntry<bool> IsChuteUnlocked;
 
-	public UnlockConfig(ConfigFile cfg)
+	public UnlockConfig(ConfigFile cfg) : base(GUID_)
 	{
 		UnlockName = cfg.Bind(
 			new ConfigDefinition(SECTION, "ChuteUnlockName"),
