@@ -38,6 +38,8 @@ internal class UnlockConfig : SyncedConfig2<UnlockConfig>
 		);
 
 		UnlockName.SettingChanged += (_, _) => Patches.Terminal_Patches.AssignNewCommand(UnlockName.Value);
+		
+		Patches.Terminal_Patches.AssignNewCost(UnlockCost.Value);
 		UnlockCost.Changed += (_, _) => Patches.Terminal_Patches.AssignNewCost(UnlockCost.Value);
 		
 		ConfigManager.Register(this);
