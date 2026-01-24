@@ -11,6 +11,7 @@ namespace ShipInventoryUpdated;
 // Hard
 [BepInDependency("WhiteSpike.InteractiveTerminalAPI", "1.3.0")]
 [BepInDependency(LethalLib.Plugin.ModGUID)]
+[BepInDependency("com.sigurd.csync", "5.0.1")] 
 // Soft
 [BepInDependency(LethalConfig.PluginInfo.Guid, BepInDependency.DependencyFlags.SoftDependency)]
 public class ShipInventoryUpdated : BaseUnityPlugin

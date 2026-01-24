@@ -65,6 +65,7 @@ jobs:
                       BepInEx-BepInExPack-5.4.2100
                       Evaisa-LethalLib-1.1.1
                       WhiteSpike-Interactive_Terminal_API-1.3.0
+                      Sigurd-CSync-5.0.1
                   website: ${{ steps.get-properties.outputs.WEBSITE }}
                   files: |
                       ./src/ShipInventoryUpdated/bin/Release/ShipInventoryUpdated.dll
