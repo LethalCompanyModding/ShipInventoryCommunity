@@ -72,7 +72,7 @@ internal static class Dependency
 	private static void ApplyChuteConfiguration(ChuteConfig config)
 	{
 		LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(
-			config.Blacklist,
+			config.Blacklist.Entry,
 			new TextInputFieldOptions
 			{
 				Name = Localization.Get("configuration.chute.blacklist.name"),
@@ -100,7 +100,7 @@ internal static class Dependency
 	private static void ApplyInventoryConfiguration(InventoryConfig config)
 	{
 		LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(
-			config.MaxItemCount,
+			config.MaxItemCount.Entry,
 			new IntInputFieldOptions
 			{
 				Name = Localization.Get("configuration.inventory.maxItemCount.name"),
@@ -111,7 +111,7 @@ internal static class Dependency
 		));
 		
 		LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
-			config.ClearOnWipe,
+			config.ClearOnWipe.Entry,
 			new BoolCheckBoxOptions
 			{
 				Name = Localization.Get("configuration.inventory.clearOnWipe.name"),
@@ -167,7 +167,7 @@ internal static class Dependency
 		));
 
 		LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(
-			config.UnlockCost,
+			config.UnlockCost.Entry,
 			new IntInputFieldOptions
 			{
 				Name = Localization.Get("configuration.unlock.unlockCost.name"),
@@ -178,7 +178,7 @@ internal static class Dependency
 		));
 
 		LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
-			config.IsChuteUnlocked,
+			config.IsChuteUnlocked.Entry,
 			new BoolCheckBoxOptions
 			{
 				Name = Localization.Get("configuration.unlock.isUnlockable.name"),
