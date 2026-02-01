@@ -65,7 +65,7 @@ public static class InteractionHelper
 		if (item == null)
 			return true;
 
-		var items = ItemConverter.Convert(item);
+		var items = ItemConverter.Convert(item, false);
 
 		return items.Length + Inventory.Count <= config.Inventory.MaxItemCount.Value;
 	}

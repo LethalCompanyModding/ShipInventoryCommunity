@@ -45,7 +45,7 @@ public class ChuteStore : MonoBehaviour
 			return;
 		}
 
-		var data = ItemConverter.Convert(item);
+		var data = ItemConverter.Convert(item, true);
 		Inventory.Add(data);
 
 		// Update scrap collected

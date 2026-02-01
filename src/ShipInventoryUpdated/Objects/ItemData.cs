@@ -34,12 +34,12 @@ public struct ItemData : INetworkSerializable, IEquatable<ItemData>
 	/// </summary>
 	public bool PERSISTED_THROUGH_ROUNDS;
 
-	public ItemData(GrabbableObject item)
+	public ItemData(GrabbableObject item, bool addSaveData)
 	{
 		ID = ItemIdentifier.GetID(item.itemProperties);
 		SCRAP_VALUE = item.scrapValue;
 
-		if (item.itemProperties.saveItemVariable)
+		if (addSaveData && item.itemProperties.saveItemVariable)
 			SAVE_DATA = item.GetItemDataToSave();
 
 		PERSISTED_THROUGH_ROUNDS = item.scrapPersistedThroughRounds;

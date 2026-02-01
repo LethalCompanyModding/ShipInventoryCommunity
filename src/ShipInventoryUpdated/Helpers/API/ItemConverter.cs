@@ -9,22 +9,22 @@ public static class ItemConverter
 {
 	#region API
 
-	private static readonly List<Func<GrabbableObject, ItemData[]?>> Conversions = [];
+	private static readonly List<Func<GrabbableObject, bool, ItemData[]?>> Conversions = [];
 
 	/// <summary>
 	/// Adds a conversion that defines how the given object is converted to its data form
 	/// </summary>
 	/// <param name="conversion">Returns the list of data for the given object or <c>null</c> if this conversion doesn't handle this object</param>
-	public static void AddConversion(Func<GrabbableObject, ItemData[]?> conversion) => Conversions.Add(conversion);
+	public static void AddConversion(Func<GrabbableObject, bool, ItemData[]?> conversion) => Conversions.Add(conversion);
 
 	/// <summary>
 	/// Converts the given item into <see cref="ItemData"/>, using registered conversions
 	/// </summary>
-	internal static ItemData[] Convert(GrabbableObject item)
+	internal static ItemData[] Convert(GrabbableObject item, bool addSaveData)
 	{
 		foreach (var conversion in Conversions)
 		{
-			var items = conversion?.Invoke(item);
+			var items = conversion?.Invoke(item, addSaveData);
 
 			if (items != null)
 				return items;
@@ -43,9 +43,9 @@ public static class ItemConverter
 		AddConversion(NormalConversion);
 	}
 
-	private static ItemData[] NormalConversion(GrabbableObject item) => [new(item)];
+	private static ItemData[] NormalConversion(GrabbableObject item, bool addSaveData) => [new(item, addSaveData)];
 
-	private static ItemData[]? BeltBagConversion(GrabbableObject item)
+	private static ItemData[]? BeltBagConversion(GrabbableObject item, bool addSaveData)
 	{
 		if (item is not BeltBagItem beltBagItem)
 			return null;
@@ -59,10 +59,10 @@ public static class ItemConverter
 			if (itemInBag == null)
 				continue;
 
-			items.AddRange(Convert(itemInBag));
+			items.AddRange(Convert(itemInBag, addSaveData));
 		}
 
-		items.Add(new ItemData(beltBagItem));
+		items.AddRange(NormalConversion(beltBagItem, addSaveData));
 
 		return items.ToArray();
 	}
