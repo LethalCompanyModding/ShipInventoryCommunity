@@ -12,6 +12,9 @@
   - `ChuteUnlockCost`
   - `ChuteIsUnlock`
 
+## Fixes
+- Added prevention of items data saving when `HasEnoughSpace()` is checked 
+
 </details>
 
 something happened between 2.0.4 and 2.0.8 but idk
