@@ -3,7 +3,7 @@ name: Feature request
 about: Suggest an idea for this project
 title: "[SUGGESTION] "
 labels: enhancement
-assignees: WarperSan
+assignees: ''
 
 ---
 
