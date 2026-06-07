@@ -31,16 +31,7 @@ internal static class Dependency
 		ApplyTerminalConfiguration(configuration.Terminal);
 		ApplyInventoryConfiguration(configuration.Inventory);
 		ApplyModConfiguration(configuration.Mod);
-
-		#if DEBUG
-		LethalConfigManager.AddConfigItem(new GenericButtonConfigItem(
-			"DEBUG",
-			"Reload Localization",
-			"Reloads the current localization",
-			"Reload",
-			Localization.ReloadDefault
-		));
-		#endif
+		ApplyDebugConfiguration(configuration.Debug);
 	}
 
 	/// <summary>
@@ -81,7 +72,7 @@ internal static class Dependency
 				RequiresRestart = false
 			}
 		));
-		
+
 		LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(
 			config.StoreSpeed,
 			new FloatInputFieldOptions
@@ -109,7 +100,7 @@ internal static class Dependency
 				RequiresRestart = false
 			}
 		));
-		
+
 		LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
 			config.ClearOnWipe.Entry,
 			new BoolCheckBoxOptions
@@ -118,7 +109,7 @@ internal static class Dependency
 				RequiresRestart = false
 			}
 		));
-		
+
 		LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(
 			config.RetrieveSpeed,
 			new FloatInputFieldOptions
@@ -242,6 +233,20 @@ internal static class Dependency
 				Name = Localization.Get("configuration.terminal.showTrademark.name"),
 				RequiresRestart = false
 			}
+		));
+	}
+
+	/// <summary>
+	/// Applies all configurations for <see cref="DebugConfig"/>
+	/// </summary>
+	private static void ApplyDebugConfiguration(DebugConfig config)
+	{
+		LethalConfigManager.AddConfigItem(new GenericButtonConfigItem(
+			"DEBUG",
+			"Reload Localization",
+			"Reloads the current localization",
+			"Reload",
+			config.ReloadLanguage
 		));
 	}
 }

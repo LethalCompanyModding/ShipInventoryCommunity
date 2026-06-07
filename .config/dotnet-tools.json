@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "evaisa.netcodepatcher.cli": {
-      "version": "4.4.2",
+      "version": "4.5.0",
       "commands": [
         "netcode-patch"
       ],

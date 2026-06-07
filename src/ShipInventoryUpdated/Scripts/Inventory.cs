@@ -8,11 +8,7 @@ public class Inventory : NetworkBehaviour
 {
 	private static Inventory? _instance;
 
-	private readonly NetworkList<ItemData> _storedItems = new(
-		null,
-		NetworkVariableReadPermission.Everyone,
-		NetworkVariableWritePermission.Owner
-	);
+	private readonly NetworkList<ItemData> _storedItems = new(null);
 
 	#region API
 
@@ -155,7 +151,7 @@ public class Inventory : NetworkBehaviour
 		for (var i = 0; i < _storedItems.Count; i++)
 		{
 			var item = _storedItems[i];
-			
+
 			if (!newItems.Contains(item))
 				continue;
 

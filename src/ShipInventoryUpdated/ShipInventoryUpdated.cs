@@ -20,6 +20,7 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 	{
 		Helpers.Logger.SetLogger(Logger);
 
+
 		if (!LoadAssets("si-bundle"))
 			return;
 
@@ -84,6 +85,7 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 
 	#region RPCs
 
+	
 	private static bool PrepareRPCs()
 	{
 		try
@@ -111,6 +113,7 @@ public class ShipInventoryUpdated : BaseUnityPlugin
 
 		return true;
 	}
+	
 
 	#endregion
 }

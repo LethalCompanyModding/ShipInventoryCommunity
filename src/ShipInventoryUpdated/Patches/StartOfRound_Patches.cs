@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using ShipInventoryUpdated.Objects;
 using ShipInventoryUpdated.Scripts;
 using Unity.Netcode;
@@ -68,6 +68,12 @@ internal class StartOfRound_Patches
 	private static void LoadShipGrabbableItems_Prefix()
 	{
 		var currentSaveFileName = GameNetworkManager.Instance.currentSaveFileName;
+
+		if (!ES3.KeyExists("shipGrabbableItemIDs", currentSaveFileName))
+		{
+			Logger.Info("Fresh save file detected. Skipping custom inventory load.");
+			return;
+		}
 
 		Inventory.Clear();
 

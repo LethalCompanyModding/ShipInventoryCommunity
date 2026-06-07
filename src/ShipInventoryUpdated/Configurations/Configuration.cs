@@ -12,6 +12,7 @@ internal class Configuration
 	public readonly TerminalConfig Terminal;
 	public readonly InventoryConfig Inventory;
 	public readonly ModConfig Mod;
+	public readonly DebugConfig Debug;
 
 	private Configuration(ConfigFile cfg)
 	{
@@ -25,6 +26,7 @@ internal class Configuration
 		Unlock = new UnlockConfig(cfg);
 		Terminal = new TerminalConfig(cfg);
 		Inventory = new InventoryConfig(cfg);
+		Debug = new DebugConfig(cfg);
 	}
 
 	/// <summary>

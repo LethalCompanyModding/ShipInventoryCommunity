@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <!-- BepInEx Properties -->
   <PropertyGroup>
     <AssemblyName>ShipInventoryUpdated</AssemblyName>
@@ -8,49 +8,42 @@
     <PackageProjectUrl>https://github.com/LethalCompanyModding/ShipInventoryCommunity</PackageProjectUrl>
   </PropertyGroup>
 
-  <!-- Project Properties -->
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <RootNamespace>ShipInventoryUpdated</RootNamespace>
-  </PropertyGroup>
+    <!-- Project Properties -->
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <RootNamespace>ShipInventoryUpdated</RootNamespace>
+    </PropertyGroup>
 
-  <!-- Primary Package References -->
-  <ItemGroup>
-    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-    <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
-    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2"
-      PrivateAssets="all" />
-    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Sigurd.BepInEx.CSync" Version="5.0.1" />
-    <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile"
-      PrivateAssets="all" />
-    <PackageReference Include="MinVer" Version="6.*" PrivateAssets="all" />
-  </ItemGroup>
+    <!-- Primary Package References -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.5.0-beta.2" PrivateAssets="all" />
+        <PackageReference Include="Evaisa.NetcodePatcher.MSBuild" Version="4.5.0">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.62" IncludeAssets="compile" PrivateAssets="all" />
+        <PackageReference Include="MinVer" Version="6.*" PrivateAssets="all" />
+    </ItemGroup>
 
-  <!-- Dependencies -->
-  <ItemGroup>
-    <!-- Hard -->
-    <PackageReference
-      Include="WhiteSpike-Interactive_Terminal_API"
-      Version="1.3.0"
-      PrivateAssets="all"
-    />
-    <PackageReference
-      Include="Evaisa.LethalLib"
-      Version="1.1.1"
-      PrivateAssets="all"
-    />
-    <!-- Soft -->
-    <PackageReference
-      Include="AinaVT-LethalConfig"
-      Version="1.4.6"
-      PrivateAssets="all"
-    />
-  </ItemGroup>
+    <!-- Dependencies -->
+    <ItemGroup>
+        <!-- Hard -->
+        <PackageReference Include="WhiteSpike-Interactive_Terminal_API" Version="1.3.3" PrivateAssets="all" />
+        <PackageReference Include="Evaisa.LethalLib" Version="1.2.0" PrivateAssets="all" />
+        <PackageReference Include="Sigurd.BepInEx.CSync" Version="5.0.1" />
+        <!-- Soft -->
+        <PackageReference Include="AinaVT-LethalConfig" Version="1.4.6" PrivateAssets="all" />
+    </ItemGroup>
 
-  <Target Name="NetCode" AfterTargets="PostBuildEvent">
-    <Exec
-      Command="dotnet tool run netcode-patch -uv 2022.3.62 -nv 1.12.0 -tv 1.0.0 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
-  </Target>
+    <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
+        <PropertyGroup>
+            <NetcodePatcherDepsListFile>$(IntermediateOutputPath)ncp-deps.list</NetcodePatcherDepsListFile>
+        </PropertyGroup>
+        <WriteLinesToFile File="$(NetcodePatcherDepsListFile)" Lines="@(ReferencePathWithRefAssemblies)" Overwrite="true"/>
+        <Exec Command="dotnet tool run netcode-patch -uv 2022.3.62 -nv 1.12.2 -tv 1.0.0 &quot;$(TargetPath)&quot; --dependency-file &quot;$(NetcodePatcherDepsListFile)&quot;" />
+    </Target>
 </Project>
