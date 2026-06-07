@@ -1,7 +1,8 @@
-using HarmonyLib;
+﻿using HarmonyLib;
 using Unity.Netcode;
 using ShipInventoryUpdated.Helpers;
 using ShipInventoryUpdated.Scripts;
+
 // ReSharper disable InconsistentNaming
 
 namespace ShipInventoryUpdated.Patches;
@@ -28,16 +29,6 @@ internal class GameNetworkManager_Patches
 			NetworkManager.Singleton.AddNetworkPrefab(ShipInventoryUpdated.INVENTORY_PREFAB);
 		else
 			Logger.Error($"Tried to add '{nameof(ShipInventoryUpdated.INVENTORY_PREFAB)}' to the network, but it was not defined.");
-
-		if (ShipInventoryUpdated.ITEM_PORTABLE_PREFAB is not null)
-			NetworkManager.Singleton.AddNetworkPrefab(ShipInventoryUpdated.ITEM_PORTABLE_PREFAB);
-		else
-			Logger.Error($"Tried to add '{nameof(ShipInventoryUpdated.ITEM_PORTABLE_PREFAB)}' to the network, but it was not defined.");
-
-		if (ShipInventoryUpdated.ITEM_ERROR_PREFAB is not null)
-			NetworkManager.Singleton.AddNetworkPrefab(ShipInventoryUpdated.ITEM_ERROR_PREFAB);
-		else
-			Logger.Error($"Tried to add '{nameof(ShipInventoryUpdated.ITEM_ERROR_PREFAB)}' to the network, but it was not defined.");
 	}
 
 	[HarmonyPatch(nameof(GameNetworkManager.SaveItemsInShip))]
