@@ -1,4 +1,4 @@
-﻿using InteractiveTerminalAPI.UI;
+using InteractiveTerminalAPI.UI;
 using InteractiveTerminalAPI.UI.Application;
 using InteractiveTerminalAPI.UI.Cursor;
 using InteractiveTerminalAPI.UI.Page;

@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using ShipInventoryUpdated.Configurations;
 using ShipInventoryUpdated.Helpers;
 using UnityEngine;
@@ -119,11 +119,10 @@ internal class Terminal_Patches
 			return;
 		}
 
-		buyNode.compatibleNouns = buyNode.compatibleNouns.AddToArray(new CompatibleNoun
-		{
-			noun = unlockKeyword,
-			result = ShipInventoryUpdated.CHUTE_BUY_NODE
-		});
+        buyNode.compatibleNouns = buyNode.compatibleNouns.AddToArray(new CompatibleNoun(
+           unlockKeyword,
+           ShipInventoryUpdated.CHUTE_BUY_NODE
+        ));
 
 		unlockKeyword.defaultVerb = buyNode;
 	}

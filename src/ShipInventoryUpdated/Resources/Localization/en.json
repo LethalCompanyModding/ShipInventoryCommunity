@@ -1,4 +1,4 @@
-﻿{
+{
   "mod": {
     "description": "Adds an inventory to the ship, allowing it to store items and retrieve them."
   },
@@ -25,6 +25,16 @@
       "retrieveSpeed": {
         "name": "Retrieve Speed",
         "description": "Determines the speed in seconds at which a player can retrieve items."
+      }
+    },
+    "portableitem": {
+      "itemCost": {
+        "name": "Item Cost",
+        "description": "Determines the item cost of the portable ship inventory."
+      },
+      "energyPerUse":  {
+        "name": "Energy Per Use",
+        "description": "Determines the amount of energy consumed each time the portable ship inventory is used."
       }
     },
     "unlock": {

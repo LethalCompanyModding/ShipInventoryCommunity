@@ -1,4 +1,4 @@
-﻿using BepInEx.Configuration;
+using BepInEx.Configuration;
 
 namespace ShipInventoryUpdated.Configurations;
 
@@ -12,6 +12,7 @@ internal class Configuration
 	public readonly TerminalConfig Terminal;
 	public readonly InventoryConfig Inventory;
 	public readonly ModConfig Mod;
+	public readonly PortableItemConfig PortableItem;
 
 	private Configuration(ConfigFile cfg)
 	{
@@ -25,6 +26,7 @@ internal class Configuration
 		Unlock = new UnlockConfig(cfg);
 		Terminal = new TerminalConfig(cfg);
 		Inventory = new InventoryConfig(cfg);
+		PortableItem = new PortableItemConfig(cfg);
 	}
 
 	/// <summary>
