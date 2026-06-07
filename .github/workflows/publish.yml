@@ -26,5 +26,5 @@ jobs:
 
             -   name: Publish to Thunderstore
                 env:
-                    THUNDERSTORE_TOKEN: ${{ secrets.THUNDERSTORE_API_TOKEN }}
+                    THUNDERSTORE_TOKEN: ${{ secrets.TCLI_AUTH_TOKEN }}
                 run: dotnet pack -c Release -p:PublishTS=true
