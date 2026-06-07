@@ -1,4 +1,5 @@
 <Project>
+    <Sdk Name="ThunderPipe.Sdk" Version="0.1.3"/>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
         <PackageReference
@@ -40,4 +41,23 @@ namespace $(RootNamespace)
 
         <WriteLinesToFile Lines="$(GeneratedText)" File="$(GeneratedFilePath)" WriteOnlyWhenDifferent="true" Overwrite="true"/>
     </Target>
+
+    <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
+        <PropertyGroup>
+            <NetcodePatcherDepsListFile>$(IntermediateOutputPath)ncp-deps.list</NetcodePatcherDepsListFile>
+        </PropertyGroup>
+        <WriteLinesToFile File="$(NetcodePatcherDepsListFile)" Lines="@(ReferencePathWithRefAssemblies)" Overwrite="true"/>
+        <Exec Command="dotnet tool run netcode-patch -uv 2022.3.62 -nv 1.12.2 -tv 1.0.0 &quot;$(TargetPath)&quot; --dependency-file &quot;$(NetcodePatcherDepsListFile)&quot;"/>
+    </Target>
+
+    <Target Name="SetThunderstoreVersion" AfterTargets="MinVer">
+        <PropertyGroup>
+            <ThunderstoreVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</ThunderstoreVersion>
+        </PropertyGroup>
+    </Target>
+
+    <PropertyGroup>
+        <RunThunderPipePackAfterBuild Condition="'$(RunThunderPipePackAfterBuild)' != 'false' And '$(Configuration)' == 'Release'">true</RunThunderPipePackAfterBuild>
+        <RunThunderPipePublishAfterBuild Condition="'$(RunThunderPipePublishAfterBuild)' != 'false' And '$(RunThunderPipePackAfterBuild)' == 'true' And '$(PublishTS)' == 'true'">true</RunThunderPipePublishAfterBuild>
+    </PropertyGroup>
 </Project>

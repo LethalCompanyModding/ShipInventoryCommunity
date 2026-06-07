@@ -1,25 +1,30 @@
-name: Build on Push
+name: Build
 
 on:
-  push:
-    branches: [master]
-  pull_request:
+    push:
+        branches: [ master ]
+    # Trigger the workflow on any pull request
+    pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      # Use checkout to publish the files in your repo
-      - name: Checkout
-        uses: actions/checkout@v4
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+                with:
+                    fetch-depth: 0
+                    filter: tree:0
 
-      - name: Setup Dotnet
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: "9.x"
+            -   name: Setup .NET
+                uses: actions/setup-dotnet@v4
+                with:
+                    dotnet-version: "9.x"
 
-      - name: Restore and Build
-        run: |
-          dotnet restore
-          dotnet tool restore
-          dotnet build -c Release
+            -   name: Restore
+                run: |
+                    dotnet restore --locked-mode
+                    dotnet tool restore
+
+            -   name: Build
+                run: dotnet build -c Release
