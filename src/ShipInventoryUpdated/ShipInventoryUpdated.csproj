@@ -50,7 +50,6 @@
         <ThunderstoreCategories>mods;tweaks-and-quality-of-life;performance;furniture</ThunderstoreCategories>
 
         <ThunderstoreToken>$(THUNDERSTORE_TOKEN)</ThunderstoreToken>
-        <ThunderstoreHost>http://thunderstore.localhost</ThunderstoreHost>
     </PropertyGroup>
 
     <ItemGroup>
