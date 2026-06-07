@@ -1,26 +1,17 @@
 using System.Reflection;
 using BepInEx;
 using HarmonyLib;
-using LethalLib;
 using ShipInventoryUpdated.Configurations;
 using ShipInventoryUpdated.Helpers.API;
-using Unity.Netcode;
 using UnityEngine;
-using static BepInEx.BepInDependency;
-using ShipInventoryUpdated.Objects;
 
 namespace ShipInventoryUpdated;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 // Hard
-<<<<<<< Updated upstream
 [BepInDependency("WhiteSpike.InteractiveTerminalAPI", "1.3.0")]
 [BepInDependency(LethalLib.Plugin.ModGUID)]
 [BepInDependency("com.sigurd.csync", "5.0.1")] 
-=======
-[BepInDependency("WhiteSpike.InteractiveTerminalAPI", DependencyFlags.HardDependency)]
-[BepInDependency(LethalLib.Plugin.ModGUID, DependencyFlags.HardDependency)]
->>>>>>> Stashed changes
 // Soft
 [BepInDependency(LethalConfig.PluginInfo.Guid, BepInDependency.DependencyFlags.SoftDependency)]
 public class ShipInventoryUpdated : BaseUnityPlugin

@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <!-- BepInEx Properties -->
   <PropertyGroup>
@@ -8,17 +7,6 @@
     <Description>Adds an inventory to the ship, allowing it to store items and retrieve them.</Description>
     <PackageProjectUrl>https://github.com/LethalCompanyModding/ShipInventoryCommunity</PackageProjectUrl>
   </PropertyGroup>
-=======
-<Project Sdk="Microsoft.NET.Sdk">
-    <!-- BepInEx Properties -->
-    <PropertyGroup>
-        <AssemblyName>ShipInventoryUpdated</AssemblyName>
-        <Product>ShipInventoryUpdated</Product>
-        <Authors>LethalCompanyModding</Authors>
-        <Description>Adds an inventory to the ship, allowing it to store items and retrieve them.</Description>
-        <PackageProjectUrl>https://github.com/LethalCompanyModding/ShipInventoryCommunity</PackageProjectUrl>
-    </PropertyGroup>
->>>>>>> Stashed changes
 
     <!-- Project Properties -->
     <PropertyGroup>
@@ -26,42 +14,6 @@
         <RootNamespace>ShipInventoryUpdated</RootNamespace>
     </PropertyGroup>
 
-<<<<<<< Updated upstream
-  <!-- Primary Package References -->
-  <ItemGroup>
-    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-    <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
-    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2"
-      PrivateAssets="all" />
-    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Sigurd.BepInEx.CSync" Version="5.0.1" />
-    <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile"
-      PrivateAssets="all" />
-    <PackageReference Include="MinVer" Version="6.*" PrivateAssets="all" />
-  </ItemGroup>
-
-  <!-- Dependencies -->
-  <ItemGroup>
-    <!-- Hard -->
-    <PackageReference
-      Include="WhiteSpike-Interactive_Terminal_API"
-      Version="1.3.0"
-      PrivateAssets="all"
-    />
-    <PackageReference
-      Include="Evaisa.LethalLib"
-      Version="1.1.1"
-      PrivateAssets="all"
-    />
-    <!-- Soft -->
-    <PackageReference
-      Include="AinaVT-LethalConfig"
-      Version="1.4.6"
-      PrivateAssets="all"
-    />
-  </ItemGroup>
-=======
     <!-- Primary Package References -->
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
@@ -82,10 +34,10 @@
         <!-- Hard -->
         <PackageReference Include="WhiteSpike-Interactive_Terminal_API" Version="1.3.3" PrivateAssets="all" />
         <PackageReference Include="Evaisa.LethalLib" Version="1.2.0" PrivateAssets="all" />
+        <PackageReference Include="Sigurd.BepInEx.CSync" Version="5.0.1" />
         <!-- Soft -->
         <PackageReference Include="AinaVT-LethalConfig" Version="1.4.6" PrivateAssets="all" />
     </ItemGroup>
->>>>>>> Stashed changes
 
     <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
         <Exec Command="dotnet tool run netcode-patch -uv 2022.3.62 -nv 1.12.0 -tv 1.0.0 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
