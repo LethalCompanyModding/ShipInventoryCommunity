@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using ShipInventoryUpdated.Helpers;
+﻿using ShipInventoryUpdated.Helpers;
 using ShipInventoryUpdated.Objects;
 using Unity.Netcode;
 
@@ -9,11 +8,7 @@ public class Inventory : NetworkBehaviour
 {
 	private static Inventory? _instance;
 
-	private NetworkList<ItemData> _storedItems = new NetworkList<ItemData>(
-			null,
-			NetworkVariableReadPermission.Everyone,
-			NetworkVariableWritePermission.Server
-		);
+	private readonly NetworkList<ItemData> _storedItems = new(null);
 
 	#region API
 
@@ -107,11 +102,6 @@ public class Inventory : NetworkBehaviour
 
 	#region Unity
 
-	/// <inheritdoc />
-	public void Awake()
-	{
-	}
-
 	/// <inheritdoc/>
 	public override void OnNetworkSpawn()
 	{
@@ -161,7 +151,7 @@ public class Inventory : NetworkBehaviour
 		for (var i = 0; i < _storedItems.Count; i++)
 		{
 			var item = _storedItems[i];
-			
+
 			if (!newItems.Contains(item))
 				continue;
 
