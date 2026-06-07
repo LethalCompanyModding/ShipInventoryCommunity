@@ -59,10 +59,10 @@
         <ThunderstoreFile Include="$(ProjectRoot)Resources/Localization/*.json" Destination="plugins/"/>
 
         <!-- Package Files -->
-        <ThunderstorePackageFile Include="$(SolutionDir)README.md"/>
-        <ThunderstorePackageFile Include="$(SolutionDir)CHANGELOG.md"/>
-        <ThunderstorePackageFile Include="$(SolutionDir)icon.png"/>
-        <ThunderstorePackageFile Include="$(SolutionDir)LICENSE"/>
+        <ThunderstorePackageFile Include="$(SolutionDir)README.md" Visible="false"/>
+        <ThunderstorePackageFile Include="$(SolutionDir)CHANGELOG.md" Visible="false"/>
+        <ThunderstorePackageFile Include="$(SolutionDir)icon.png" Visible="false"/>
+        <ThunderstorePackageFile Include="$(SolutionDir)LICENSE" Visible="false"/>
 
         <!-- Thunderstore Dependencies -->
         <ThunderstoreDependency Include="BepInEx-BepInExPack" Version="5.4.2100"/>
