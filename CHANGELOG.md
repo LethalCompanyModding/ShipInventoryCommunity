@@ -14,10 +14,15 @@
 
 ## Fixes
 - Added prevention of items data saving when `HasEnoughSpace()` is checked 
+- Updated the code to work with `v80`
 
 </details>
 
+<details>
+<summary>2.0.4 to 2.0.8</summary>
+
 something happened between 2.0.4 and 2.0.8 but idk
+</details>
 
 <details>
 <summary>2.0.4</summary>
