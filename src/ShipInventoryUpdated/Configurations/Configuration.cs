@@ -18,9 +18,7 @@ internal class Configuration
 	{
 		Mod = new ModConfig(cfg);
 
-		var languageCode = Mod.Language.Value;
-		var language = Helpers.Localization.LoadLanguage(languageCode);
-		Helpers.Localization.SetAsDefault(language);
+		Helpers.Localization.SetLanguage(Mod.Language.Value);
 
 		Chute = new ChuteConfig(cfg);
 		Unlock = new UnlockConfig(cfg);

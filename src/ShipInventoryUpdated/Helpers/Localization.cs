@@ -1,7 +1,6 @@
 ﻿using ShipInventoryUpdated.Objects;
 using System.Reflection;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using File = System.IO.File;
 
 namespace ShipInventoryUpdated.Helpers;
@@ -28,12 +27,12 @@ internal static class Localization
 		return localDir;
 	}
 
-	private static LanguagePackage? _defaultLanguage;
+	private static LanguagePackage? _currentLanguage;
 
 	/// <summary>
-	/// Loads the language package with the given language code
+	/// Loads the <see cref="LanguagePackage"/> from the file with the given language code
 	/// </summary>
-	public static LanguagePackage? LoadLanguage(string languageCode)
+	public static LanguagePackage? LoadFromFile(string languageCode)
 	{
 		var localDir = GetDirectory();
 
@@ -49,30 +48,32 @@ internal static class Localization
 		}
 
 		var json = File.ReadAllText(file);
-		var rawData = JsonConvert.DeserializeObject<JObject>(json);
+		var package = JsonConvert.DeserializeObject<LanguagePackage>(json);
 
-		if (rawData == null)
+		if (package == null)
 		{
 			Logger.Error($"Tried to load the language package for '{languageCode}', but it could not be parsed.");
 			return null;
 		}
 
-		return new LanguagePackage(languageCode, rawData);
+		return package;
 	}
 
 	/// <summary>
-	/// Sets the given language package as the default language
+	/// Sets the current language to the given language code
 	/// </summary>
-	public static void SetAsDefault(LanguagePackage? languagePackage) => _defaultLanguage = languagePackage;
+	public static void SetLanguage(string languageCode)
+	{
+		var language = LoadFromFile(languageCode);
+		_currentLanguage = language;
+	}
 
 	/// <summary>
 	/// Fetches the localized value at the given key, parsing the parameters in it
 	/// </summary>
 	public static string Get(string key, Dictionary<string, string>? parameters = null)
 	{
-		var value = _defaultLanguage?.Get(key);
-
-		if (value == null)
+		if (_currentLanguage == null || !_currentLanguage.TryGet(key, out var value))
 			return key;
 
 		if (parameters != null)
@@ -83,22 +84,4 @@ internal static class Localization
 
 		return value;
 	}
-
-	#if DEBUG
-	/// <summary>
-	/// Reloads the default language package
-	/// </summary>
-	public static void ReloadDefault()
-	{
-		var code = _defaultLanguage?.Language;
-
-		SetAsDefault(null);
-
-		if (code != null)
-		{
-			var package = LoadLanguage(code);
-			SetAsDefault(package);
-		}
-	}
-	#endif
 }

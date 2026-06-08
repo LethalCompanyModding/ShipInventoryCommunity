@@ -1,57 +1,27 @@
-using Newtonsoft.Json.Linq;
+using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
+using ShipInventoryUpdated.Dependencies.Newtonsoft;
 
 namespace ShipInventoryUpdated.Objects;
 
 /// <summary>
 /// Represents a language package that contains localized strings
 /// </summary>
+[JsonConverter(typeof(LanguagePackageConverter))]
 internal sealed class LanguagePackage
 {
+	private readonly Dictionary<string, string> _loadedData = new();
+
 	/// <summary>
-	/// Language code of this package
+	/// Adds the given localized value under the given key
 	/// </summary>
-	public readonly string Language;
+	public void Add(string key, string value) => _loadedData.Add(key, value);
 
-	private readonly Dictionary<string, string> _loadedData;
-
-	internal LanguagePackage(string language, JObject node)
+	/// <summary>
+	/// Attempts to get the localized value under the given key
+	/// </summary>
+	public bool TryGet(string key, [NotNullWhen(true)] out string? value)
 	{
-		Language = language;
-		_loadedData = [];
-		ParseTree(node);
+		return _loadedData.TryGetValue(key, out value);
 	}
-
-	/// <summary>
-	/// Compiles the localized strings into their IDs from the given root
-	/// </summary>
-	private void ParseTree(JObject root)
-	{
-		var stack = new Stack<(JToken, string)>();
-		stack.Push((root, ""));
-
-		while (stack.Count > 0)
-		{
-			(var token, var path) = stack.Pop();
-
-			if (token.Type == JTokenType.Object)
-			{
-				var obj = (JObject)token;
-
-				if (!obj.HasValues)
-					continue;
-
-				foreach (var prop in obj.Properties())
-				{
-					var newPath = string.IsNullOrEmpty(path) ? prop.Name : $"{path}.{prop.Name}";
-					stack.Push((prop.Value, newPath));
-				}
-			} else if (!string.IsNullOrWhiteSpace(path))
-				_loadedData[path] = token.ToString();
-		}
-	}
-
-	/// <summary>
-	/// Fetches the localized value for the given key
-	/// </summary>
-	public string? Get(string key) => _loadedData.ContainsKey(key) ? _loadedData[key] : null;
 }

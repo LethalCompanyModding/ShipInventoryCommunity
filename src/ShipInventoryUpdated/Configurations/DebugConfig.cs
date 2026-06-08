@@ -22,7 +22,19 @@ internal class DebugConfig
 	public void ReloadLanguage()
 	{
 		#if DEBUG
-		Localization.ReloadDefault();
+
+		var config = Configuration.Instance;
+
+		if (config == null)
+		{
+			Logger.Warn($"No instance of '{nameof(Configuration)}' was created.");
+			return;
+		}
+
+		var lang = config.Mod.Language.Value;
+
+		Localization.SetLanguage(lang);
+
 		#endif
 	}
 }
