@@ -44,11 +44,8 @@ internal class TerminalConfig
 			false,
 			new ConfigDescription(Localization.GetParsed(
 				"configuration.terminal.automaticPositive.description",
-				new Dictionary<string, string>
-				{
-					["positiveAnswer"] = Localization.Get("application.answers.positive")
-				})
-			)
+				("positiveAnswer", Localization.Get("application.answers.positive"))
+			))
 		);
 
 		ShowConfirmation = cfg.Bind(

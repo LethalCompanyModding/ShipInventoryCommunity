@@ -16,11 +16,10 @@ public class ChuteTrigger : InteractTrigger
 	{
 		base.Start();
 
-		hoverTip = Localization.GetParsed("tooltip.trigger.hover",
-			new Dictionary<string, string>
-			{
-				["key"] = "LMB"
-			});
+		hoverTip = Localization.GetParsed(
+			"tooltip.trigger.hover",
+			("key", "LMB")
+		);
 	}
 
 	private new void Update()

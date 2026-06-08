@@ -3,6 +3,7 @@ using ShipInventoryUpdated.Configurations;
 using ShipInventoryUpdated.Helpers;
 using UnityEngine;
 using Logger = ShipInventoryUpdated.Helpers.Logger;
+
 // ReSharper disable InconsistentNaming
 
 namespace ShipInventoryUpdated.Patches;
@@ -82,11 +83,10 @@ internal class Terminal_Patches
 
 		ShipInventoryUpdated.CHUTE_CONFIRM_NODE.shipUnlockableID = unlockableID;
 
-		ShipInventoryUpdated.CHUTE_CONFIRM_NODE.displayText = Localization.GetParsed("terminal.buy.confirm",
-			new Dictionary<string, string>
-			{
-				["command"] = command
-			});
+		ShipInventoryUpdated.CHUTE_CONFIRM_NODE.displayText = Localization.GetParsed(
+			"terminal.buy.confirm",
+			("command", command)
+		);
 	}
 
 	private static void RegisterKeyword(Terminal __instance, string command)
@@ -119,10 +119,10 @@ internal class Terminal_Patches
 			return;
 		}
 
-        buyNode.compatibleNouns = buyNode.compatibleNouns.AddToArray(new CompatibleNoun(
-           unlockKeyword,
-           ShipInventoryUpdated.CHUTE_BUY_NODE
-        ));
+		buyNode.compatibleNouns = buyNode.compatibleNouns.AddToArray(new CompatibleNoun(
+			unlockKeyword,
+			ShipInventoryUpdated.CHUTE_BUY_NODE
+		));
 
 		unlockKeyword.defaultVerb = buyNode;
 	}
@@ -140,11 +140,10 @@ internal class Terminal_Patches
 
 		if (ShipInventoryUpdated.CHUTE_CONFIRM_NODE != null)
 		{
-			ShipInventoryUpdated.CHUTE_CONFIRM_NODE.displayText = Localization.GetParsed("terminal.buy.confirm",
-				new Dictionary<string, string>
-				{
-					["command"] = command
-				});
+			ShipInventoryUpdated.CHUTE_CONFIRM_NODE.displayText = Localization.GetParsed(
+				"terminal.buy.confirm",
+				("command", command)
+			);
 		}
 	}
 

@@ -185,11 +185,10 @@ public class ShipApplication : PageApplication<CursorElement>
 			[
 				TextElement.Create(Localization.Get("application.screens.locked.message")),
 				TextElement.Create(" "),
-				TextElement.Create(Localization.GetParsed("application.screens.locked.tip",
-					new Dictionary<string, string>
-					{
-						["command"] = Configuration.Instance?.Unlock.UnlockName.Value ?? ""
-					})),
+				TextElement.Create(Localization.GetParsed(
+					"application.screens.locked.tip",
+					("command", Configuration.Instance?.Unlock.UnlockName.Value ?? "")
+				)),
 				TextElement.Create(" "),
 				TextElement.Create(" "),
 				TextElement.Create(Localization.Get("application.screens.locked.offer")),
@@ -226,12 +225,11 @@ public class ShipApplication : PageApplication<CursorElement>
 
 		var screen = CreateScreen(Localization.Get("application.titles.main"),
 			[
-				TextElement.Create(Localization.GetParsed("application.screens.main.welcome",
-					new Dictionary<string, string>
-					{
-						["level"] = HUDManager.Instance.playerLevels[player.playerLevelNumber].levelName,
-						["username"] = player.playerUsername
-					})),
+				TextElement.Create(Localization.GetParsed(
+					"application.screens.main.welcome",
+					("level", HUDManager.Instance.playerLevels[player.playerLevelNumber].levelName),
+					("username", player.playerUsername)
+				)),
 				TextElement.Create(" "),
 				TextElement.Create(Localization.Get("application.screens.main.home")),
 				TextElement.Create(" "),
@@ -346,18 +344,16 @@ public class ShipApplication : PageApplication<CursorElement>
 	{
 		var name = itemData.GetItem()?.itemName ?? Localization.Get("application.answers.unknown");
 
-		var itemFormat = Localization.GetParsed("application.screens.single.item",
-			new Dictionary<string, string>
-			{
-				["name"] = name,
-				["value"] = itemData.SCRAP_VALUE.ToString()
-			});
+		var itemFormat = Localization.GetParsed(
+			"application.screens.single.item",
+			("name", name),
+			("value", itemData.SCRAP_VALUE.ToString())
+		);
 
-		var message = Localization.GetParsed("application.screens.single.confirm",
-			new Dictionary<string, string>
-			{
-				["name"] = name
-			});
+		var message = Localization.GetParsed(
+			"application.screens.single.confirm",
+			("name", name)
+		);
 
 		return (itemFormat, message, [itemData]);
 	}
@@ -388,20 +384,19 @@ public class ShipApplication : PageApplication<CursorElement>
 
 		var name = group.First().GetItem()?.itemName ?? Localization.Get("application.answers.unknown");
 
-		var itemFormat = Localization.GetParsed("application.screens.type.item",
-			new Dictionary<string, string>
-			{
-				["name"] = name,
-				["amount"] = amount,
-				["total"] = group.Sum(d => d.SCRAP_VALUE).ToString()
-			});
+		var itemFormat = Localization.GetParsed(
+			"application.screens.type.item",
+			("name", name),
+			("name", name),
+			("amount", amount),
+			("total", group.Sum(d => d.SCRAP_VALUE).ToString())
+		);
 
-		var message = Localization.GetParsed("application.screens.type.confirm",
-			new Dictionary<string, string>
-			{
-				["name"] = name,
-				["amount"] = amount
-			});
+		var message = Localization.GetParsed(
+			"application.screens.type.confirm",
+			("name", name),
+			("amount", amount)
+		);
 
 		return (itemFormat, message, group.ToArray());
 	}
@@ -432,11 +427,10 @@ public class ShipApplication : PageApplication<CursorElement>
 		var data = Inventory.Items[UnityEngine.Random.Range(0, Inventory.Count)];
 
 		// Generate message
-		var message = Localization.GetParsed("application.screens.random.message",
-			new Dictionary<string, string>
-			{
-				["name"] = data.GetItem()?.itemName ?? Localization.Get("application.answers.unknown")
-			});
+		var message = Localization.GetParsed(
+			"application.screens.random.message",
+			("name", data.GetItem()?.itemName ?? Localization.Get("application.answers.unknown"))
+		);
 
 		ConfirmElement(message,
 			() =>
@@ -466,12 +460,11 @@ public class ShipApplication : PageApplication<CursorElement>
 	{
 		var items = GetItems(false);
 
-		var message = Localization.GetParsed("application.screens.all.message",
-			new Dictionary<string, string>
-			{
-				["amount"] = items.Length.ToString(),
-				["total"] = items.Sum(i => i.SCRAP_VALUE).ToString()
-			});
+		var message = Localization.GetParsed(
+			"application.screens.all.message",
+			("amount", items.Length.ToString()),
+			("total", items.Sum(i => i.SCRAP_VALUE).ToString())
+		);
 
 		ConfirmElement(message,
 			() =>
@@ -507,17 +500,15 @@ public class ShipApplication : PageApplication<CursorElement>
 
 		var screen = CreateScreen(Localization.Get("application.titles.status"),
 			[
-				TextElement.Create(Localization.GetParsed("application.screens.information.total",
-					new Dictionary<string, string>
-					{
-						["total"] = items.Sum(i => i.SCRAP_VALUE).ToString()
-					})),
-				TextElement.Create(Localization.GetParsed("application.screens.information.count",
-					new Dictionary<string, string>
-					{
-						["count"] = items.Length.ToString(),
-						["maxCount"] = maxCount.ToString()
-					}))
+				TextElement.Create(Localization.GetParsed(
+					"application.screens.information.total",
+					("total", items.Sum(i => i.SCRAP_VALUE).ToString())
+				)),
+				TextElement.Create(Localization.GetParsed(
+					"application.screens.information.count",
+					("count", items.Length.ToString()),
+					("maxCount", maxCount.ToString())
+				))
 			]
 		);
 
