@@ -40,7 +40,7 @@ internal static class Localization
 		if (localDir == null)
 			return null;
 
-		var file = Path.Combine(localDir, $"{languageCode}.json");
+		var file = Path.Combine(localDir, "Languages", $"{languageCode}.json");
 
 		if (!File.Exists(file))
 		{

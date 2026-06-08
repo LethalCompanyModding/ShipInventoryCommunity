@@ -56,7 +56,7 @@
         <!-- Mod Files -->
         <ThunderstoreFile Include="$(TargetPath)" Destination="plugins/"/>
         <ThunderstoreFile Include="$(ProjectRoot)Resources/Bundles/si-bundle" Destination="plugins/"/>
-        <ThunderstoreFile Include="$(ProjectRoot)Resources/Localization/*.json" Destination="plugins/"/>
+        <ThunderstoreFile Include="$(ProjectRoot)Resources/Localization/*.json" Destination="plugins/Languages/"/>
 
         <!-- Package Files -->
         <ThunderstorePackageFile Include="$(SolutionDir)README.md" Visible="false"/>
