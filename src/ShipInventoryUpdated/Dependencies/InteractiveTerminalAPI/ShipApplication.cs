@@ -380,16 +380,15 @@ public class ShipApplication : PageApplication<CursorElement>
 
 	private static (string, string, ItemData[]) RenderType(IGrouping<string, ItemData> group)
 	{
-		var amount = group.Count().ToString();
+		var amount = group.Count();
 
 		var name = group.First().GetItem()?.itemName ?? Localization.Get("application.answers.unknown");
 
 		var itemFormat = Localization.GetParsed(
 			"application.screens.type.item",
 			("name", name),
-			("name", name),
 			("amount", amount),
-			("total", group.Sum(d => d.SCRAP_VALUE).ToString())
+			("total", group.Sum(d => d.SCRAP_VALUE))
 		);
 
 		var message = Localization.GetParsed(
@@ -462,8 +461,8 @@ public class ShipApplication : PageApplication<CursorElement>
 
 		var message = Localization.GetParsed(
 			"application.screens.all.message",
-			("amount", items.Length.ToString()),
-			("total", items.Sum(i => i.SCRAP_VALUE).ToString())
+			("amount", items.Length),
+			("total", items.Sum(i => i.SCRAP_VALUE))
 		);
 
 		ConfirmElement(message,
@@ -502,12 +501,12 @@ public class ShipApplication : PageApplication<CursorElement>
 			[
 				TextElement.Create(Localization.GetParsed(
 					"application.screens.information.total",
-					("total", items.Sum(i => i.SCRAP_VALUE).ToString())
+					("total", items.Sum(i => i.SCRAP_VALUE))
 				)),
 				TextElement.Create(Localization.GetParsed(
 					"application.screens.information.count",
-					("count", items.Length.ToString()),
-					("maxCount", maxCount.ToString())
+					("count", items.Length),
+					("maxCount", maxCount)
 				))
 			]
 		);

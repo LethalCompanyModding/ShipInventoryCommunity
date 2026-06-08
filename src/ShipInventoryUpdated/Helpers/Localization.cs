@@ -82,12 +82,16 @@ internal static class Localization
 	/// <summary>
 	/// Gets the localized value at the given key with the given parameters parsed in it
 	/// </summary>
-	public static string GetParsed(string key, params (string Key, string Value)[] parameters)
+	public static string GetParsed(string key, params (string Key, object? Value)[] parameters)
 	{
 		var value = Get(key);
 
 		foreach (var parameter in parameters)
-			value = value.Replace($"{{{parameter.Key}}}", parameter.Value);
+		{
+			var paramValue = parameter.Value?.ToString() ?? "";
+
+			value = value.Replace($"{{{parameter.Key}}}", paramValue);
+		}
 
 		return value;
 	}
