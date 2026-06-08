@@ -69,12 +69,6 @@ internal class StartOfRound_Patches
 	{
 		var currentSaveFileName = GameNetworkManager.Instance.currentSaveFileName;
 
-		if (!ES3.KeyExists("shipGrabbableItemIDs", currentSaveFileName))
-		{
-			Logger.Info("Fresh save file detected. Skipping custom inventory load.");
-			return;
-		}
-
 		Inventory.Clear();
 
 		if (!ES3.KeyExists(ShipInventoryUpdated.SAVE_KEY, currentSaveFileName))
