@@ -42,11 +42,13 @@ internal class TerminalConfig
 		AutomaticPositiveAnswer = cfg.Bind(
 			new ConfigDefinition(SECTION, "YesPlease"),
 			false,
-			new ConfigDescription(Localization.Get("configuration.terminal.automaticPositive.description",
+			new ConfigDescription(Localization.GetParsed(
+				"configuration.terminal.automaticPositive.description",
 				new Dictionary<string, string>
 				{
 					["positiveAnswer"] = Localization.Get("application.answers.positive")
-				}))
+				})
+			)
 		);
 
 		ShowConfirmation = cfg.Bind(

@@ -69,18 +69,25 @@ internal static class Localization
 	}
 
 	/// <summary>
-	/// Fetches the localized value at the given key, parsing the parameters in it
+	/// Gets the localized value at the given key
 	/// </summary>
-	public static string Get(string key, Dictionary<string, string>? parameters = null)
+	public static string Get(string key)
 	{
 		if (_currentLanguage == null || !_currentLanguage.TryGet(key, out var value))
 			return key;
 
-		if (parameters != null)
-		{
-			foreach ((var paramKey, var paramValue) in parameters)
-				value = value.Replace($"{{{paramKey}}}", paramValue);
-		}
+		return value;
+	}
+
+	/// <summary>
+	/// Gets the localized value at the given key with the given parameters parsed in it
+	/// </summary>
+	public static string GetParsed(string key, Dictionary<string, string> parameters)
+	{
+		var value = Get(key);
+
+		foreach ((var paramKey, var paramValue) in parameters)
+			value = value.Replace($"{{{paramKey}}}", paramValue);
 
 		return value;
 	}

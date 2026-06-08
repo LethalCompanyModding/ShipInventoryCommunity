@@ -185,7 +185,7 @@ public class ShipApplication : PageApplication<CursorElement>
 			[
 				TextElement.Create(Localization.Get("application.screens.locked.message")),
 				TextElement.Create(" "),
-				TextElement.Create(Localization.Get("application.screens.locked.tip",
+				TextElement.Create(Localization.GetParsed("application.screens.locked.tip",
 					new Dictionary<string, string>
 					{
 						["command"] = Configuration.Instance?.Unlock.UnlockName.Value ?? ""
@@ -226,7 +226,7 @@ public class ShipApplication : PageApplication<CursorElement>
 
 		var screen = CreateScreen(Localization.Get("application.titles.main"),
 			[
-				TextElement.Create(Localization.Get("application.screens.main.welcome",
+				TextElement.Create(Localization.GetParsed("application.screens.main.welcome",
 					new Dictionary<string, string>
 					{
 						["level"] = HUDManager.Instance.playerLevels[player.playerLevelNumber].levelName,
@@ -346,14 +346,14 @@ public class ShipApplication : PageApplication<CursorElement>
 	{
 		var name = itemData.GetItem()?.itemName ?? Localization.Get("application.answers.unknown");
 
-		var itemFormat = Localization.Get("application.screens.single.item",
+		var itemFormat = Localization.GetParsed("application.screens.single.item",
 			new Dictionary<string, string>
 			{
 				["name"] = name,
 				["value"] = itemData.SCRAP_VALUE.ToString()
 			});
 
-		var message = Localization.Get("application.screens.single.confirm",
+		var message = Localization.GetParsed("application.screens.single.confirm",
 			new Dictionary<string, string>
 			{
 				["name"] = name
@@ -388,7 +388,7 @@ public class ShipApplication : PageApplication<CursorElement>
 
 		var name = group.First().GetItem()?.itemName ?? Localization.Get("application.answers.unknown");
 
-		var itemFormat = Localization.Get("application.screens.type.item",
+		var itemFormat = Localization.GetParsed("application.screens.type.item",
 			new Dictionary<string, string>
 			{
 				["name"] = name,
@@ -396,7 +396,7 @@ public class ShipApplication : PageApplication<CursorElement>
 				["total"] = group.Sum(d => d.SCRAP_VALUE).ToString()
 			});
 
-		var message = Localization.Get("application.screens.type.confirm",
+		var message = Localization.GetParsed("application.screens.type.confirm",
 			new Dictionary<string, string>
 			{
 				["name"] = name,
@@ -432,7 +432,7 @@ public class ShipApplication : PageApplication<CursorElement>
 		var data = Inventory.Items[UnityEngine.Random.Range(0, Inventory.Count)];
 
 		// Generate message
-		var message = Localization.Get("application.screens.random.message",
+		var message = Localization.GetParsed("application.screens.random.message",
 			new Dictionary<string, string>
 			{
 				["name"] = data.GetItem()?.itemName ?? Localization.Get("application.answers.unknown")
@@ -466,7 +466,7 @@ public class ShipApplication : PageApplication<CursorElement>
 	{
 		var items = GetItems(false);
 
-		var message = Localization.Get("application.screens.all.message",
+		var message = Localization.GetParsed("application.screens.all.message",
 			new Dictionary<string, string>
 			{
 				["amount"] = items.Length.ToString(),
@@ -507,12 +507,12 @@ public class ShipApplication : PageApplication<CursorElement>
 
 		var screen = CreateScreen(Localization.Get("application.titles.status"),
 			[
-				TextElement.Create(Localization.Get("application.screens.information.total",
+				TextElement.Create(Localization.GetParsed("application.screens.information.total",
 					new Dictionary<string, string>
 					{
 						["total"] = items.Sum(i => i.SCRAP_VALUE).ToString()
 					})),
-				TextElement.Create(Localization.Get("application.screens.information.count",
+				TextElement.Create(Localization.GetParsed("application.screens.information.count",
 					new Dictionary<string, string>
 					{
 						["count"] = items.Length.ToString(),

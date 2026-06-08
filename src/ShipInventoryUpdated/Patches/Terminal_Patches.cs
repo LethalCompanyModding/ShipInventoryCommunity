@@ -82,7 +82,7 @@ internal class Terminal_Patches
 
 		ShipInventoryUpdated.CHUTE_CONFIRM_NODE.shipUnlockableID = unlockableID;
 
-		ShipInventoryUpdated.CHUTE_CONFIRM_NODE.displayText = Localization.Get("terminal.buy.confirm",
+		ShipInventoryUpdated.CHUTE_CONFIRM_NODE.displayText = Localization.GetParsed("terminal.buy.confirm",
 			new Dictionary<string, string>
 			{
 				["command"] = command
@@ -140,7 +140,7 @@ internal class Terminal_Patches
 
 		if (ShipInventoryUpdated.CHUTE_CONFIRM_NODE != null)
 		{
-			ShipInventoryUpdated.CHUTE_CONFIRM_NODE.displayText = Localization.Get("terminal.buy.confirm",
+			ShipInventoryUpdated.CHUTE_CONFIRM_NODE.displayText = Localization.GetParsed("terminal.buy.confirm",
 				new Dictionary<string, string>
 				{
 					["command"] = command

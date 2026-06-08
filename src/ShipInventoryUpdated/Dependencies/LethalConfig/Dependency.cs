@@ -208,7 +208,7 @@ internal static class Dependency
 			config.AutomaticPositiveAnswer,
 			new BoolCheckBoxOptions
 			{
-				Name = Localization.Get("configuration.terminal.automaticPositive.name",
+				Name = Localization.GetParsed("configuration.terminal.automaticPositive.name",
 					new Dictionary<string, string>
 					{
 						["positiveAnswer"] = Localization.Get("application.answers.positive")
