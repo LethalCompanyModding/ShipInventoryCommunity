@@ -1,6 +1,17 @@
 # Changelog
 
 <details>
+<summary>2.0.10</summary>
+
+## Changes
+- Moved every language package from `.` to `./Languages`
+
+## Fixes
+- Removed an invalid check, making the inventory clear on load
+
+</details>
+
+<details>
 <summary>2.0.9</summary>
 
 ## Changes
