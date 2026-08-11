@@ -6,6 +6,9 @@ on:
     # Trigger the workflow on any pull request
     pull_request:
 
+permissions:
+    contents: read
+
 jobs:
     build:
         runs-on: ubuntu-latest
