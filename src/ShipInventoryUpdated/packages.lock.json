@@ -63,9 +63,9 @@
       },
       "MinVer": {
         "type": "Direct",
-        "requested": "[6.*, )",
-        "resolved": "6.1.0",
-        "contentHash": "dGyb6EBQ87AhyagcXslfDGL/A+xbNtRD23CBjXoKo82TvjHqF2BBz61B6EBx/S117KUMB1PEUpRLrHcu6UjOhg=="
+        "requested": "[8.*, )",
+        "resolved": "8.0.0",
+        "contentHash": "AJy/KVjXgUbgjf6HiI8wAk4DSSq0SCmvXQF8aU6IB+pnIQq+YJvofvMczug2hqO8yEvnQY557ryew66KPpyCsA=="
       },
       "Sigurd.BepInEx.CSync": {
         "type": "Direct",
@@ -80,9 +80,9 @@
       },
       "UnityEngine.Modules": {
         "type": "Direct",
-        "requested": "[2022.3.62, )",
-        "resolved": "2022.3.62",
-        "contentHash": "zpu5dELUCFt7Rvvzp50iTrfVusJg+2gmlcaytGEoHYuIP+AOv57X272czjp+sA8N1onPo/IiHFnOEFtT9rLJBA=="
+        "requested": "[6000.5.11, )",
+        "resolved": "6000.5.11",
+        "contentHash": "Rl0hhRlYCBGKBHYsAuKYhbPGwA9u4ePfOVqRZ32gj2AzCWU+KF5asi5C+ENBp2Jc46k0iRH/WvQX8QtvmoZOkg=="
       },
       "WhiteSpike-Interactive_Terminal_API": {
         "type": "Direct",
